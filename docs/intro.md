@@ -2,13 +2,18 @@
 sidebar_position: 1
 ---
 
-# 기술 문서 안내
+# Documentation
 
 안녕하세요! 이곳은 제가 개발 여정에서 학습하고 경험한 기술적 지식을 공유하는 공간입니다. 
 AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 문서를 제공합니다.
 
 ## 📚 문서 구성
 이 기술 문서는 다음과 같은 주제들을 다룹니다:
+
+**컴퓨터 과학 (Computer Science)**
+- 자료구조 (Data Structure)
+- 알고리즘 (Algorithm)
+- 운영체제 (Operating System)
 
 **AWS (Amazon Web Services)**
 - 클라우드 아키텍처 설계
