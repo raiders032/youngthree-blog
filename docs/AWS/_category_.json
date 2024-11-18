@@ -1,0 +1,8 @@
+{
+  "label": "AWS",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "AWS에 대한 모든 문서를 보려면 여기를 클릭하세요.",
+  }
+}
