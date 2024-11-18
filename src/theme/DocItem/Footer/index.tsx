@@ -17,16 +17,16 @@ export default function FooterWrapper(props: Props): JSX.Element {
             <div className="mt-8"> {/* 댓글창 위 여백 */}
                 <Giscus
                     repo="raiders032/youngthree-blog"
-                    repoId="여기에_repo_ID입력"
-                    category="Comments"
-                    categoryId="여기에_category_ID입력"
+                    repoId="R_kgDONREpvQ"
+                    category="Q&A"
+                    categoryId="DIC_kwDONREpvc4CkXgb"
                     mapping="pathname"
+                    strict="0"
                     reactionsEnabled="1"
                     emitMetadata="0"
-                    inputPosition="top"
-                    theme={colorMode === 'dark' ? 'dark_high_contrast' : 'light'}
+                    inputPosition="bottom"
+                    theme={colorMode}
                     lang="ko"
-                    loading="lazy"
                 />
             </div>
         </>

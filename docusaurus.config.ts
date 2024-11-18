@@ -72,8 +72,8 @@ const config: Config = {
     giscus: {
       repo: 'raiders032/youngthree-blog',
       repoId: 'R_kgDONREpvQ',
-      category: 'Comments',
-      categoryId: 'DIC_kwDONREpvc4CkXga',
+      category: 'Q&A',
+      categoryId: 'DIC_kwDONREpvc4CkXgb',
       mapping: 'pathname',
       reactionsEnabled: '1',
       theme: 'light',
