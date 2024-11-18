@@ -2,34 +2,18 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
 const config: Config = {
-  title: '덱스터의 개발 실험실',
-  tagline: '개발 블로그',
+  title: 'Young Three의 개발 실험실',
+  tagline: '성장하는 개발자의 기록',
   favicon: 'img/favicon.ico',
-
-  // Set the production url of your site here
-  url: 'https://youngthree.me',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
+  url: 'https://youngthree-blog.vercel.app/',
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'raiders032', // Usually your GitHub org/user name.
-  projectName: 'youngthree-blog', // Usually your repo name.
-  deploymentBranch: 'master',
-
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: 'ko',
+    locales: ['ko'],
   },
 
   presets: [
@@ -38,10 +22,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: {
           showReadingTime: true,
@@ -49,10 +29,6 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -66,10 +42,13 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
+    metadata: [
+      {name: 'keywords', content: '개발, 프로그래밍, 웹개발, 백엔드, 기술블로그'},
+      {name: 'author', content: 'Young Three'},
+    ],
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'My Site',
+      title: 'Young Three Blog',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.svg',
@@ -79,11 +58,12 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Document',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/blog/tags', label: 'Tag', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/raiders032',
           label: 'GitHub',
           position: 'right',
         },
@@ -93,46 +73,33 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: '콘텐츠',
           items: [
             {
-              label: 'Tutorial',
+              label: '기술 문서',
               to: '/docs/intro',
             },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
+              label: '블로그',
               to: '/blog',
+            },
+          ],
+        },
+        {
+          title: '커뮤니티',
+          items: [
+            {
+              label: 'LinkedIn',
+              href: 'https://www.linkedin.com/in/youngthree',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/raiders032',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Young Three's Dev Lab. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
