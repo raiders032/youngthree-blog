@@ -1,7 +1,7 @@
 ---
 title: "Array와 Linked List 완벽 비교 분석"
 description: "Array와 Linked List의 특징, 장단점 및 실제 활용 사례 분석"
-tags: ["array", "linked list", "자료구조", "알고리즘", "코딩테스트"]
+tags: [DATA_STRUCTURE, ARRAY, LINKED_LIST]
 keywords: ["배열", "연결리스트", "자료구조 비교", "메모리 구조", "성능 분석"]
 draft: false
 ---

@@ -1,7 +1,7 @@
 ---
 title: "Deque"
 description: "자료구조 데크(Deque)의 개념과 특징, 구현 방법을 초보자도 이해하기 쉽게 설명합니다. 이중 연결 리스트를 활용한 구현 방법과 파이썬의 collections.deque 사용법을 알아봅니다."
-tags: ["자료구조", "데크", "Python", "알고리즘", "이중연결리스트"]
+tags: [DATA_STRUCTURE, DEQUE]
 keywords: ["deque", "double-ended queue", "자료구조", "파이썬", "collections.deque"]
 draft: false
 ---

@@ -2,7 +2,7 @@
 title: AWS Amplify
 description: AWS Amplify는 모바일 및 웹 애플리케이션을 쉽게 생성하고 배포할 수 있는 종합적인 도구 세트입니다. 이 서비스는 "모바일 및 웹 애플리케이션을 위한 Elastic Beanstalk"로 불릴 만큼 강력하고 유연합니다. Amplify는 데이터 저장, 인증, 스토리지, 기계 학습 등 필수적인 기능을 AWS 서비스를 통해 제공합니다.
 authors: [youngsam]
-tags: [aws, amplify]
+tags: [AWS, AMPLIFY]
 ---
 
 ## 1 AWS Amplify 소개

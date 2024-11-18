@@ -1,0 +1,33 @@
+# AWS
+AWS:
+  description: Amazon Web Services
+EC2:
+  description: Amazon Elastic Compute Cloud
+AMI:
+  description: Amazon Machine Image
+AMPLIFY:
+  description: AWS Amplify
+API_GATEWAY:
+  description: Amazon API Gateway
+RESTFUL_API:
+  description: REST API
+WEBSOCKET_API:
+  description: WebSocket API
+
+# Computer Science
+ARRAY:
+  description: Array Data Structure
+LINKED_LIST:
+  description: Linked List
+DATA_STRUCTURE:
+  description: Data Structure
+ALGORITHM:
+  description: Algorithm
+CODING_TEST:
+  description: Coding Test
+DEQUE:
+  description: Deque Data Structure
+DOUBLY_LINKED_LIST:
+  description: Doubly Linked List
+PYTHON:
+  description: Python Programming Language

@@ -22,6 +22,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
+          tags: 'tags.yml',
         },
         blog: {
           showReadingTime: true,
@@ -61,7 +62,7 @@ const config: Config = {
           label: 'Document',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
-        {to: '/blog/tags', label: 'Tag', position: 'left'},
+        {to: '/docs/tags', label: 'Tag', position: 'left'},
         {
           href: 'https://github.com/raiders032',
           label: 'GitHub',
