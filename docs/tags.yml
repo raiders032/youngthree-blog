@@ -77,3 +77,11 @@ TIME_COMPLEXITY:
   label: Time Complexity
   permalink: /tags/time-complexity
   description: Algorithm Time Complexity Analysis
+DYNAMIC_PROGRAMMING:
+  label: Dynamic Programming
+  permalink: /tags/dynamic-programming
+  description: Dynamic Programming Algorithm
+RECURSION:
+  label: Recursion
+  permalink: /tags/recursion
+  description: Recursive Algorithm

@@ -1,185 +1,193 @@
-## 1 Dynamic Programming
+---
+title: "다이나믹 프로그래밍"
+description: "다이나믹 프로그래밍의 핵심 개념부터 실전 구현까지 상세히 알아봅니다. 재귀 알고리즘과의 관계, 메모이제이션과 타뷸레이션 기법을 통한 최적화, 실제 문제 해결 방법까지 다룹니다."
+date: 2024-11-19
+tags: [ALGORITHM, DATA_STRUCTURE, CODING_TEST, PYTHON, DYNAMIC_PROGRAMMING, RECURSION]
+keywords: [동적 프로그래밍, DP, 재귀, 메모이제이션, 타뷸레이션, 알고리즘 최적화]
+draft: false
+hide_title: true
+---
 
-> 문제를 각각의 작은 문제로 나누어 해결한 결과를 저장해뒀다가 나중에 큰 문제의 결과와 합하여 풀이하는 알고리즘이다
+## 1. 재귀를 통한 문제 해결
 
-* Dynamic Programming으로 **최적 부분 구조(Optimal Substructure)**와  **Overlapping Subproblem**특성을 갖고 있는 문제를 풀 수 있다
+### 1.1 재귀의 개념과 구조
 
+- 재귀는 문제를 동일한 형태의 작은 문제로 나누어 해결하는 방식입니다 
+- 재귀 함수는 자기 자신을 호출하여 문제를 해결합니다
 
+### 1.2 재귀의 핵심 요소
 
-## 2 Optimal Substructure
-
-* 최적 부분 구조
-* 어떠한 문제가 하위 문제의 최적 해법으로부터 큰 문제의 최적 해법을 구할 수 있을 때 Optimal Substructure를 만족한다
-  * 간단히 말하면 점화식을 세울 수 있다면 Optimal Substructure를 가진다고 할 수 있다
-
-* **Optimal Substructure**를 가진 문제는 **Dynamic Programming** 또는 **Greedy Algorithm**으로 문제를 해결할 수 있다
-
-
-
-## 3 Overlapping Subproblem
-
-* 큰 문제를 해결하기 위해 동일한 작은 문제가 반복적으로 나타나는 현상
-* 캐싱을 통해 한 번 계산한 문제의 결과를 메모리 공간에 저장하고 다시 동일한 문제를 만나면 직접 계산하지 않고 기록된 결과를 사용
+- 재귀의 핵심 요소는 종료 조건(Base Case)과 재귀 호출(Recursive Case)입니다
 
 
+**종료 조건 (Base Case)**
+```python
+def factorial(n):
+    # 종료 조건
+    if n <= 1:
+        return 1
+    # 재귀 호출
+    return n * factorial(n-1)
+```
+- 재귀 호출이 끝나는 시점을 명확히 정의해야 합니다
+- 종료 조건이 없으면 무한 재귀에 빠질 수 있습니다
 
-## 4 다른 알고리즘과 차이점
+**재귀 호출 (Recursive Case)**
+- 문제를 더 작은 단위로 나누어 자신을 다시 호출합니다
+- 각 호출마다 문제의 크기가 감소해야 합니다
 
-**Greedy Algorithm과 차이점**
+### 1.3 재귀로 피보나치 수열 구현하고 문제점 분석
 
-* **Greedy Algorithm**은 그 **순간에 최적**이라고 생각되는 것을 선택하면서 풀이한다
-* **Dynamic Programming**은 **중복된 하위 문제들(Overlapping Subproblem)**의 결과를 **저장**해뒀다가 풀이해 나간다는 차이가 있다
+```python
+def fibonacci(n):
+    # 종료 조건
+    if n <= 1:
+        return n
+        
+    # 재귀 호출
+    return fibonacci(n-1) + fibonacci(n-2)
+```
+- 시간 복잡도: O(2ⁿ)
+- 중복된 계산이 많아 성능이 떨어집니다
+  - 예) fibonacci(3) = fibonacci(2) + fibonacci(1) = fibonacci(1) + fibonacci(0) + fibonacci(1)
+  - fibonacci(1)이 중복 호출됩니다
+- 메모리 문제
+  - 재귀 호출마다 스택 프레임이 쌓임
+  - 깊은 재귀의 경우 스택 오버플로우 발생 가능
+  - 각 호출마다 지역 변수와 반환 주소가 스택에 저장됨
 
+## 2. 다이나믹 프로그래밍의 등장
 
+### 2.1 DP가 필요한 이유
+- 재귀의 치명적인 문제: 중복 계산
+- DP의 핵심 아이디어: 계산 결과 재사용
+- 한 번 계산한 결과를 저장하고 재활용하여 중복 계산을 방지합니다
 
-**분할 정복과 차이점**
+### 2.2 DP가 적용 가능한 문제의 특징
+1. 최적 부분 구조(Optimal Substructure)
+   - 큰 문제의 최적해가 작은 문제의 최적해로 구성됨
+   - 간단히 말하면 점화식을 세울 수 있다면 Optimal Substructure를 가진다고 할 수 있습니다
+   - 피보나치 예시: F(n) = F(n-1) + F(n-2)
+2. 중복되는 부분 문제(Overlapping Subproblem)
+   - 동일한 작은 문제들이 반복해서 나타남
+   - 피보나치 예시: F(3)이 F(5), F(4) 계산시 중복 등장
+   - 이항 계수 계산: nCr = n-1Cr + n-1Cr-1에서 여러 항의 계산이 중복됨
 
-* 분할 정복은 DP와 마찬가지로 최적 부분 구조를 가지는 공통점이 있으나 하위 문제가 반복되지 않는다.
+## 3. DP의 구현 방식
 
+### 3.1 하향식(Top-down) - 메모이제이션
 
+- 메모이제이션(Memoization): 계산 결과를 저장해두고 재활용하는 기법
+- 재귀 호출을 사용하며 중복 계산을 피합니다
+- 이미 계산한 값은 저장해두고 필요할 때 꺼내 사용합니다
 
-**표**
+```python
+def fibonacci_memoization(n, memo=None):
+    if memo is None:
+        memo = {}
+        
+    # 이미 계산된 값이면 반환
+    if n in memo:
+        return memo[n]
+        
+    # 종료 조건
+    if n <= 1:
+        return n
+        
+    # 계산 결과를 메모에 저장
+    memo[n] = fibonacci_memoization(n-1, memo) + fibonacci_memoization(n-2, memo)
+    return memo[n]
+```
+
+**장점**
+- 필요한 부분만 계산합니다
+- 직관적이고 재귀적 구조를 그대로 유지합니다
+- 모든 상태를 계산할 필요가 없습니다
+
+**단점**
+- 재귀 호출 스택을 사용하므로 깊이가 깊어지면 스택 오버플로우가 발생할 수 있습니다
+- 함수 호출 오버헤드가 있습니다
+
+### 3.2 상향식(Bottom-up) - 타뷸레이션
+
+- 타뷸레이션(Tabulation): 작은 문제부터 차례대로 해결해 나갑니다
+- 반복문을 사용하며 중복 계산을 피합니다
+- 작은 문제부터 순차적으로 해결하므로 최종 답을 구할 수 있습니다
+- 메모이제이션과 달리 재귀 호출이 없어 스택 오버플로우 위험이 없습니다
+
+```python
+def fibonacci_tabulation(n):
+    # 테이블 초기화
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    
+    # 작은 문제부터 순차적으로 해결
+    for i in range(2, n + 1):
+        dp[i] = dp[i-1] + dp[i-2]
+    
+    return dp[n]
+```
+
+**장점**
+- 재귀 호출이 없어 스택 오버플로우 위험이 없습니다
+- 캐시 지역성이 좋아 실행 속도가 더 빠릅니다
+- 반복문을 사용하므로 예측 가능한 성능을 보입니다
+- 메모리 사용량을 쉽게 예측할 수 있습니다
+
+**단점**
+- 모든 부분 문제를 계산해야 합니다
+- 때로는 불필요한 상태까지 계산할 수 있습니다
+- 점화식을 직관적으로 세우기 어려울 수 있습니다
+
+### 3.3 공간 최적화 버전
+
+```python
+def fibonacci_space_optimized(n):
+    if n <= 1:
+        return n
+        
+    prev2, prev1 = 0, 1
+    
+    for i in range(2, n + 1):
+        current = prev1 + prev2
+        prev2, prev1 = prev1, current
+        
+    return prev1
+```
+- 시간 복잡도: O(n)
+- 공간 복잡도: O(1)
+
+## 4DP 문제 해결 전략
+### 4.1 문제 해결 단계
+
+1. DP 적용 가능성 확인
+   - 최적 부분 구조 존재 여부 
+   - 중복되는 부분 문제 존재 여부 
+2. 상태 정의 
+  - 문제를 작은 부분으로 나누었을 때 어떤 상태가 필요한지 
+  - 예: fibonacci(n)에서 n이 상태 
+3. 점화식 수립 
+   - 현재 상태와 이전 상태의 관계 정의 
+   - 예: dp[i] = dp[i-1] + dp[i-2]
+4. 구현 방식 선택 
+   - 메모이제이션(Top-down)
+   - 타뷸레이션(Bottom-up)
+
+## 5. 다른 알고리즘과 차이점
+
+### 5.1 Greedy Algorithm과 차이점
+
+- **Greedy Algorithm**은 그 **순간에 최적**이라고 생각되는 것을 선택하면서 풀이합니다
+- **Dynamic Programming**은 **중복된 하위 문제들(Overlapping Subproblem)**의 결과를 **저장**해뒀다가 풀이해 나갑니다
+
+### 5.2 분할 정복과 차이점
+
+- 분할 정복은 DP와 마찬가지로 최적 부분 구조를 가지는 공통점이 있으나 하위 문제가 반복되지 않습니다
+
+### 5.3 알고리즘 비교 표
 
 | 알고리즘            | 풀이 가능한 문제의 특징              | 풀이 가능한 문제 및 알고리즘                              |
 | ------------------- | ------------------------------------ | --------------------------------------------------------- |
 | 다이나믹 프로그래밍 | 최적 부분 구조<br />중복된 하위 문제 | 0-1 배낭 문제<br />피보나치 수열<br />다익스트라 알고리즘 |
 | 그리디 알고리즘     | 최적 부분 구조<br />탐욕 선택 속성   | 분할 가능 배낭 문제<br />다익스트라 알고리즘              |
 | 분할 정복           | 최적 부분 구조                       | 병합 정렬<br />퀵 정렬                                    |
-
-
-
-## 5 Dynamic Programming 방법론
-
-* 방법론은 방식에 따라 크게 **상향식**과 **하향식**으로 나뉜다
-* 상향식은 **타뷸레이션**, 하향식은 **메모이제이션**이라고 구분해 부르기도 한다
-
-
-
-### 5.1 상향식(bottom-up)
-
-* 더 작은 하위 문제부터 살펴본 다음, 작은 문제의 정답을 이용해 큰 문제의 정답을 풀어나간다
-* 하향식은 **타뷸레이션**이라고 부르기도 한다
-* 일반적으로 이 방식만을 다이나믹 프로그래밍이라고 지칭하기도 한다
-* 보통 하향식 방식보다 빠르다
-
-
-
-### 5.2 하향식(top-down)
-
-* 하위 문제에 대한 정답을 계산했는지 확인해가며 문제를 자연스러운 방식으로 풀어나간다
-* 이 방식을 특별히 **메모이제이션**이라 지칭한다
-
-
-
-## 6 DP로 문제를 푸는 과정
-
-1. 문제에 DP를 적용할 수 있는지 판단
-2. 상태와 매개변수를 결정
-3. 상태 간의 관계를 정립
-4. 종료조건을 결정
-5. 메모이제이션 또는 타뷸레이션을 추가
-
-
-
-## 7 Tip
-
-1. DP 문제를 많이 풀어볼 것
-2. 어떤 제약 하에 어떤 값을 최적화하는 패턴
-3. 재귀 함수에 동일한 매개변수가 반복적으로 전달되는 경우
-4. 그리드를 만들려고 해볼 것
-
-
-
-## 8 대표문제
-
-
-
-### 8.1 LCS(Longest Common Subsequence)
-
-**관련 강의**
-
-* https://www.youtube.com/watch?v=Ua0GhsJSlWM
-* https://www.youtube.com/watch?v=sSno9rV8Rhg
-
-**문제**
-
-* https://www.acmicpc.net/problem/9251
-* https://www.acmicpc.net/problem/1695
-
-
-
-### 8.2 트리 DP
-
-- 트리의 지름을 DP를 사용해서 구해보자.
-- [문제](https://www.acmicpc.net/problem/1967)
-
-> 트리의 지름이란?
->
-> - 트리(tree)는 사이클이 없는 무방향 그래프이다. 
-> - 트리에서는 어떤 두 노드를 선택해도 둘 사이에 경로가 항상 하나만 존재하게 된다.
-> - 트리의 지름은 트리에 존재하는 모든 경로들 중에서 가장 긴 것의 길이를 말한다.
-
-
-
-**풀이**
-
-- 트리의 높이는 해당 노드부터 리프까지의 거리를 말한다.
-
-```python
-import sys
-input = sys.stdin.readline
-sys.setrecursionlimit(10 ** 6)
-
-## #높이를 구하는 top-down 방식 DP
-def make_max_height(node):
-    if max_height[node] != -1:
-        return max_height[node]
-
-    max_height[node] = 0
-    for child, weight in tree[node]:
-        max_height[node] = max(max_height[node], make_max_height(child) + weight)
-
-    return max_height[node]
-
-
-## #트리의 지름을 구하는 top-down 방식 DP
-def get_tree_radius(node):
-    if tree_radius[node] != -1:
-        return tree_radius[node]
-
-    tree_radius[node] = 0
-    height = []
-    for child, weight in tree[node]:
-        # 트리의 지름은 해당 정점 node를 지나지 않는다면 서브 트리의 지름 중 가장 큰 것이다.
-        tree_radius[node] = max(tree_radius[node], get_tree_radius(child))
-        height.append(max_height[child] + weight)
-
-    height.sort(reverse=True)
-    # 트리의 지름은 해당 정점 node를 지난다면 해당 node를 기준으로 높이가 가장 큰 2개를 더한 것과 같다.
-    tree_radius[node] = max(tree_radius[node], sum(height[:2]))
-
-    return tree_radius[node]
-
-
-N = int(input())
-tree = [list() for _ in range(N + 1)]
-max_height = [-1] * (N + 1) # 각 노드의 최대 높이
-tree_radius = [-1] * (N + 1) # 트리의 지름
-for _ in range(N - 1):
-    parent, child, weight, = map(int, input().split())
-    tree[parent].append((child, weight))
-
-## #먼저 각각의 노드의 최대 높이를 구한다.
-make_max_height(1)
-print(get_tree_radius(1))
-```
-
-
-
-### 8.3 LIS(Longest Increasing Subsequence)
-
-
-
-### 8.4 0/1 knapsack problem
-
- 
