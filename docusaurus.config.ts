@@ -69,6 +69,17 @@ const config: Config = {
         },
       ],
     },
+    giscus: {
+      repo: 'raiders032/youngthree-blog',
+      repoId: 'R_kgDONREpvQ',
+      category: 'Comments',
+      categoryId: 'DIC_kwDONREpvc4CkXga',
+      mapping: 'pathname',
+      reactionsEnabled: '1',
+      theme: 'light',
+      darkTheme: 'dark_high_contrast',
+      lang: 'ko'
+    },
     footer: {
       style: 'dark',
       links: [
