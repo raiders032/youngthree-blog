@@ -1,33 +1,63 @@
 # AWS
 AWS:
+  label: AWS
+  permalink: /tags/aws
   description: Amazon Web Services
 EC2:
+  label: EC2
+  permalink: /tags/ec2
   description: Amazon Elastic Compute Cloud
 AMI:
+  label: AMI
+  permalink: /tags/ami
   description: Amazon Machine Image
 AMPLIFY:
+  label: Amplify
+  permalink: /tags/amplify
   description: AWS Amplify
 API_GATEWAY:
+  label: API Gateway
+  permalink: /tags/api-gateway
   description: Amazon API Gateway
 RESTFUL_API:
+  label: RESTful API
+  permalink: /tags/restful-api
   description: REST API
 WEBSOCKET_API:
+  label: WebSocket API
+  permalink: /tags/websocket-api
   description: WebSocket API
 
 # Computer Science
 ARRAY:
+  label: Array
+  permalink: /tags/array
   description: Array Data Structure
 LINKED_LIST:
+  label: Linked List
+  permalink: /tags/linked-list
   description: Linked List
 DATA_STRUCTURE:
+  label: Data Structure
+  permalink: /tags/data-structure
   description: Data Structure
 ALGORITHM:
+  label: Algorithm
+  permalink: /tags/algorithm
   description: Algorithm
 CODING_TEST:
+  label: Coding Test
+  permalink: /tags/coding-test
   description: Coding Test
 DEQUE:
+  label: Deque
+  permalink: /tags/deque
   description: Deque Data Structure
 DOUBLY_LINKED_LIST:
+  label: Doubly Linked List
+  permalink: /tags/doubly-linked-list
   description: Doubly Linked List
 PYTHON:
+  label: Python
+  permalink: /tags/python
   description: Python Programming Language

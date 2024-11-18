@@ -2,7 +2,7 @@
 title: Amazon API Gateway
 description: Amazon API Gateway는 개발자가 안전하게 API를 생성, 게시, 유지 관리, 모니터링 및 보호할 수 있도록 지원하는 완전 관리형 서비스입니다. API Gateway의 주요 기능, 사용 사례, VPC 링크, CloudWatch Metrics, 로깅 및 추적 등에 대해 알아봅니다.
 keywords: [aws, api gateway, api, restful api, websocket api]
-tags: [AWS, API_GATEWAY, RESTFUL_API, WEBSOCKET_API
+tags: [AWS, API_GATEWAY, RESTFUL_API, WEBSOCKET_API]
 ---
 
 ## 1 Amazon API Gateway
