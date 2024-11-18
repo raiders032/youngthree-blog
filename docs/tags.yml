@@ -61,3 +61,19 @@ PYTHON:
   label: Python
   permalink: /tags/python
   description: Python Programming Language
+BFS:
+  label: BFS
+  permalink: /tags/bfs
+  description: Breadth-First Search
+DFS:
+  label: DFS
+  permalink: /tags/dfs
+  description: Depth-First Search
+BIG_O:
+  label: Big O
+  permalink: /tags/big-o
+  description: Big O Notation for Algorithm Analysis
+TIME_COMPLEXITY:
+  label: Time Complexity
+  permalink: /tags/time-complexity
+  description: Algorithm Time Complexity Analysis
