@@ -3,12 +3,7 @@ title: Amazon Machine Images (AMI)
 description: AMI (Amazon Machine Image)는 EC2 인스턴스를 시작하는 데 필요한 모든 정보가 포함된 템플릿입니다. AMI의 구성 요소, 유형, 생성 방법, 사용 사례, 관리 방법 등에 대해 알아봅니다.
 keywords: [aws, ami]
 tags: [AWS, EC2, AMI]
-draft: true
-authors:
-  - name: Noh Young Sam
-    title: 개발자
-    url: https://github.com/raiders032
-    image_url: https://github.com/raiders032.png
+draft: false
 ---
 
 ## 1 Amazon Machine Images
