@@ -1,6 +1,6 @@
 ## #  1 System Structure
 
-<img src="./images/system-structure.jpg" alt="System Structure" style="zoom:80%;" />
+![cpu-structure.png](images/cpu-structure.png)
 
 * System Structure는 `CPU`, `Memory`, `DMA Controller`, `Timer,` `I/O device(controller, buffer)`로 구성되어 있다
 

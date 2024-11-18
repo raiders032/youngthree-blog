@@ -25,7 +25,7 @@
 
 **CPU와 입출력 버스트의 교차**
 
-<img src="./images/cpu-io-burst.png" alt="cpu I/O bursts" style="zoom:50%;" />
+![cpu-io-burst.png](images/cpu-io-burst.png)
 
 
 

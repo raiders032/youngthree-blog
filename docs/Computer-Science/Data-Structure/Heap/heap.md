@@ -18,7 +18,7 @@
 2. 부모 값과 비교해 값이 더 작은 경우 위치를 변경한다.
 3. 계속해서 부모 값과 비교해 위치를 변경한다.(가장 작은 값일 경우 루트까지 올라간다)
 
-<img src="./images/Push-min-heap.png" alt="Push Operation in Min Heap" style="zoom:70%;" />
+![Push-min-heap.png](images/Push-min-heap.png)
 
 ### #추출
 
@@ -29,4 +29,4 @@
 3. 자식 노드의 값과 비교해서 자식보다 크다면 내려가는 다운힙 연산을 수행한다.
 4. 계속해서 자식 값과 비교해 위치를 변경한다.
 
-<img src="./images/Pop-min-heap.png" alt="Heap | cv-learn" style="zoom:70%;" />
+![Pop-min-heap.png](images/Pop-min-heap.png)
