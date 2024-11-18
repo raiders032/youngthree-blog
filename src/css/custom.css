@@ -28,3 +28,18 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.markdown h2 {
+  margin-top: 4rem;
+  margin-bottom: 1rem;
+}
+
+.markdown h3 {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.markdown h4 {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
