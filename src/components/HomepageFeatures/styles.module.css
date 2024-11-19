@@ -16,5 +16,5 @@
 
 .getStarted p {
   margin-bottom: 2rem;
-  color: whitesmoke;
+  color: var(--ifm-color-content);
 }
