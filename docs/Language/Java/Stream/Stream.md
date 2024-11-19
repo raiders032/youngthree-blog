@@ -91,7 +91,7 @@ public static void main(String[] args) {
 
 ### 2.2 내부 반복자
 
-![image-20210706214913437](./images/내부 반복자.png)
+![image-20210706214913437](./images/inner.png)
 
 **외부 반복자**
 
@@ -198,7 +198,7 @@ Process finished with exit code 0
 
 ### 2.3 파이프라이닝
 
-![image-20210706221004528](./images/파이프라인.png)
+![image-20210706221004528](./images/pipeline.png)
 
 * 대부분의 스트림 연산은 스트림 연산끼리 연결해서 커다란 파이프 라인을 구성한다.
 * 스트림 파이프라인은 0 또는 다수의 중간 처리(intermediate operation)와 한개의 최종 처리(terminal operation)로 구성된다
@@ -353,7 +353,7 @@ public static List<String> getLowCaloricDishesNamesInJava8(List<Dish> dishes) {
 
 ## 3 스트림의 종류
 
-![img](./images/stream종류.png)
+![img](./images/stream.png)
 
 - 모든 스트림에서 사용할 수 있는 공통 메소드들이 정의 되어있는 `BaseStream`아래에 객체와 타입 요소를 처리하는 스트림이 있다. 
 - BaseStream은 공통 메소드들이 정의되어 있고, 코드에서 직접적으로 사용하지는 않는다.
