@@ -1,6 +1,5 @@
 {
   "label": "AWS",
-  "position": 3,
   "link": {
     "type": "generated-index",
     "description": "Amazon Web Services(AWS)는 클라우드 컴퓨팅 서비스입니다. 여기서는 AWS의 주요 서비스들과 실제 활용 사례들을 다룹니다.",
