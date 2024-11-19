@@ -6,7 +6,7 @@ const config: Config = {
   title: 'Young Three의 개발 실험실',
   tagline: '개발자를 위한 기술 문서 모음 - AWS, 알고리즘, Java, Kotlin 등의 기술 가이드와 팁을 제공합니다.',
   favicon: 'img/favicon.ico',
-  url: 'https://youngthree-blog.vercel.app/',
+  url: 'https://blog.youngthree.me/',
   baseUrl: '/',
   onBrokenLinks: "log",
   onBrokenMarkdownLinks: 'warn',
@@ -47,12 +47,12 @@ const config: Config = {
       {name: 'keywords', content: '개발, 프로그래밍, 웹개발, 백엔드, 기술블로그'},
       {name: 'author', content: 'Young Three'},
     ],
-    image: 'img/docusaurus-social-card.jpg',
     navbar: {
       title: 'Young Three Blog',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.svg',
+        srcDark: 'img/logo-dark.svg',
       },
       items: [
         {
