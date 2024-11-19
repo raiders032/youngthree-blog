@@ -1,0 +1,24 @@
+{
+  "label": "Design Patterns",
+  "link": {
+    "type": "generated-index",
+    "description": "Design Patterns",
+    "keywords": [
+      "Design Pattern",
+      "Singleton",
+      "Builder",
+      "Factory Method",
+      "Adapter",
+      "Decorator",
+      "Facade",
+      "Proxy",
+      "Observer",
+      "Strategy",
+      "Template Method",
+      "Template Callback",
+      "MVC Pattern",
+      "객체지향",
+      "소프트웨어 설계"
+    ]
+  }
+}

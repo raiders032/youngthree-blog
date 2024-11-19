@@ -1,0 +1,25 @@
+{
+  "label": "Java",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "자바(Java)는 객체 지향 프로그래밍 언어로, JVM(Java Virtual Machine) 위에서 동작하는 강력한 프로그래밍 언어입니다.",
+    "keywords": [
+      "Java",
+      "JVM",
+      "JDK",
+      "JRE",
+      "객체 지향",
+      "추상 클래스",
+      "인터페이스",
+      "컬렉션",
+      "제네릭",
+      "람다",
+      "스트림",
+      "멀티스레드",
+      "JDBC",
+      "JSP",
+      "Effective Java"
+    ]
+  }
+}
