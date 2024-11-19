@@ -30,9 +30,9 @@
 
 ### 2.1 Modular sharding
 
-> 
 >
-> <img src="https://woowabros.github.io/img/2020-07-06/thiiing-db-modular-sharding.png" alt="properties" style="zoom:50%;" />
+>
+> ![properties](https://woowabros.github.io/img/2020-07-06/thiiing-db-modular-sharding.png)
 >
 > 모듈러샤딩은 PK를 모듈러 연산한 결과로 DB를 특정하는 방식입니다. 간략한 장단점은 아래와 같습니다.
 >
@@ -45,7 +45,7 @@
 
 ### 2.2 Range sharding
 
-> <img src="https://woowabros.github.io/img/2020-07-06/thiiing-db-range-sharding.png" alt="properties" style="zoom:50%;" />
+> ![properties](https://woowabros.github.io/img/2020-07-06/thiiing-db-range-sharding.png)
 >
 > 레인지샤딩은 PK의 범위를 기준으로 DB를 특정하는 방식입니다. 간략한 장단점은 아래와 같습니다.
 >

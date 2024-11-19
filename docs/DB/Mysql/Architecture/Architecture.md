@@ -1,6 +1,6 @@
 ## 1 Architecture
 
-<img src="images/architecture.png" alt="1" style="zoom:50%;" />
+![1](images/architecture.png)
 
 [이미지 출처](https://user-images.githubusercontent.com/43127088/108531720-5bb71080-731a-11eb-8b51-288f49a4a600.PNG)
 
