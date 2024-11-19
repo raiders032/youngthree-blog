@@ -1,0 +1,10 @@
+{
+  "label": "Kubernetes",
+  "link": {
+    "type": "generated-index",
+    "description": "Kubernetes",
+    "keywords": [
+        "Kubernetes"
+    ]
+  }
+}
