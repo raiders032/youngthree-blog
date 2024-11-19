@@ -1,4 +1,4 @@
-_---
+---
 sidebar_position: 1
 ---
 
@@ -21,7 +21,6 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
   - Kotlin
 - Cloud
   - AWS
-
 
 ## 🤝 기여하기
 문서의 개선이나 오류 수정은 언제나 환영합니다. GitHub 저장소에서 Issue를 생성하거나 Pull Request를 보내주세요.
