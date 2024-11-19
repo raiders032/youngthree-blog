@@ -1,94 +1,146 @@
-## 1 Topology Sort
+---
+title: "토폴로지 정렬(Topology Sort)"
+description: "DAG(Directed Acyclic Graph)에서 선후관계가 있는 작업들의 순서를 결정하는 토폴로지 정렬 알고리즘을 상세히 알아봅니다. 큐를 이용한 구현 방법과 실전 문제 해결 방법을 다룹니다."
+date: 2024-11-19
+tags: ["TOPOLOGY_SORT", "GRAPH", "QUEUE", "ALGORITHM", "DATA_STRUCTURE", "CODING_TEST"]
+keywords: ["토폴로지 정렬", "위상 정렬", "topology sort", "topological sort", "방향성 비순환 그래프", "DAG", "directed acyclic graph", "선수과목", "선행조건", "알고리즘", "그래프 알고리즘"]
+draft: false
+hide_title: true
+---
 
-* 순서가 정해진 작업을 차례로 수행해야 할 때 그 순서를 결정해주기 위해 사용되는 알고리즘
-* 위상 정렬은 DAG에만 적용이 가능하다
-	* DAG: 사이클이 없는 방향 그래프
+## 1. 토폴로지 정렬이란?
 
+- 선후 관계가 정의된 작업들을 순서대로 나열하는 알고리즘입니다
+- DAG(Directed Acyclic Graph, 방향성 비순환 그래프)에서만 적용 가능합니다
+- 선수과목, 프로젝트 일정 관리 등에 활용됩니다
 
+### 1.1 적용 조건
 
-## 2 구현방식
+- 그래프는 방향성이 있어야 합니다
+- 사이클이 없어야 합니다
+- 시작점이 존재해야 합니다 (진입차수가 0인 노드)
 
-* 위상정렬은 스택과 큐를 이용하며 주로 큐를 이용해 구현한다
+## 2. 구현 방법
 
+### 2.1 큐를 이용한 구현
 
+- 진입차수(들어오는 간선의 수)를 이용합니다
+- 시간 복잡도: O(V + E) (V: 정점 수, E: 간선 수)
 
-### 2.1 큐 구현방식
+#### 2.1.1 알고리즘 단계
 
-1. 각 노드의 진입차수 정보를 가진 배열 inDegree를 초기화한다.
-2. 진입차수가 0인 정점을 큐에 삽입한다.
-3. 큐에서 원소 하나를 꺼내 연결된 모든 간선을 제거한다.
-	1. 꺼낸 노드와 연결된 노드의 진입차수를 1 감소시킨다
-4. 진입차수가 0인 된 정점을 큐에 삽입한다
-5. 큐가 빌 때까지 3-4번 작업을 총 노드의 수만큼 반복한다
+- 모든 노드의 진입차수를 계산합니다
+- 진입차수가 0인 노드를 큐에 삽입합니다
+- 다음 과정을 노드 수만큼 반복합니다:
+	- 큐에서 노드를 꺼냅니다
+	- 꺼낸 노드와 연결된 모든 간선을 제거합니다
+	- 새롭게 진입차수가 0이 된 노드를 큐에 삽입합니다
 
-모든 원소를 방문하기 전 큐가 비게된다면 사이클이 존재하는 것
-모든 원소를 방문한다면 큐에서 꺼낸 순서가 위상 정렬의 결과
+### 2.2 구현 예제
 
-
-
-### 2.2 예제 코드
-
-* https://www.acmicpc.net/problem/2252
-* `N, M` : 노드의 개수, 간선의 개수
-	* 노드는 1번부터 N번 까지 존재
-* `graph`: 노드의 선후 관계를 나타내는 그래프
-	* V1 -> V2: V1 이후에 V2
-* `inDegree`: 각 노드의 진입차수를 나타내는 배열
-* `queue`: 큐를 이용한 Topology Sort
-* `result`: 위상 정렬된 결과
+#### 2.2.1 백준 2252번: 줄 세우기 문제 풀이
 
 ```python
 import sys
 from collections import deque
-input = sys.stdin.readline
 
-N, M = map(int, input().split())
-graph = [list() for _ in range(N + 1)]
-inDegree = [0] * (N + 1)
-queue = deque()
-result = []
+def topology_sort(N, graph, inDegree):
+    """
+    토폴로지 정렬을 수행하는 함수
+    
+    Args:
+        N (int): 노드의 개수
+        graph (list): 그래프의 인접 리스트
+        inDegree (list): 각 노드의 진입차수
+    
+    Returns:
+        list: 위상 정렬된 결과
+    """
+    queue = deque()
+    result = []
 
-## #진입 차수를 초기화하는 과정
-for _ in range(M):
-    v1, v2 = map(int, input().split())
-    graph[v1].append(v2)
-    inDegree[v2] += 1
+    # 진입차수가 0인 노드를 큐에 삽입
+    for i in range(1, N + 1):
+        if inDegree[i] == 0:
+            queue.append(i)
 
-## #진입 차수가 0인 정점을 우선 순위 큐에 넣는다
-for i in range(1, N + 1):
-    if inDegree[i] == 0:
-        queue.append(i)
+    # 노드의 수만큼 반복
+    for _ in range(N):
+        # 큐가 비어있다면 사이클이 존재
+        if not queue:
+            return None
+            
+        # 큐에서 노드를 꺼내어 결과에 추가
+        current = queue.popleft()
+        result.append(current)
 
-## #총 정점의 개수만큼 반복한다.
-for _ in range(N):
-  	# 반복문 도중 큐가 비었다면 사이클이 발생했다는 것
-    if not queue:
-        print('사이클 발생')
-        break
-		
-    # 큐에서 꺼내진 정점의 순서가 위상 정렬된 순서다
-    vertex = queue.popleft()
-    result.append(vertex)
+        # 연결된 노드들의 진입차수를 감소
+        for next_node in graph[current]:
+            inDegree[next_node] -= 1
+            # 진입차수가 0이 되면 큐에 삽입
+            if inDegree[next_node] == 0:
+                queue.append(next_node)
 
-    # 현재 정점가 연결된 모든 정점의 진입차수를 1 감소시킨다.
-    for next_vertex in graph[vertex]:
-        inDegree[next_vertex] -= 1
-        # 연결된 정점의 집인 차수가 0이 되면 우선 순위 큐에 넣어준다
-        if inDegree[next_vertex] == 0:
-            queue.append(next_vertex)
+    return result
 
-print(*result)
+def main():
+    input = sys.stdin.readline
+    
+    # 입력 받기
+    N, M = map(int, input().split())
+    graph = [[] for _ in range(N + 1)]
+    inDegree = [0] * (N + 1)
+
+    # 그래프 구성
+    for _ in range(M):
+        a, b = map(int, input().split())
+        graph[a].append(b)
+        inDegree[b] += 1
+
+    # 위상 정렬 수행
+    result = topology_sort(N, graph, inDegree)
+    
+    # 결과 출력
+    if result:
+        print(*result)
+    else:
+        print("사이클이 존재합니다")
+
+if __name__ == "__main__":
+    main()
 ```
 
+## 3. 실전 응용
 
+### 3.1 대표적인 문제 유형
 
-## 3 관련 문제
+- 선수과목 순서 결정하기
+- 프로젝트 일정 관리
+- 작업 순서 정하기
 
-* https://www.acmicpc.net/problem/2252
-* https://www.acmicpc.net/problem/14567
+### 3.2 추천 문제
 
+- 백준 2252번: 줄 세우기
+	- 기본적인 토폴로지 정렬 구현
+- 백준 14567번: 선수과목
+	- 선수과목 조건을 토폴로지 정렬로 해결
 
+## 4. 시간 복잡도 분석
 
-관련 자료
+### 4.1 각 단계별 복잡도
 
-* https://www.youtube.com/watch?v=qzfeVeajuyc
+- 진입차수 계산: O(E)
+- 큐를 이용한 정렬: O(V + E)
+- 전체 시간 복잡도: O(V + E)
+
+### 4.2 공간 복잡도
+
+- 인접 리스트: O(E)
+- 진입차수 배열: O(V)
+- 큐: O(V)
+- 전체 공간 복잡도: O(V + E)
+
+## 5. 참고 자료
+
+- [유튜브 강의: 토폴로지 정렬 알고리즘](https://www.youtube.com/watch?v=qzfeVeajuyc)
+- [백준 온라인 저지](https://www.acmicpc.net/problem/2252)

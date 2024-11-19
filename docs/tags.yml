@@ -85,3 +85,35 @@ RECURSION:
   label: Recursion
   permalink: /tags/recursion
   description: Recursive Algorithm
+TOPOLOGY_SORT:
+  label: Topology Sort
+  permalink: /tags/topology-sort
+  description: Algorithm for Ordering Tasks with Dependencies
+GRAPH:
+  label: Graph
+  permalink: /tags/graph
+  description: Graph Data Structure and Algorithms
+QUEUE:
+  label: Queue
+  permalink: /tags/queue
+  description: Queue Data Structure
+TREE:
+  label: Tree
+  permalink: /tags/tree
+  description: Tree Data Structure and Algorithms
+BINARY_TREE:
+  label: Binary Tree
+  permalink: /tags/binary-tree
+  description: Binary Tree Data Structure and Algorithms
+BINARY_SEARCH_TREE:
+  label: Binary Search Tree
+  permalink: /tags/binary-search-tree
+  description: Binary Search Tree (BST) Data Structure
+HEAP:
+  label: Heap
+  permalink: /tags/heap
+  description: Heap Data Structure (Priority Queue)
+UNION_FIND:
+  label: Union Find
+  permalink: /tags/union-find
+  description: Disjoint Set (Union-Find) Data Structure for Efficiently Managing Sets of Elements
