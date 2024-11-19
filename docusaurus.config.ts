@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Young Three의 개발 실험실',
-  tagline: '성장하는 개발자의 기록',
+  tagline: '개발자를 위한 기술 문서 모음 - AWS, 알고리즘, Java, Kotlin 등의 기술 가이드와 팁을 제공합니다.',
   favicon: 'img/favicon.ico',
   url: 'https://youngthree-blog.vercel.app/',
   baseUrl: '/',
@@ -57,7 +57,7 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'documentSidebar',
           position: 'left',
           label: 'Document',
         },
