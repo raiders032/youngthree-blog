@@ -117,3 +117,131 @@ UNION_FIND:
   label: Union Find
   permalink: /tags/union-find
   description: Disjoint Set (Union-Find) Data Structure for Efficiently Managing Sets of Elements
+
+# Architecture
+ARCHITECTURE:
+  label: Architecture
+  permalink: /tags/architecture
+  description: System Architecture and Design Patterns
+MICROSERVICE:
+  label: Microservice
+  permalink: /tags/microservice
+  description: Microservice Architecture
+MONOLITHIC:
+  label: Monolithic
+  permalink: /tags/monolithic
+  description: Monolithic Architecture
+SOA:
+  label: SOA
+  permalink: /tags/soa
+  description: Service Oriented Architecture
+EVENT_DRIVEN:
+  label: Event Driven
+  permalink: /tags/event-driven
+  description: Event Driven Architecture
+SERVERLESS:
+  label: Serverless
+  permalink: /tags/serverless
+  description: Serverless Architecture
+LAYERED:
+  label: Layered
+  permalink: /tags/layered
+  description: Layered Architecture
+DDD:
+  label: DDD
+  permalink: /tags/ddd
+  description: Domain Driven Design
+
+# Web
+WEB:
+  label: Web
+  permalink: /tags/web
+  description: Web Technologies and Standards
+FRONTEND:
+  label: Frontend
+  permalink: /tags/frontend
+  description: Frontend Development
+BACKEND:
+  label: Backend
+  permalink: /tags/backend
+  description: Backend Development
+FULLSTACK:
+  label: Fullstack
+  permalink: /tags/fullstack
+  description: Full Stack Development
+SPA:
+  label: SPA
+  permalink: /tags/spa
+  description: Single Page Application
+PWA:
+  label: PWA
+  permalink: /tags/pwa
+  description: Progressive Web Application
+SSR:
+  label: SSR
+  permalink: /tags/ssr
+  description: Server Side Rendering
+CSR:
+  label: CSR
+  permalink: /tags/csr
+  description: Client Side Rendering
+HTTP:
+  label: HTTP
+  permalink: /tags/http
+  description: Hypertext Transfer Protocol
+HTTPS:
+  label: HTTPS
+  permalink: /tags/https
+  description: HTTP Secure
+REST:
+  label: REST
+  permalink: /tags/rest
+  description: Representational State Transfer
+
+# Network
+NETWORK:
+  label: Network
+  permalink: /tags/network
+  description: Computer Networks and Communication
+DNS:
+  label: DNS
+  permalink: /tags/dns
+  description: Domain Name System
+TCP:
+  label: TCP
+  permalink: /tags/tcp
+  description: Transmission Control Protocol
+UDP:
+  label: UDP
+  permalink: /tags/udp
+  description: User Datagram Protocol
+IP:
+  label: IP
+  permalink: /tags/ip
+  description: Internet Protocol
+OSI:
+  label: OSI
+  permalink: /tags/osi
+  description: Open Systems Interconnection Model
+
+# Infrastructure
+INFRASTRUCTURE:
+  label: Infrastructure
+  permalink: /tags/infrastructure
+  description: IT Infrastructure and System Components
+LOAD_BALANCER:
+  label: Load Balancer
+  permalink: /tags/load-balancer
+  description: Load Balancing Systems
+PROXY:
+  label: Proxy
+  permalink: /tags/proxy
+  description: Proxy Servers
+CDN:
+  label: CDN
+  permalink: /tags/cdn
+  description: Content Delivery Network
+CACHE:
+  label: Cache
+  permalink: /tags/cache
+  description: Caching Systems and Strategies

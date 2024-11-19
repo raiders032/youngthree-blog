@@ -25,7 +25,7 @@
 
 ## 2 MVC 패턴 등장 배경
 
-<img src="images/image-20210313195057600.png" alt="image-20210313195057600" style="zoom: 33%;" />
+![image-20210313195057600](images/image-20210313195057600.png)
 
 * MVC 패턴 이전 비즈니스 로직과 뷰 로직이 분리되지 않았다.
 
@@ -86,7 +86,7 @@
 
 *  비즈니스 로직과 뷰 로직이 분리되었다.
 
-<img src="images/image-20210313195256204.png" alt="image-20210313195256204" style="zoom:33%;" />
+![image-20210313195256204](images/image-20210313195256204.png)
 
 
 
@@ -145,4 +145,4 @@ public class MvcMemberSaveServlet extends HttpServlet {
 * 일반적으로 비즈니스 로직은 서비스(Service)라는 계층을 별도로 만들어서 처리한다. 
 * 그리고 컨트롤러는 비즈니스 로직이 있는 서비스를 호출하는 담당한다.
 
-<img src="images/image-20210313195516781.png" alt="image-20210313195516781" style="zoom:33%;" />
+![image-20210313195516781](images/image-20210313195516781.png)

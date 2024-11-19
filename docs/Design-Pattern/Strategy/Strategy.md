@@ -6,10 +6,7 @@
 	* Strategy: 변하는 알고리즘 역할을 한다.
 * 전략 패턴의 핵심은 Context 는 Strategy 인터페이스에만 의존한다는 점이다. 
 	* 덕분에 Strategy 의 구현체를 변경하거나 새로 만들어도 Context 코드에는 영향을 주지 않는다.
-
-
-
-
+	
 > GOF의 Strategy 정의
 >
 > 알고리즘 제품군을 정의하고 각각을 캡슐화하여 상호 교환 가능하게 만들자. 
@@ -42,7 +39,7 @@
 
 * 더 유연한 Strategy 패턴
 * 기존 Strategy 패턴처럼 Context의 내부 필드에 Strategy를 두고는 것이 아니라 Context 에 실행 시점에 여러 전략을 인수로 전달받아 실행
-	* [Behavior-Parameterization.md](../../../../../../../GoogleDrive/dev/TIL/Language/Java/Behavior-Parameterization/Behavior-Parameterization.md) 참고
+	* [Behavior-Parameterization.md](/docs/Language/Java/Behavior-Parameterization/Behavior-Parameterization.md) 참고
 * 클라이언트는 Context 를 실행하는 시점에 원하는 Strategy 를 전달할 수 있다.
 	* [Template-Callback.md](../Template-Callback/Template-Callback.md) 참고
 

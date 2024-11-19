@@ -7,7 +7,7 @@
   * 참고로 템플릿 콜백 패턴은 GOF 패턴은 아니고, 스프링 내부에서 이런 방식을 자주 사용하기 때문에, 스프링 안에서만 이렇게 부른다. 
   * 전략 패턴에서 템플릿과 콜백 부분이 강조된 패턴이라 생각하면 된다.
 * 기존 Strategy 패턴처럼 Context의 내부 필드에 Strategy를 두고는 것이 아니라 Context에 실행 시점에 여러 전략을 인수로 전달받아 실행
-  * [Behavior-Parameterization.md](../../../../../../../GoogleDrive/dev/TIL/Language/Java/Behavior-Parameterization/Behavior-Parameterization.md) 참고
+  * [Behavior-Parameterization.md](/docs/Language/Java/Behavior-Parameterization/Behavior-Parameterization.md) 참고
 * 클라이언트는 Context 를 실행하는 시점에 원하는 Strategy 를 전달할 수 있다.
 * **Context는 변하지 않는 템플릿** 역할을 한다. 그리고 **변하는 부분은 파라미터로 넘어온 Strategy**의 코드를 실행해서 처리한다. 
 * 이렇게 다른 코드의 인수로서 넘겨주는 실행 가능한 코드를 콜백(callback)이라 한다.

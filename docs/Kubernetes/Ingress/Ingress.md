@@ -153,7 +153,7 @@ $ kubectl delete validatingwebhookconfiguration ingress-nginx-admission
 
 ## 4 TLS 적용
 
-- [TLS.md](../../../../../../../GoogleDrive/dev/TIL/Network/TLS/TLS.md) 참조
+- [TLS.md](/docs/Network/TLS/TLS.md) 참조
 - 먼저 CA에게 TLS 인증서를 발급 받으면 인증서와 개인 키를 얻을 수 있다.
 
 

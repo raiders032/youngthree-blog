@@ -8,11 +8,7 @@
 
 -  CRI 프로토콜에 의해 컨테이너의 로그는 `/var/log/pods` 위치에 쌓인다.
 
-
-
 ## 2 Elastic Search
-
-
 
 ### 2.1 Elastic Search 설치
 

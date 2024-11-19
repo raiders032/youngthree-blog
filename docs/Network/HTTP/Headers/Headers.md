@@ -8,22 +8,15 @@
 	* 엔티티 헤더(entity headers)
 	* 확장 헤더(extension headers)
 
-
-
 ## 2 일반 헤더(general headers)
 
 - 일반 헤더는 서버와 클라이언트 모두가 사용한다.
 - 예를 들어 Date 헤더는 서버와 클라이언트를 가리지 않고 메시지가 만들어진 시점을 지칭하기 위해 사용된다.
 
-
-
-
 ## 3 요청 헤더(request headers)
 
 - 요청 헤더는 클라이언트가 서버에 보내는 요청 메시지에 포함되는 부가 정보입니다. 
 - 이를 통해 클라이언트는 서버에게 자신이 선호하는 데이터 타입이나 기타 중요한 정보를 전달합니다.
-
-
 
 ### 3.1 기타 요청 헤더
 
@@ -284,10 +277,11 @@ Content-Length: 16
 - HTML에 `enctype` 속성을 따로 명시하지 않으면 기본적으로 `application/x-www-form-urlencoded` 가 선택된다
 
 ```html
+
 <form action="/" method="post" enctype="multipart/form-data">
-  <input type="text" name="description" value="some text">
-  <input type="file" name="myFile">
-  <button type="submit">Submit</button>
+    <input type="text" name="description" value="some text">
+    <input type="file" name="myFile">
+    <button type="submit">Submit</button>
 </form>
 ```
 

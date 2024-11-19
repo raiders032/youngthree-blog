@@ -1,12 +1,7 @@
-
-
 ## 1 OOP란?
-
-> 객체 지향 프로그래밍은 컴퓨터 프로그램을 명령어의 목록으로 보는 시각에서 벗어나 여러 개의 독립된 단위, 즉 "객체"들의 모임으로 파악하고자 하는 것이다. 각각의 객체는 메시지 를 주고받고, 데이터를 처리할 수 있다.
-
-- 객체 지향 프로그래밍은 프로그램을 **유연**하고 **변경**이 용이하게 만들기 때문에 대규모 소프 트웨어 개발에 많이 사용된다.
-
-
+- 객체 지향 프로그래밍은 컴퓨터 프로그램을 명령어의 목록으로 보는 시각에서 벗어나 여러 개의 독립된 단위, 즉 "객체"들의 모임으로 파악하고자 하는 것이다. 
+- 각각의 객체는 메시지 를 주고받고, 데이터를 처리할 수 있다.
+- 객체 지향 프로그래밍은 프로그램을 유연하고 변경이 용이하게 만들기 때문에 대규모 소프 트웨어 개발에 많이 사용된다.
 
 ## 2 OOP의 특성
 
@@ -18,25 +13,19 @@
 * composition
 * aggregation
 
-
-
 ## 3 Encapsulation
 
 * 객체의 상태가 외부로부터 숨겨진 상황에서 이 상태에 접근하는 일련의 공개 메서드만 노출하는 기법을 `캡슐화`라고 합니다.
 * 캡슐화는 객체의 상태를 비공개로 유지할 때 성립한다.
 * 캡슐화를 정보 은닉이라고 부른다.
 * 자바에서는 접근 제어자를 통해 캡슐화를 달성할 수 있다
-  * [Access-Modifier.md](../../../../../../../GoogleDrive/dev/TIL/Language/Java/Access-Modifier/Access-Modifier.md) 참고
-
-
+  * [Access-Modifier.md](/docs/Language/Java/Access-Modifier/Access-Modifier.md) 참고
 
 ### 2.1 캡슐화의 이점
 
 - 느스한 결합
 - 재사용성
 - 보안 및 테스트를 하기 쉬운 코드
-
-
 
 ## 4 Inheritance
 
@@ -48,21 +37,15 @@
 * 상속은 `IS-A` 관계라고 한다.
 * 상속된 객체는 `슈퍼클래스` 또는 `부모 클래스`라고 하고 상속 받는 객체는 `서브클래스` 또는 `자식 클래스`라고 한다.
 
-
-
 ### 4.1 상속의 이점
 
 * 코드 중복을 막는다
-
-
 
 ### 4.2 상속의 단점
 
 - 부모 클래스와 자식 클래스 간의 캡슐화를 깨뜨린다.
 - 꼭 필요한 경우에만 상속을 사용하고 컴포지션을 대안으로 사용하는 것이 좋다.
-  - [Item18.md](../../../../../../../GoogleDrive/dev/TIL/Language/Java/Effective-Java/Chapter4/Item18/Item18.md) 상속보다는 컴포지션을 사용하라 참조
-
-
+  - [Item18.md](/docs/Language/Java/Effective-Java/Chapter4/Item18/Item18.md) 상속보다는 컴포지션을 사용하라 참조
 
 ## 5 Polymorphism
 
@@ -70,10 +53,7 @@
 * 여러가지 서로 다른 타입의 객체를 어떠한 하나의 타입에 담을 수 있다는 것이다.
 * 따라서 한 타입으로 된 리스트에 다른 여러 타입의 객체를 담고 리스트의 원소에 모두 같은 지시를 내리면 다른 타입의 객체는 동작을 달리할 것이다.
   * 만약 절차적 언어 였다면 if 문을 사용해 각각 동작을 달리 했을 것이다.
-
 * 다형성은 컴파일 타임 다형성과 런타임 다형성 두 종류로 구분된다.
-
-
 
 ### 5.1 컴파일 타임 다형성
 
@@ -81,20 +61,14 @@
 - 메서드 오버로딩은 이름은 동일하지만 매개변수가 다른 메서드를 말한다.
 - 컴파일러가 오버로딩된 메서드 가운데 어떤 형식을 호출할지 컴파일 타임에 식별할 수 있으므로 `컴파일 타임 다형성`이라 부른다.
 
-
-
-> **주의점**
->
-> 객체지향 프로그래밍에서 다형성을 가장 중요한 개념으로 여기는 사람들이 있다. 특히 런타임 다형성을 유일한 다형성이라고 여기는 주장도 있다. 
-
-
+#### 주의점
+- 객체지향 프로그래밍에서 다형성을 가장 중요한 개념으로 여기는 사람들이 있다. 
+- 특히 런타임 다형성을 유일한 다형성이라고 여기는 주장도 있다. 
 
 ### 5.2 런타임 다형성
 
 * 어떤 함수 구현이 실행될지는 실행중에 결정된다.
 * 런타임 다형성은 상속 또는 인터페이스 구현으로 달성할 수 있다
-
-
 
 ### 5.3 런타임 다형성 예시
 
@@ -155,8 +129,6 @@ Draw a rectangle ...
 Draw a circle ...
 ```
 
-
-
 ## 6 Abstraction
 
 * 문헌에 따라 `데이터 추상화` 또는 `추상화` 라고 한다.
@@ -165,14 +137,10 @@ Draw a circle ...
 * 다형성을 얻기위해 추상화가 필요하다.
   * 추상클래스나 인터페이스를 사용해 추상화 하면 다형성을 사용할 수 있다.
 
-
-
-**추상화의 이점**
+#### 추상화의 이점
 
 - 클라이언트는 고수준의 공개 API만 알고 세부 구현 사항을 모르기 때문의 클라이언트와 서버 사이의 결합도가 낮아진다.
 - 결합도가 낮기 때문에 서버는 API를 그대로 두고 세부 구현 사항을 변경해도 클라이언트의 영향이 없다.
-
-
 
 ## 7 Association
 
@@ -183,8 +151,6 @@ Draw a circle ...
 * 두 클래스는 독집적인 자체 수명을 가진다.
 * 객체와 객체 사이에 **양방향** 또는 **단반향** 관계가 있다.
 
-
-
 ### 7.1 Association 예시
 
 - 한 명의 Person이 여러개의 Team와 연관될 수 있으며 하나의 Team가 여러개의 Person과 연관될 수 있다
@@ -192,9 +158,7 @@ Draw a circle ...
 - Person는 와 Team 없이 존재할 수 있고 Team도 Person 없이 존재할 수 있다.
 	- 독립적인 자체 수명을 가짐
 
-
-
-**Person 클래스**
+#### Person 클래스
 
 - Person 객체가 Team를 참조하여 메세지를 보낼 수 있다.
 
@@ -205,9 +169,7 @@ public class Person {
 }
 ```
 
-
-
-**Team 클래스**
+#### Team 클래스
 
 - Team 객체가 Person를 참조하여 메세지를 보낼 수 있다.
 
@@ -217,8 +179,6 @@ public class Team {
     private List<Person> people;
 }
 ```
-
-
 
 ## 8 Aggregation
 
@@ -231,8 +191,6 @@ public class Team {
 * 두 객체 사이에 소유 관계가 있으며 이를 `HAS-A` 관계가 있다라고 한다.
 * 두 객체는 자체 수명 주기를 가지고 있다.
 
-
-
 ### 8.1 Aggregation 예시
 
 - TennisPlayer는 Racket을 소유하고 있다.
@@ -240,9 +198,7 @@ public class Team {
 - TennisPlayer가 죽어도 Racket은 영향을 받지 않는다.
 	- 두 객체는 자체 수명 주기를 가지고 있다.
 
-
-
-TennisPlayer 클래스
+#### TennisPlayer 클래스
 
 ```java
 public class TennisPlayer {
@@ -272,9 +228,7 @@ public class TennisPlayer {
 }
 ```
 
-
-
-**Racket 클래스**
+#### Racket 클래스
 
 ```java
 public class Racket {
@@ -314,22 +268,17 @@ public class Racket {
 }
 ```
 
-
-
-**Main 클래스**
+#### Main 클래스
 
 ```java
 public class Main {
     public static void main(String[] args) {
         Racket racket = new Racket("Babolat Pure Aero", 100, 300);
         TennisPlayer player = new TennisPlayer("Rafael Nadal", racket);
-
         System.out.println("Player " + player.getName() + " plays with " + player.getRacket().getType());
     }
 }
 ```
-
-
 
 ## 9 Composition
 
@@ -338,16 +287,10 @@ public class Main {
 * Composition 관계의 부모 자식이 있으면 자식의 라이프사이클은 부모에 의해 관리된다.
 	* 자식을 생성하고 삭제하거나 자식을 책임질 다른 부모에게 넘겨주거나 
 
-
-
-
 ### 9.1 Composition 예시
-
 - Car가 파괴되면 Engine도 파괴된다고 했을 때 Car와 Engine은 Composition 관계입니다. 
 
-
-
-**Car 클래스**
+#### Car 클래스
 
 ```java
 public class Car {
@@ -371,9 +314,7 @@ public class Car {
 }
 ```
 
-
-
-**Engine 클래스**
+#### Engine 클래스
 
 ```java
 public class Engine {
@@ -403,21 +344,16 @@ public class Engine {
 }
 ```
 
-
-
-**Main 클래스**
+#### Main 클래스
 
 ```java
 public class Main {
     public static void main(String[] args) {
         Car car = new Car("MyCar");
-
         System.out.println("Horsepower: " + car.getHorsepower());
     }
 }
 ```
-
-
 
 ## 10 비교
 
@@ -430,8 +366,6 @@ public class Main {
 - 그림으로 나타내면 아래와 같다.
 
 ![relations](images/jNyV5.jpg)
-
-
 
 **참고**
 

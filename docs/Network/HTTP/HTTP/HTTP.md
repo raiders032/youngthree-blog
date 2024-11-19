@@ -1,8 +1,17 @@
+---
+title: HTTP
+description: HTTP(HyperText Transfer Protocol)의 기본 개념과 동작 방식, 메서드, 상태 코드에 대한 상세 설명
+tags: [HTTP, HTTPS, WEB, NETWORK, RESTFUL_API, BACKEND]
+keywords: [HTTP Method, Status Code, GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, Stateless, Connectionless, Client-Server, Safe Methods, Idempotent Methods, Cacheable Methods, Redirect]
+---
+
 ## 1 HTTP
 
-> 하이퍼텍스트 전송 프로토콜(HTTP)은 HTML과 같은 하이퍼미디어 문서를 전송하기위한 애플리케이션 레이어 프로토콜입니다. 웹 브라우저와 웹 서버간의 커뮤니케이션을위해 디자인되었지만, 다른 목적으로도 사용될 수 있습니다. HTTP는 클라이언트가 요청을 생성하기 위한 연결을 연다음 응답을 받을때 까지 대기하는 전통적인 클라이언트-서버 모델을 따릅니다. HTTP는 무상태 프로토콜이며, 이는 서버가 두 요청간에 어떠한 데이터(상태)도 유지하지 않음을 의미합니다. 일반적으로 안정적인 전송 레이어로 UDP와 달리 메세지를 잃지 않는 프로토콜인 TCP/IP 레이어를 기반으로 사용 합니다.
-
-
+- 하이퍼텍스트 전송 프로토콜(HTTP)은 HTML과 같은 하이퍼미디어 문서를 전송하기위한 애플리케이션 레이어 프로토콜입니다.
+- 웹 브라우저와 웹 서버간의 커뮤니케이션을위해 디자인되었지만, 다른 목적으로도 사용될 수 있습니다.
+- HTTP는 클라이언트가 요청을 생성하기 위한 연결을 연다음 응답을 받을때 까지 대기하는 전통적인 클라이언트-서버 모델을 따릅니다.
+- HTTP는 무상태 프로토콜이며, 이는 서버가 두 요청간에 어떠한 데이터(상태)도 유지하지 않음을 의미합니다.
+- 일반적으로 안정적인 전송 레이어로 UDP와 달리 메세지를 잃지 않는 프로토콜인 TCP/IP 레이어를 기반으로 사용 합니다.
 
 ### 1.1 클라이언트-서버
 
@@ -16,20 +25,18 @@
 
 * 통신 채널의 반대편에는 클라이언트에 의한 요청에 대한 문서를 *제공*하는 서버가 존재합니다
 
-
-
 ### 1.2 Stateless
-
-> HTTP는 **상태를 저장하지 않습니다(Stateless)**. 동일한 연결 상에서 연속하여 전달된 **두 개의 요청 사이에는 연결고리가 없습니다**. 이는 e-커머스 쇼핑 바구니처럼, 일관된 방식으로 사용자가 페이지와 상호작용하길 원할 때 문제가 됩니다. 하지만, HTTP의 핵심은 상태가 없는 것이지만 HTTP 쿠키는 상태가 있는 세션을 만들도록 해줍니다.
-> 헤더 확장성을 사용하여, 동일한 컨텍스트 또는 동일한 상태를 공유하기 위해 각각의 요청들에 세션을 만들도록 HTTP 쿠키가 추가됩니다.
+- HTTP는 **상태를 저장하지 않습니다(Stateless)**. 
+- 동일한 연결 상에서 연속하여 전달된 **두 개의 요청 사이에는 연결고리가 없습니다**. 
+- 이는 e-커머스 쇼핑 바구니처럼, 일관된 방식으로 사용자가 페이지와 상호작용하길 원할 때 문제가 됩니다. 
+- 하지만, HTTP의 핵심은 상태가 없는 것이지만 HTTP 쿠키는 상태가 있는 세션을 만들도록 해줍니다. 
+- 헤더 확장성을 사용하여, 동일한 컨텍스트 또는 동일한 상태를 공유하기 위해 각각의 요청들에 세션을 만들도록 HTTP 쿠키가 추가됩니다.
 
 * 서버가 클라이언트의 상태를 보존하지 않는다
 * 장점
 	* 서버 확장성(스케일 아웃)
 * 단점
 	* 클라이언트가 추가 데이터 전송(필요한 모든 정보를 요청에 담아야하기 때문)
-
-
 
 ### 1.3 Connectionless(비연결성)
 
@@ -47,8 +54,6 @@
 * 웹 브라우저로 사이트를 요청하면 HTML 뿐만 아니라 자바스크립트, css, 추가 이미지 등 수 많은 자원이 함께 다운로드
 * 지금은 HTTP 지속 연결(Persistent Connections)로 문제 해결
 * HTTP/2, HTTP/3에서 더 많은 최적화
-
-
 
 ## 2 HTTP Request Method(HTTP 요청 메서드)
 
@@ -78,8 +83,8 @@
 	* 서버가 아직 식별하지 않은 새 리소스 생성
 2. 요청 데이터 처리
 	* 단순히 데이터를 생성하거나, 변경하는 것을 넘어서 프로세스를 처리해야 하는 경우
-	* 예) 주문에서 결제완료 -> 배달시작 -> 배달완료 처럼 단순히 값 변경을 넘어 프로세스의 상태가 변경되는 경우 POST의 결과로 새로운 리소스가 생성되지 않을 수도 있음
-	* 예) POST /orders/{orderId}/start-delivery (컨트롤 URI)
+	* 예) 주문에서 결제완료 - 배달시작 - 배달완료 처럼 단순히 값 변경을 넘어 프로세스의 상태가 변경되는 경우 POST의 결과로 새로운 리소스가 생성되지 않을 수도 있음
+	* 예) POST `/orders/{orderId}/start-delivery` (컨트롤 URI)
 3. 다른 메서드로 처리하기 애매한 경우
 	* 예) JSON으로 조회 데이터를 넘겨야 하는데, GET 메서드를 사용하기 어려운 경우 애매하면 POST
 
@@ -89,8 +94,8 @@
 
 * [레퍼런스](https://httpwg.org/specs/rfc7231.html#rfc.section.4.3.4)
 * PUT 메서드는 타겟 리소스를 생성하거나 대체하는 메서드다.
-	* 타겟 리소스가 없으면 생성한다. -> `201` 응답
-	* 타겟 리소스가 있으면 요청에 명시된 상태로 대체한다. -> `200` 또는 `204` 응답
+	* 타겟 리소스가 없으면 생성한다: `201` 응답
+	* 타겟 리소스가 있으면 요청에 명시된 상태로 대체한다: `200` 또는 `204` 응답
 * 이와 달리 `PATCH` 메서드는 리소스의 부분만을 수정하는 데 쓰입니다.
 * 클라이언트가 리소스를 식별
 	* 클라이언트가 리소스 위치를 알고 URI 지정 
@@ -105,10 +110,7 @@
 | [Idempotent](https://developer.mozilla.org/en-US/docs/Glossary/Idempotent) | Yes  |
 | [Cacheable](https://developer.mozilla.org/en-US/docs/Glossary/Cacheable) | No   |
 | Allowed in [HTML forms](https://developer.mozilla.org/en-US/docs/Learn/Forms) | No   |
-
-> [레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT)
-
-
+- [레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PUT)
 
 ### 2.4 PATCH
 
@@ -129,7 +131,7 @@
 | [Cacheable](https://developer.mozilla.org/en-US/docs/Glossary/Cacheable) | No   |
 | Allowed in [HTML forms](https://developer.mozilla.org/en-US/docs/Learn/Forms) | No   |
 
-> [레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH)
+[레퍼런스](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/PATCH)
 
 
 
@@ -216,7 +218,6 @@
 * 거의 사용되지 않음
 
 
-
 ### 4.2 성공 응답(2XX)
 
 * 2xx (Successful): 요청 정상 처리
@@ -231,7 +232,6 @@
 * `PUT` 또는 `DELETE` 는 종종 성공적인 응답으로 `200 OK` 보다  `204 No Content` 을 많이 사용함
 
 
-
 `201 Created`
 
 * 요청이 성공적이었으며 그 결과로 새로운 리소스가 생성되었습니다. 
@@ -239,13 +239,11 @@
 * 생성된 리소스는 응답의 Location 헤더 필드로 식별합니다
 
 
-
 `202 Accepted`
 
 * 요청이 접수되었으나 처리가 완료되지 않았음
 * 배치 처리 같은 곳에서 사용한다.
 	* 예시) 요청 접수 후 1시간 뒤에 배치 프로세스가 요청을 처리한다
-
 
 
 `204 No Content`
