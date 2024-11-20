@@ -23,6 +23,8 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           tags: 'tags.yml',
+          showLastUpdateTime: false,
+          showLastUpdateAuthor: false,
         },
         blog: {
           showReadingTime: true,
@@ -34,6 +36,13 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+        },
+        sitemap: {
+          changefreq: 'monthly',
+          priority: 0.5,
+          ignorePatterns: ['/tags/**'],
+          filename: 'sitemap.xml',
+          lastmod: "date"
         },
         theme: {
           customCss: './src/css/custom.css',
