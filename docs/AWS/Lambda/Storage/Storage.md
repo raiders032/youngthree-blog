@@ -1,9 +1,16 @@
+---
+title: "Lambda Storage"
+description: "AWS Lambda 스토리지 완벽 가이드: EFS 마운팅부터 스토리지 옵션 비교까지: AWS Lambda의 다양한 스토리지 옵션을 상세히 알아봅니다. EFS 파일 시스템 마운팅 방법, 임시 스토리지, Lambda 계층, S3, EFS 등 각 스토리지 옵션의 특징과 활용 사례를 비교 분석하여 최적의 선택 기준을 제시합니다."
+tags: ["LAMBDA", "EFS", "S3", "LAYERS", "VPC", "SERVERLESS", "STORAGE", "AWS", "CLOUD"]
+keywords: ["AWS Lambda", "람다", "Lambda 스토리지", "EFS", "일래스틱 파일 시스템", "Elastic File System", "Lambda Layer", "람다 계층", "S3", "임시 스토리지", "tmp", "VPC", "서버리스", "serverless", "파일시스템", "file system", "스토리지", "storage", "Lambda 마운팅", "EFS 마운팅", "스토리지 옵션"]
+draft: false
+hide_title: true
+---
+
 ## 1 AWS Lambda의 스토리지
 
 - AWS Lambda는 서버리스 컴퓨팅 서비스로, 다양한 파일 시스템 및 스토리지 옵션을 제공합니다. 
 - 이번 글에서는 Lambda의 EFS 파일 시스템 마운팅 기능과 여러 스토리지 옵션에 대해 자세히 알아보겠습니다.
-
-
 
 ## 2 Lambda의 파일 시스템 마운팅
 
@@ -12,8 +19,6 @@
 - EFS 액세스 포인트를 활용해야 합니다.
 - 주의할 점: EFS 연결 제한(함수 인스턴스 하나당 연결 하나)과 연결 버스트 제한에 유의해야 합니다.
 
-
-
 ### 2.1 EFS 마운팅 구조
 
 - VPC 내에 Lambda 함수가 위치합니다.
@@ -21,19 +26,15 @@
 - EFS 액세스 포인트는 루트 경로("/")를 사용합니다.
 - EFS 파일 시스템은 모든 가용 영역의 Lambda 함수에서 접근 가능합니다.
 
-
-
 ## 3 Lambda의 스토리지 옵션
 
 - Lambda는 다양한 스토리지 옵션을 제공하며, 각각의 특성과 용도가 다릅니다. 
 - 주요 옵션은 다음과 같습니다:
 	- 임시 스토리지 (/tmp)
 	- Lambda 계층
-		- [[Layers]] 참고
+      - [Layers.md](../Layers/Layers.md) 참고
 	- Amazon S3
 	- Amazon EFS
-
-
 
 ### 3.1 스토리지 옵션 비교
 
@@ -49,16 +50,12 @@
 | Lambda에서의 상대적 데이터 접근 속도 | 가장 빠름          | 가장 빠름              | 빠름                 | 매우 빠름               |
 | 모든 호출에서 공유              | 아니오            | 예                  | 예                  | 예                   |
 
-
-
 ## 4 스토리지 옵션 선택 가이드
 
 - **임시 스토리지 (/tmp)**: 함수 실행 중 임시 파일이나 중간 결과를 저장할 때 사용합니다.
 - **Lambda 계층**: 공통 코드, 라이브러리, 정적 자산을 여러 함수에서 공유할 때 유용합니다.
 - **Amazon S3**: 대용량 데이터, 영구 저장이 필요한 객체, 버전 관리가 필요한 파일에 적합합니다.
 - **Amazon EFS**: 여러 Lambda 함수나 다른 AWS 서비스와 파일 시스템을 공유해야 할 때 사용합니다.
-
-
 
 ## 5 결론
 
