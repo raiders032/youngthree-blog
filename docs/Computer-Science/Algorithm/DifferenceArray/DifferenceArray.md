@@ -151,3 +151,4 @@ def update_range_brute(arr, left, right, value):
 
 ## 7. 추천 문제
 - [Programmers 파괴되지 않은 건물](https://school.programmers.co.kr/learn/courses/30/lessons/92344)
+  - [문제 풀이](../../../ProblemSolving/Programmers/92344.md)
