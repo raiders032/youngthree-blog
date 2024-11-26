@@ -1,0 +1,8 @@
+{
+  "label": "Test",
+  "link": {
+    "type": "generated-index",
+    "description": "Test",
+    "keywords": ["Test", "Unit Test", "Integration Test", "End-to-End Test", "E2E Test", "Test Suite"]
+  }
+}
