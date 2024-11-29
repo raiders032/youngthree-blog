@@ -25,6 +25,7 @@ const config: Config = {
           tags: 'tags.yml',
           showLastUpdateTime: false,
           showLastUpdateAuthor: false,
+          onInlineTags: 'ignore',
         },
         blog: {
           showReadingTime: true,
