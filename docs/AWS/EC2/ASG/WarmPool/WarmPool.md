@@ -1,12 +1,19 @@
+---
+title: "Warm Pool"
+description: "AWS EC2 Auto Scaling Warm Pool 완벽 가이드: EC2 Auto Scaling Warm Pool의 개념부터 구성 방법, 인스턴스 상태 관리, 제한사항까지 상세히 알아봅니다. 긴 부팅 시간을 가진 애플리케이션의 지연 시간을 효과적으로 줄이는 방법을 설명합니다."
+tags: ["WARM_POOL", "AUTO_SCALING", "EC2", "AWS", "CLOUD"]
+keywords: ["워밍풀", "warm pool", "warm-pool", "오토스케일링", "auto scaling", "autoscaling", "EC2", "AWS", "클라우드", "cloud", "인스턴스", "instance", "스케일아웃", "scale out", "하이버네이션", "hibernation", "라이프사이클훅", "lifecycle hook"]
+draft: false
+hide_title: true
+---
+
 ## 1 AWS EC2 Auto Scaling Warm Pool 이란?
 
-- Warm Pool은 EC2 Auto Scaling Group 옆에 위치하는 사전 초기화된 EC2 인스턴스 풀입니다.
+- Warm Pool은 EC2 Auto Scaling Group을 위해 사전 초기화된 EC2 인스턴스 풀입니다.
 - 애플리케이션이 스케일 아웃해야 할 때 Auto Scaling Group이 Warm Pool의 인스턴스를 활용할 수 있습니다.
+  - 새로운 인스턴스를 시작하는 대신 Warm Pool의 인스턴스를 사용하여 애플리케이션 트래픽을 빠르게 처리할 수 있습니다.
 - 인스턴스가 애플리케이션 트래픽을 빠르게 처리할 수 있도록 준비된 상태를 유지합니다.
 - 부팅 시간이 긴 애플리케이션의 지연 시간을 줄일 수 있습니다.
-- 애플리케이션 성능 향상을 위한 오버 프로비저닝이 필요하지 않습니다.
-
-
 
 ## 2 주의사항
 
@@ -15,18 +22,14 @@
 - 혼합 인스턴스 정책이 있는 Auto Scaling 그룹에는 Warm Pool을 추가할 수 없습니다.
 - Spot 인스턴스를 요청하는 시작 템플릿이나 시작 구성이 있는 Auto Scaling 그룹에도 추가할 수 없습니다.
 
-
-
-## 3 Warm Pool의 크기
+## 3 Warm Pool의 기본 크기
 
 - 기본적으로 Warm Pool의 크기는 Auto Scaling 그룹의 최대 용량과 원하는 용량의 차이로 계산됩니다.
 - 예시:
 	- Auto Scaling 그룹의 원하는 용량이 6이고 최대 용량이 10인 경우
 	- Warm Pool을 처음 설정하고 초기화할 때 Pool의 크기는 4가 됩니다.
 
-
-
-## 4 사용자 지정 최대 용량
+## 4 Warm Pool Size 설정
 
 - MaxGroupPreparedCapacity 옵션을 사용하여 Warm Pool의 최대 용량을 별도로 지정할 수 있습니다.
 - 그룹의 현재 용량보다 큰 사용자 지정 값을 설정해야 합니다.
@@ -38,8 +41,6 @@
 	- 사용자 지정 값이 8인 경우
 	- Warm Pool을 처음 설정하고 초기화할 때 Pool의 크기는 2가 됩니다.
 
-
-
 ## 5 Warm Pool 인스턴스 상태
 
 - Warm Pool의 인스턴스는 세 가지 상태 중 하나로 유지할 수 있습니다:
@@ -47,14 +48,10 @@
 	- Running
 	- Hibernated
 
-
-
 ### 5.1 Stopped 상태
 
 - 비용을 최소화하는 가장 효과적인 방법입니다.
 - 사용하는 볼륨과 인스턴스에 연결된 Elastic IP 주소에 대해서만 비용을 지불합니다.
-
-
 
 ### 5.2 Hibernated 상태
 
@@ -67,8 +64,6 @@
 	- EBS 볼륨 (RAM 내용 저장 포함)
 	- 인스턴스에 연결된 Elastic IP 주소에 대해서만 비용 지불
 
-
-
 ### 5.3 Running 상태
 
 - Warm Pool 내에서 인스턴스를 Running 상태로 유지하는 것도 가능합니다.
@@ -76,10 +71,36 @@
 - 인스턴스가 중지되거나 최대 절전 모드일 때는 인스턴스 자체 비용을 절약할 수 있습니다.
 - 인스턴스가 실행 중일 때만 비용을 지불합니다.
 
+### 5.4 상태별 비용 비교 예시 (m5.large 기준)
 
+- 예시 구성:
+	- 인스턴스 유형: m5.large
+	- EBS 볼륨: 10GB
+	- 기간: 30일
+
+#### Running 상태 비용
+- 인스턴스 비용: $0.096/시간 * 24시간 * 30일 = $69.12
+- EBS 볼륨 비용: $0.10/GB-월 * 10GB = $1.00
+- **총 비용: $70.12/월**
+
+#### Stopped 상태 비용
+- 인스턴스 비용: $0 (정지 상태)
+- EBS 볼륨 비용: $0.10/GB-월 * 10GB = $1.00
+- **총 비용: $1.00/월**
+
+#### Hibernated 상태 비용
+- 인스턴스 비용: $0 (최대 절전 모드)
+- EBS 볼륨 비용:
+	- 기본 볼륨: $0.10/GB-월 * 10GB = $1.00
+	- RAM 저장 추가 볼륨 (예: 8GB RAM): $0.10/GB-월 * 8GB = $0.80
+- **총 비용: $1.80/월**
+
+:::tip[비용 최적화 팁]
+위 비용 비교를 보면 Running 상태 대비 Stopped나 Hibernated 상태를 사용할 때 최대 98% 비용 절감이 가능합니다. 특별한 이유가 없다면 Stopped 상태 사용을 권장합니다.
+:::
 
 ## 6 Lifecycle Hooks
-
+ 
 - Lifecycle Hooks를 사용하여 인스턴스를 대기 상태로 둘 수 있습니다.
 - 인스턴스가 시작되거나 종료되기 전에 사용자 정의 작업을 수행할 수 있습니다.
 - Warm Pool 구성에서 Lifecycle Hooks는 다음과 같은 경우 인스턴스를 지연시킵니다:
@@ -90,8 +111,6 @@
 	- 중지되거나 최대 절전 모드로 전환될 수 있습니다.
 	- 스케일 아웃 이벤트 중에 서비스에 투입될 수 있습니다.
 
-
-
 ## 7 Instance Reuse Policy
 
 - 기본적으로 Auto Scaling 그룹이 축소될 때 Amazon EC2 Auto Scaling은 인스턴스를 종료합니다.
@@ -99,13 +118,6 @@
 - Instance Reuse Policy를 지정하면:
 	- 인스턴스를 Warm Pool로 반환할 수 있습니다.
 	- 애플리케이션 트래픽을 처리하도록 이미 구성된 인스턴스를 재사용할 수 있습니다.
-- Warm Pool이 과도하게 프로비저닝되지 않도록:
-	- Amazon EC2 Auto Scaling은 설정에 따라 필요 이상으로 클 때
-	- Warm Pool의 인스턴스를 종료할 수 있습니다.
-- Warm Pool의 인스턴스를 종료할 때는:
-	- 기본 종료 정책을 사용하여 먼저 종료할 인스턴스를 선택합니다.
-
-
 
 ## 8 인스턴스 업데이트
 
@@ -120,8 +132,6 @@
 	- 먼저 InService 인스턴스를 교체합니다.
 	- 그런 다음 Warm Pool의 인스턴스를 교체합니다.
 
-
-
 ## 9 제한 사항
 
 - 혼합 인스턴스 정책이 있는 Auto Scaling 그룹에는 Warm Pool을 추가할 수 없습니다.
@@ -133,8 +143,6 @@
 - Warm Pool 내의 인스턴스가 시작 프로세스 중에 문제가 발생하면:
 	- InService 상태에 도달하지 못하는 경우
 	- 인스턴스는 시작 실패로 간주되어 종료됩니다.
-
-
 
 ## 10 결론
 

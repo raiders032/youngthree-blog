@@ -1,3 +1,12 @@
+---
+title: "Termination Policy"
+description: "AWS Auto Scaling Group Termination Policy 완벽 가이드: AWS Auto Scaling Group의 Termination Policy를 상세히 알아봅니다. Default Termination Policy의 동작 방식부터 Predefined Termination Policies까지 실무에 필요한 모든 내용을 다룹니다. ASG 운영 시 최적의 Termination Policy 선택을 위한 실용적인 가이드입니다."
+tags: ["AWS", "EC2", "AUTO_SCALING", "CLOUD", "DEVOPS", "INFRASTRUCTURE"]
+keywords: ["AWS", "오토스케일링", "Auto Scaling", "ASG", "Auto Scaling Group", "Termination Policy", "종료 정책", "Scale In", "스케일인", "AWS EC2", "클라우드", "인프라", "데브옵스", "DevOps", "인프라 자동화", "AWS 자동화"]
+draft: false
+hide_title: true
+---
+
 ## 1 AWS Auto Scaling Group Termination Policy 개요
 
 - AWS Auto Scaling Group(ASG)은 인스턴스를 자동으로 확장하거나 축소하는 서비스입니다
