@@ -1,3 +1,12 @@
+---
+title: "Config"
+description: "AWS Config 완벽 가이드: 리소스 관리부터 규정 준수까지: AWS Config의 핵심 기능과 활용 방법을 상세히 설명합니다. 리소스 구성 관리, 규칙 설정, 자동 수정 기능을 통한 규정 준수 유지 방법과 실제 사용 사례를 다룹니다."
+tags: ["AWS_CONFIG", "AWS", "CLOUD", "DEVOPS", "IAM", "EC2", "S3", "SNS", "SECURITY", "AUTOMATION"]
+keywords: ["AWS Config", "AWS 설정", "리소스 관리", "규정 준수", "구성 관리", "클라우드 관리", "보안 설정", "자동화", "모니터링", "감사", "컨피그", "AWS 구성", "클라우드 거버넌스", "리소스 추적", "보안 규정", "컴플라이언스", "설정 변경 추적", "자동 수정", "AWS 모니터링", "클라우드 보안"]
+draft: false
+hide_title: true
+---
+
 ## 1 AWS Config 소개
 
 - AWS Config는 AWS 계정 내의 AWS 리소스 구성에 대한 상세한 뷰를 제공하는 서비스입니다.
@@ -80,23 +89,26 @@
 - AWS Config 규칙을 사용하여 AWS 리소스의 구성 설정을 평가할 수 있습니다.
 - AWS는 사용자 정의가 가능한 관리형 규칙을 제공합니다.
 - 규칙 평가 결과는 준수(COMPLIANT), 비준수(NON_COMPLIANT), 오류(ERROR), 해당 없음(NOT_APPLICABLE) 중 하나입니다.
+- 규칙의 종류는 아래와 같습니다.
+  - AWS Managed Rules: AWS에서 사전 정의하고 관리하는 규칙들입니다.
+  - Cutom Rules: AWS Lambda 함수를 사용하여 직접 정의하는 규칙입니다.
 
 
-
-### 3.1 사용자 정의 규칙
+### 3.1 사용자 정의 규칙(Cutom Rule)
 
 - AWS Lambda를 사용하여 사용자 정의 규칙을 만들 수 있습니다.
 - 예: EBS 디스크가 gp2 유형인지, EC2 인스턴스가 t2.micro 유형인지 평가
 
+### 3.2 AWS Managed Rules
 
+- AWS에서 사전 정의하고 관리하는 규칙들입니다.
+- [ManagedRule.md](../ManagedRule/ManagedRule.md) 참고
 
-### 3.2 규칙 평가 및 트리거
+### 3.3 규칙 평가 및 트리거
 
 - 규칙은 구성 변경 시 또는 정기적으로 평가될 수 있습니다.
 - AWS Config 규칙은 액션을 방지하지 않고, 규정 준수 여부만 평가합니다.
 - 규칙 평가에는 비용이 발생합니다.
-
-
 
 ## 4 규칙의 자동 수정 및 알림
 
