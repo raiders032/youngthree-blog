@@ -1,10 +1,17 @@
+---
+title: "Managed Rule(관리형 규칙)"
+description: "AWS Config의 관리형 규칙을 상세히 알아봅니다. 보안, 운영 효율성을 위한 주요 규칙들의 설정 방법과 모범 사례를 실제 예제와 함께 설명합니다. AWS 리소스의 규정 준수를 자동화하고 모니터링하는 방법을 배우실 수 있습니다."
+tags: ["AWS_CONFIG", "AWS", "EC2", "S3", "IAM", "CLOUD", "SECURITY", "DEVOPS"]
+keywords: ["AWS Config", "AWS 컨피그", "관리형 규칙", "managed rules", "AWS 보안", "AWS security", "규정 준수", "compliance", "리소스 모니터링", "resource monitoring", "클라우드 보안", "cloud security", "AWS 모니터링", "AWS monitoring", "보안 자동화", "security automation", "AWS 리소스 관리", "resource management", "AWS 감사", "AWS audit"]
+draft: false
+hide_title: true
+---
+
 ## 1 AWS Config와 관리형 규칙 소개
 
 - AWS Config는 AWS 리소스의 구성을 평가, 감사 및 평가할 수 있게 해주는 서비스입니다.
 - 관리형 규칙은 AWS가 사전 정의한 규칙으로, 일반적인 규정 준수 검사를 쉽게 구현할 수 있게 해줍니다.
 - 이러한 규칙들은 보안, 운영 효율성, 비용 최적화 등 다양한 측면을 다룹니다.
-
-
 
 ## 2 AWS Config 관리형 규칙의 장점
 
@@ -12,8 +19,6 @@
 - AWS 모범 사례를 기반으로 설계되었습니다.
 - 지속적인 업데이트와 유지보수를 AWS가 담당합니다.
 - 최소한의 설정으로 복잡한 규정 준수 검사를 구현할 수 있습니다.
-
-
 
 ## 3 주요 관리형 규칙 예시
 
@@ -24,15 +29,12 @@
 - **encrypted-volumes**: EBS 볼륨이 암호화되어 있는지 확인
 - **vpc-sg-open-only-to-authorized-ports**: 보안 그룹의 인바운드 규칙 검사
 
-
-
 ### 3.2 운영 효율성 관련 규칙
 
 - **required-tags**: 필수 태그가 리소스에 적용되어 있는지 확인
 - **ec2-instance-detailed-monitoring-enabled**: EC2 상세 모니터링 활성화 여부 확인
 - **cloudtrail-enabled**: CloudTrail 로깅이 활성화되어 있는지 확인
-
-
+- **ec2-instance-profile-attached**: EC2 인스턴스 프로필이 연결되어 있는지 확인
 
 ## 4 관리형 규칙 구성 방법
 
@@ -44,8 +46,6 @@
 4. 범위 설정 (모든 리소스 또는 특정 리소스)
 5. 교정 작업 설정 (선택 사항)
 
-
-
 ### 4.2 예시: S3 버킷 공개 액세스 모니터링 설정
 
 **AWS 콘솔에서 설정**
@@ -55,8 +55,6 @@
 3. 's3-bucket-public-read-prohibited' 규칙 선택
 4. 규칙 이름과 설명 입력
 5. SNS 알림 설정 (선택)
-
-
 
 **AWS CLI를 통한 설정**
 
@@ -78,8 +76,6 @@ aws configservice put-config-rule --config-rule '{
 - 위 명령은 S3 버킷의 공개 읽기 액세스를 금지하는 규칙을 생성합니다.
 - 규칙 위반 시 자동으로 비준수 상태로 표시됩니다.
 
-
-
 ## 5 알림 설정
 
 ### 5.1 SNS 주제 생성
@@ -87,8 +83,6 @@ aws configservice put-config-rule --config-rule '{
 ```bash
 aws sns create-topic --name config-rule-notifications
 ```
-
-
 
 ### 5.2 SNS 구독 설정
 
@@ -98,8 +92,6 @@ aws sns subscribe \
     --protocol email \
     --notification-endpoint your-email@example.com
 ```
-
-
 
 ### 5.3 Config 규칙에 SNS 연결
 
@@ -118,8 +110,6 @@ aws configservice put-config-rule --config-rule '{
     "ConfigRuleState": "ACTIVE"
 }'
 ```
-
-
 
 ## 6 자동 교정 설정
 
@@ -150,8 +140,6 @@ aws configservice put-config-rule --config-rule '{
 }
 ```
 
-
-
 ## 7 문제 해결 가이드
 
 ### 7.1 일반적인 문제
@@ -165,8 +153,6 @@ aws configservice put-config-rule --config-rule '{
 	- 이메일 구독이 확인되었는지 확인
 	- CloudWatch 로그에서 오류 확인
 
-
-
 ## 8 모범 사례
 
 - 필요한 규칙만 활성화하여 비용 최적화
@@ -174,8 +160,6 @@ aws configservice put-config-rule --config-rule '{
 - 중요한 규칙에 대해서만 알림 설정
 - 자동 교정 작업 설정 시 충분한 테스트 수행
 - 규칙 변경 사항을 문서화하고 추적
-
-
 
 ## 9 결론
 

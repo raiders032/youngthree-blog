@@ -290,3 +290,7 @@ def bfs(graph, start):
 - 큐를 이용하여 너비 우선 탐색을 수행합니다
 - 방문한 정점을 저장하는 visited 집합과 큐를 사용합니다
 - [BFS.md](../../Algorithm/BFS/BFS.md) 참고
+
+## 6 추천 문제
+- 연결 요소 찾기 문제
+  - [프로그래머스 네트워크](https://school.programmers.co.kr/learn/courses/30/lessons/43162?language=java)

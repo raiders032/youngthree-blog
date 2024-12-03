@@ -1,4 +1,13 @@
- # 1 DynamoDB 트랜잭션
+---
+title: "DynamoDB 트랜잭션"
+description: "DynamoDB 트랜잭션 완벽 가이드: Amazon DynamoDB의 트랜잭션 기능에 대해 상세히 알아봅니다. ACID 속성부터 실제 용량 계산까지, 트랜잭션을 활용한 안전한 데이터 처리 방법을 다룹니다. 금융 거래, 재고 관리 등 실제 사례를 통해 DynamoDB 트랜잭션의 활용법을 이해할 수 있습니다."
+tags: ["DYNAMODB", "AWS", "DATABASE", "TRANSACTION", "BACKEND"]
+keywords: ["다이나모디비", "dynamodb", "트랜잭션", "transaction", "디비", "aws", "아마존웹서비스", "데이터베이스", "nosql", "acid", "원자성", "일관성", "격리성", "지속성", "트랜잭셔널", "transactional"]
+draft: false
+hide_title: true
+---
+
+# 1 DynamoDB 트랜잭션
 
 - Amazon DynamoDB의 트랜잭션 기능은 여러 테이블에 걸친 복잡한 비즈니스 로직을 구현할 때 데이터의 일관성과 정확성을 보장하는 강력한 도구입니다. 
 - 이 기능을 통해 개발자는 여러 작업을 원자적으로 처리할 수 있어, 금융 거래나 재고 관리와 같은 중요한 애플리케이션을 더욱 안전하게 구축할 수 있습니다.

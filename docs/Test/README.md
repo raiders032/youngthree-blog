@@ -1,7 +1,7 @@
 ##  Test
 
 * [Code Coverage](Code-Coverage/Code-Coverage.md)
-* [Integration Testing](Integration-Testing/Integration-Testing.md)
+* [Integration Testing](Integration-Testing/Integration-Testing/Integration-Testing.md)
 * [JUnit](JUnit/JUnit.md)
 * [Mockito](Test/Mockito/Mockito.md)
 * [Test Code Snipet](Snipet/Snipet.md)
