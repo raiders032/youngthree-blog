@@ -57,6 +57,12 @@ const config: Config = {
       {name: 'keywords', content: '개발, 프로그래밍, 웹개발, 백엔드, 기술블로그'},
       {name: 'author', content: 'Young Three'},
     ],
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true
+      }
+    },
     navbar: {
       title: 'Young Three Blog',
       logo: {
