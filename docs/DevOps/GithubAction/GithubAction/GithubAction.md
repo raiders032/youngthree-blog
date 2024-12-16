@@ -128,6 +128,69 @@ on:
 - auto_merge_enabled
 - auto_merge_disabled
 
+#### 2.2.3 workflow_dispatch
+
+- [레퍼런스](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_dispatch)
+- GitHub UI 또는 REST API를 통해 수동으로 workflow를 실행할 수 있게 하는 이벤트입니다.
+- 실행 시 사용자로부터 입력값을 받아 워크플로우 내에서 활용할 수 있습니다
+
+##### 기본 사용법
+
+```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     # 로그 레벨 선택
+        required: true              # 필수 입력
+        default: 'warning'          # 기본값
+        type: choice               # 선택형 입력
+        options:                   # 선택 옵션
+          - info
+          - warning
+          - debug
+      tags:
+        description: 'Test scenario tags'  # 테스트 태그 활성화 여부
+        required: false                   # 선택적 입력
+        type: boolean                     # 불리언 타입
+      environment:
+        description: 'Environment to run tests against'  # 테스트 환경 선택
+        type: environment                               # 환경 선택 타입
+        required: true                                  # 필수 입력
+
+jobs:
+  log-the-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Log level: $LEVEL"
+          echo "Tags: $TAGS"
+          echo "Environment: $ENVIRONMENT"
+        env:
+          LEVEL: ${{ inputs.logLevel }}
+          TAGS: ${{ inputs.tags }}
+          ENVIRONMENT: ${{ inputs.environment }}
+```
+
+- 워크플로우 내에서 입력값은 inputs 컨텍스트를 통해 접근할 수 있습니다.
+  - 예: `${{ inputs.logLevel }}`, `${{ inputs.tags }}`
+
+##### 입력 타입
+
+- string: 문자열 입력 (기본값)
+- number: 숫자 입력
+- boolean: true/false 선택
+- choice: 미리 정의된 옵션 중 선택
+- environment: GitHub 환경 선택
+
+##### 입력 속성
+
+- description: 입력 필드에 대한 설명
+- required: 필수 입력 여부 (true/false)
+- default: 기본값 설정
+- type: 입력 타입 지정
+- options: choice 타입에서 사용할 선택 옵션들
+
 ### 2.3 jobs
 
 - workflow에서 실행할 잡들의 묶음
