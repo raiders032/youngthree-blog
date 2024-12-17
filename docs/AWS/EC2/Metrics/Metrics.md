@@ -31,8 +31,7 @@
 	- **StatusCheckFailed**: 인스턴스 상태 확인 실패 여부
 	- **StatusCheckFailed_Instance**: 인스턴스 레벨 상태 확인 실패 여부
 	- **StatusCheckFailed_System**: 시스템 레벨 상태 확인 실패 여부
-- [[StatusChecks]] 참고
-
+- [StatusChecks](../StatusChecks/StatusChecks.md) 참고
 
 
 ## 4 기본 메트릭의 해상도와 측정 주기
