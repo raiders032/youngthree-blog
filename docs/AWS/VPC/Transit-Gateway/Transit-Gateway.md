@@ -1,106 +1,108 @@
-## 1 AWS Transit Gateway
+---
+title: "Transit Gateway"
+description: "AWS Transit Gateway의 핵심 기능과 구성 방법을 상세히 알아봅니다. VPC간 효율적인 네트워크 연결 구성부터 주의해야 할 CIDR 설정까지, AWS 네트워크 아키텍처 설계에 필요한 모든 내용을 다룹니다."
+tags: ["API_GATEWAY", "AWS", "NETWORKING", "VPC", "CLOUD"]
+keywords: ["AWS Transit Gateway", "트랜짓 게이트웨이", "VPC", "CIDR", "네트워크", "클라우드", "AWS 네트워킹", "하이브리드 클라우드", "VPC 피어링", "네트워크 아키텍처"]
+draft: false
+hide_title: true
+---
 
-- AWS Transit Gateway는 수천 개의 VPC와 온프레미스 네트워크 간의 전이적 피어링(transitive peering)을 허용하여 허브 앤 스포크(hub-and-spoke) 또는 스타(star) 연결을 구성할 수 있는 서비스입니다.
-- 이 서비스는 네트워크 아키텍처를 간소화하고 중앙 집중식 관리가 가능하게 합니다.
-- AWS 리소스 간에 일관된 네트워크 연결을 제공하여 효율적인 데이터 흐름을 보장합니다.
+## 1. AWS Transit Gateway 개요
 
+- AWS Transit Gateway는 수천 개의 VPC와 온프레미스 네트워크를 중앙에서 연결하고 관리할 수 있게 해주는 네트워크 전이 허브입니다. 
+- 이 서비스를 통해 허브 앤 스포크(hub-and-spoke) 아키텍처를 구성할 수 있어 네트워크 관리가 크게 단순화됩니다.
 
+## 2. 사전 요구사항
 
-## 2 주요 특징
+:::warning[중요: CIDR 블록 설정]
 
-### 2.1 중앙 집중식 네트워크 관리
+Transit Gateway 구성 시 가장 중요한 전제조건은 VPC 간 CIDR 블록이 중복되지 않아야 한다는 것입니다. 동일한 CIDR 블록을 사용하는 VPC들 간에는 라우팅 테이블 업데이트가 불가능합니다.
+:::
 
-- AWS Transit Gateway를 사용하면 여러 VPC와 온프레미스 네트워크를 하나의 게이트웨이로 연결할 수 있습니다.
-- 이를 통해 네트워크 관리가 간소화되고, 중앙에서 모든 연결을 제어할 수 있습니다.
+- 각 VPC는 고유한 CIDR 블록을 가져야 함
+- AWS 계정 접근 권한
+- 적절한 IAM 권한 설정
+- 네트워크 구성에 대한 기본 이해
 
+## 3. 주요 특징
 
+### 3.1 중앙 집중식 네트워크 관리
 
-### 2.2 확장성
+- 단일 게이트웨이로 모든 VPC와 온프레미스 네트워크 연결 관리
+- 네트워크 정책의 중앙 집중식 적용 가능
+- 관리 오버헤드 감소
 
-- AWS Transit Gateway는 대규모 네트워크 환경에서 쉽게 확장할 수 있는 구조를 제공합니다.
-- 새로운 VPC나 온프레미스 네트워크를 추가하는 것이 용이하며, 트래픽을 효율적으로 라우팅할 수 있습니다.
+### 3.2 확장성과 유연성
 
+- 수천 개의 VPC 연결 지원
+- 온디맨드 방식의 네트워크 확장 가능
+- 다양한 연결 옵션 제공 (VPC, VPN, Direct Connect)
 
+### 3.3 비용 최적화
 
-### 2.3 비용 절감
+- 개별 연결 대비 비용 효율적
+- 사용량 기반 과금 체계
+- 중복 리소스 제거로 인한 비용 절감
 
-- 여러 개의 VPC와 온프레미스 네트워크를 각각 연결하는 대신, AWS Transit Gateway를 통해 중앙에서 연결하면 비용을 절감할 수 있습니다.
-- 관리 비용과 네트워크 설정 비용이 줄어들어 효율적인 운영이 가능합니다.
-
-
-
-### 2.4 보안 및 정책 관리
-
-- AWS Transit Gateway는 트래픽을 중앙에서 모니터링하고 관리할 수 있어 보안이 강화됩니다.
-- 보안 정책을 중앙에서 적용할 수 있어 네트워크 보안이 일관성 있게 유지됩니다.
-
-
-
-## 3 사용 사례
-
-### 3.1 하이브리드 클라우드 아키텍처
-
-- 온프레미스 데이터 센터와 여러 AWS VPC를 연결하여 하이브리드 클라우드 환경을 구축할 수 있습니다.
-- 이는 데이터 센터의 자원과 클라우드 자원을 효율적으로 활용하는 데 도움이 됩니다.
-
-
-
-### 3.2 글로벌 네트워크 확장
-
-- AWS Transit Gateway를 사용하면 여러 리전의 VPC를 연결하여 글로벌 네트워크를 쉽게 확장할 수 있습니다.
-- 전 세계에 분산된 리소스를 하나의 중앙 게이트웨이로 관리할 수 있습니다.
-
-
-
-### 3.3 멀티 VPC 연결
-
-- 여러 부서나 팀이 각각의 VPC를 사용하면서도, 중앙 게이트웨이를 통해 서로 연결할 수 있습니다.
-- 이는 각 팀의 독립성을 유지하면서도, 필요시 중앙에서 쉽게 관리하고 연결할 수 있는 장점을 제공합니다.
-
-
-
-### 3.4 리전 간 연결 (Cross-Region Peering)
-
-- AWS Transit Gateway는 리전 간 연결을 지원하여 여러 리전에 걸친 VPC를 효율적으로 연결할 수 있습니다.
-- 이를 통해 전 세계에 분산된 리소스를 하나의 중앙 허브에서 관리할 수 있으며, 글로벌 네트워크 아키텍처를 쉽게 확장할 수 있습니다.
-- 리전 간 연결을 설정하려면 각 리전의 Transit Gateway를 생성하고, Cross-Region Peering 연결을 구성합니다.
-- 이 연결을 통해 각 리전의 VPC와의 통신을 가능하게 하며, 트래픽을 최적화된 경로로 라우팅할 수 있습니다.
-- Cross-Region Peering은 AWS 글로벌 인프라를 활용하여 낮은 지연 시간과 높은 성능을 제공합니다.
-
-
-
-## 4 구성 및 설정
+## 4. 구성 프로세스
 
 ### 4.1 Transit Gateway 생성
 
-- AWS Management Console에서 AWS Transit Gateway를 생성합니다.
-- 네트워크 아키텍처에 맞게 설정을 조정하고, 필요한 경우 각 VPC 및 온프레미스 네트워크와 연결합니다.
+:::info[CIDR 설정 확인]
 
+Transit Gateway 생성 전, 연결할 모든 VPC의 CIDR 블록이 겹치지 않는지 반드시 확인하세요.
+:::
 
+#### 기본 설정
+```bash
+aws ec2 create-transit-gateway \
+    --description "My Transit Gateway" \
+    --options "Amazon ASN=64512,AutoAcceptSharedAttachments=enable,DefaultRouteTableAssociation=enable,DefaultRouteTablePropagation=enable,VpnEcmpSupport=enable,DnsSupport=enable"
+```
 
-### 4.2 연결 설정
+### 4.2 VPC 연결 구성
 
-- 각 VPC 및 온프레미스 네트워크와의 연결을 설정합니다.
-- 이를 통해 중앙에서 모든 네트워크를 통합적으로 관리할 수 있습니다.
+- Transit Gateway Attachment 생성
+- 라우팅 테이블 업데이트
+- 보안 그룹 설정
 
+### 4.3 라우팅 설정
 
+:::danger[주의사항]
 
-### 4.3 라우팅 테이블 구성
+중복되는 CIDR 블록이 있는 경우:
+1. VPC CIDR 블록 재설정
+2. 서브넷 구조 재설계
+3. IP 주소 할당 계획 수립
+   :::
 
-- 트래픽을 효율적으로 라우팅하기 위해 AWS Transit Gateway의 라우팅 테이블을 구성합니다.
-- 라우팅 테이블을 통해 각 네트워크 간의 트래픽 흐름을 제어할 수 있습니다.
+## 5. 모범 사례
 
+- 네트워크 세분화를 위한 라우팅 테이블 분리
+- 적절한 모니터링 및 로깅 설정
+- 정기적인 네트워크 감사 수행
+- CIDR 블록 계획 수립
 
+## 6. 문제 해결
 
-## 5 장점 및 결론
+### 6.1 일반적인 문제
 
-- AWS Transit Gateway는 대규모 네트워크 환경을 중앙에서 관리하고 확장할 수 있는 강력한 도구입니다.
-- 이를 통해 네트워크 관리가 간소화되고 비용이 절감되며, 보안과 확장성이 향상됩니다.
-- 특히 하이브리드 클라우드 아키텍처나 글로벌 네트워크를 구축하는 데 매우 유용한 솔루션입니다.
+- CIDR 블록 중복
+- 라우팅 테이블 구성 오류
+- 연결 제한 초과
 
+### 6.2 해결 방안
 
+- VPC CIDR 재설계
+- 네트워크 구성 검토
+- AWS Support 활용
 
-**참고 자료**
+## 7. 결론
+
+AWS Transit Gateway는 복잡한 네트워크 환경을 효율적으로 관리할 수 있게 해주는 강력한 서비스입니다. 하지만 성공적인 구현을 위해서는 CIDR 블록 설계부터 신중하게 접근해야 합니다.
+
+## 참고 자료
 
 - [AWS Transit Gateway 공식 문서](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html)
 - [AWS Transit Gateway 설정 가이드](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-how-it-works.html)
+- [VPC CIDR 설계 가이드](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)

@@ -17,7 +17,7 @@
 
 ### 1.2 Lambda Versions 사용 방법
 
-![[Pasted image 20240815154529.png]]
+![Pasted image 20240815154529.png](images/Pasted%20image%2020240815154529.png)
 
 - 개발 시에는 $LATEST 버전에서 작업합니다.
 - 함수를 배포할 준비가 되면, 현재 $LATEST의 스냅샷을 새 버전으로 게시합니다.

@@ -40,8 +40,8 @@ hide_title: true
 
 - EC2 인스턴스는 생성부터 종료까지 여러 상태를 거치게 됩니다:
 	- **Pending**: 초기 시작 상태
-	- **Pending:Wait**: Lifecycle Hook에 의한 대기
-	- **Pending:Proceed**: 시작 진행
+	- **Pending:Wait**: Lifecycle Hook 작동
+	- **Pending:Proceed**: Lifecycle Hook 완료
 	- **InService**: 서비스 중
 	- **Terminating**: 종료 시작
 	- **Terminating:Wait**: 종료 전 대기
@@ -53,12 +53,10 @@ hide_title: true
 1. **시작 트리거**
 	- Auto Scaling 그룹이 스케일 아웃 이벤트 감지
 	- 새로운 인스턴스 시작 프로세스 시작
-
 2. **Pending:Wait 상태**
 	- Lifecycle Hook 작동
 	- 인스턴스가 대기 상태로 전환
 	- 사용자 정의 작업 수행 (최대 1시간)
-
 3. **InService 전환**
 	- 작업 완료 후 Pending:Proceed 상태로 전환
 	- 로드 밸런서 등록 (사용 시)
@@ -70,12 +68,10 @@ hide_title: true
 	- Auto Scaling 그룹이 스케일 인 이벤트 감지
 	- 로드 밸런서에서 인스턴스 제거
 	- Connection Draining 수행
-
 2. **Terminating:Wait 상태**
 	- Lifecycle Hook 작동
 	- 종료 전 대기 상태 진입
 	- 백업, 로그 수집 등 정리 작업 수행
-
 3. **최종 종료**
 	- 모든 작업 완료 후 Terminating:Proceed
 	- 인스턴스 종료 및 리소스 정리
@@ -88,7 +84,6 @@ hide_title: true
 	- 필요한 소프트웨어 설치
 	- 환경 설정 적용
 	- 데이터 초기화
-
 - **보안 설정**
 	- 보안 패치 적용
 	- 인증서 설치
@@ -100,7 +95,6 @@ hide_title: true
 	- 중요 데이터 백업
 	- 임시 파일 정리
 	- 세션 정보 저장
-
 - **리소스 정리**
 	- 연결된 리소스 해제
 	- 로그 파일 수집
@@ -138,12 +132,10 @@ aws autoscaling put-lifecycle-hook \
 	- 적절한 타임아웃 값 설정
 	- 하트비트를 통한 시간 연장
 	- 작업 실패 시 대체 로직 구현
-
 - **오류 처리**
 	- 실패 시나리오 대비
 	- 롤백 메커니즘 구현
 	- 상세한 로깅 설정
-
 - **모니터링**
 	- CloudWatch 메트릭 설정
 	- 알림 구성
