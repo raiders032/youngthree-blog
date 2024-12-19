@@ -1,5 +1,5 @@
 ---
-title: "깊이 우선 탐색(DFS) 완벽 가이드: 개념부터 구현까지"
+title: "DFS"
 description: "깊이 우선 탐색(DFS) 알고리즘의 동작 원리와 구현 방법을 상세히 알아봅니다. 재귀와 스택을 활용한 구현 방법, 실제 코딩 테스트 문제 해결 전략까지 다룹니다. 그래프와 트리 탐색의 기초를 다지고 싶은 개발자를 위한 실용적인 가이드입니다."
 tags: ["DFS", "ALGORITHM", "DATA_STRUCTURE", "RECURSION", "PYTHON", "CODING_TEST"]
 keywords: ["깊이우선탐색", "depth first search", "DFS", "디에프에스", "깊이 우선 탐색", "그래프탐색", "graph traversal", "재귀", "recursion", "스택", "stack", "알고리즘", "algorithm", "자료구조", "data structure", "코딩테스트", "coding test"]

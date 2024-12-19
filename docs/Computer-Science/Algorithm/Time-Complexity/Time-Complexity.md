@@ -1,5 +1,5 @@
 ---
-title: "Big O 표기법 완벽 가이드"
+title: "시간 복잡도"
 description: "Big O 표기법의 개념부터 실전 활용까지 상세히 알아봅니다. 시간 복잡도와 공간 복잡도를 이해하고 알고리즘의 효율성을 분석하는 방법을 배워보세요. 초보자를 위한 실용적인 예제와 함께 설명합니다."
 date: 2024-11-19
 tags: [BIG_O, TIME_COMPLEXITY, ALGORITHM, DATA_STRUCTURE, CODING_TEST]

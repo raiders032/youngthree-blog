@@ -1,5 +1,5 @@
 ---
-title: "BFS(너비 우선 탐색) 완벽 가이드 - 개념부터 구현까지"
+title: "BFS"
 description: "BFS(Breadth First Search) 알고리즘의 개념, 동작 원리, 구현 방법을 상세히 알아봅니다. 큐를 활용한 구현 방법과 시간 복잡도 분석을 통해 BFS의 효율성을 이해하고, 실제 문제 해결에 적용하는 방법을 설명합니다."
 tags: ["ALGORITHM", "DATA_STRUCTURE", "BFS", "PYTHON", "CODING_TEST"]
 keywords: ["BFS", "너비 우선 탐색", "그래프 탐색", "알고리즘", "큐", "최단경로", "그래프 순회"]

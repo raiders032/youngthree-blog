@@ -1,5 +1,5 @@
 ---
-title: "이진 탐색과 파라메트릭 서치의 원리와 구현"
+title: "이진 탐색과 파라메트릭 서치"
 description: "이진 탐색의 근간이 되는 단조성의 개념부터 파라메트릭 서치까지, 실전에서 활용 가능한 내용을 상세히 다룹니다. off-by-one 에러를 방지하는 전략과 Lower/Upper Bound의 구현 방법을 초보자도 이해할 수 있게 설명합니다."
 tags: ["ALGORITHM", "BINARY_SEARCH", "DATA_STRUCTURE", "CODING_TEST", "PYTHON"]
 keywords: ["이진탐색", "binary search", "이분탐색", "파라메트릭서치", "parametric search", "단조성", "monotonicity", "로우어바운드", "lower bound", "어퍼바운드", "upper bound", "알고리즘", "algorithm"]
