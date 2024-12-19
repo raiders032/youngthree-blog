@@ -28,6 +28,7 @@ hide_title: true
 - **iam-password-policy**: IAM 암호 정책이 지정된 요구 사항을 충족하는지 확인
 - **encrypted-volumes**: EBS 볼륨이 암호화되어 있는지 확인
 - **vpc-sg-open-only-to-authorized-ports**: 보안 그룹의 인바운드 규칙 검사
+- **restricted-ssh**: security group에 SSH 액세스 제한 했는지 확인
 
 ### 3.2 운영 효율성 관련 규칙
 
@@ -112,6 +113,9 @@ aws configservice put-config-rule --config-rule '{
 ```
 
 ## 6 자동 교정 설정
+
+- 규칙 위반 시 자동으로 교정 작업을 수행할 수 있습니다.
+- 교정 작업은 SSM Automation 문서를 사용하여 정의됩니다.
 
 ### 6.1 교정 작업 정의
 
