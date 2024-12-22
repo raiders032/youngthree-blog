@@ -12,7 +12,7 @@
   * 프로세스 간 통신(IPC)를 통해 프로세스 집합은 서로 통신한다.
 
 * 프로세스는 독립적이기 때문에 하나의 프로세스에서 오류가 발생해도 다른 프로세스에 영향을 미치지 않는다
-* [Process.md](../../../Computer-Science/OS/Process/Process.md)
+* [Process.md](../../../ComputerScience/OS/Process/Process.md)
 
 
 
@@ -27,7 +27,7 @@
   * 스레드는 메모리 및 열린 파일을 포함하여 프로세스의 리소스를 공유합니다. 
     * 이로 인해 효율적이지만 잠재적으로 동시성 문제가 발생할 수 있다.
 
-* [Threads.md](../../../Computer-Science/OS/Threads/Threads.md)
+* [Threads.md](../../../ComputerScience/OS/Threads/Threads.md)
 
 
 

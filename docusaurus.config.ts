@@ -80,6 +80,12 @@ const config: Config = {
         {to: '/blog', label: 'Blog', position: 'left'},
         {to: '/docs/tags', label: 'Tag', position: 'left'},
         {
+          type: 'docSidebar',
+          sidebarId: 'portfolioSidebar',
+          position: 'left',
+          label: 'Portfolio',
+        },
+        {
           href: 'https://github.com/raiders032',
           label: 'GitHub',
           position: 'right',

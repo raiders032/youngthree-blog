@@ -15,7 +15,7 @@
 - 인덱스는 자료구조를 이용해 디스크 접근 횟수를 줄여 조회 성능을 최적화한다.
 - 최근에는 하드 디스크보다 SSD 드라이브가 많이 활용되고 있지만, 여전히 데이터 저장 매체는 컴퓨터에서 가장 느린 부분이다.
 - 따라서 데이터베이스의 성능 튜닝은 어떻게 디스크 I/O를 줄이느냐가 관건이다.
-- [Mass-Storage-Structure.md](../../Computer-Science/OS/Mass-Storage-Structure/Mass-Storage-Structure.md) 디스크의 구조 참고
+- [Mass-Storage-Structure.md](../../ComputerScience/OS/Mass-Storage-Structure/Mass-Storage-Structure.md) 디스크의 구조 참고
 
 
 

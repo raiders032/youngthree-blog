@@ -42,7 +42,7 @@
   * 원소를 해시 테이블에 저장
   * 원소의 순서를 보장하지 않는다.
   * 가장 성능이 좋은 구현체
-  * [Hash-Table.md](../../../../Computer-Science/Data-Structure/Hash-Table/Hash-Table.md)
+  * [Hash-Table.md](../../../../ComputerScience/DataStructure/HashTable/HashTable)
   
 * [TreeSet](#3-TreeSet-Class)
   * 원소를 red-black tree에 저장한다.

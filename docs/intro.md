@@ -11,13 +11,13 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
 이 기술 문서는 다음과 같은 주제들을 다룹니다:
 
 - Computer Science
-  - Data Structure
-  - Algorithm
+  - [Data Structure](ComputerScience/DataStructure/index.md)
+  - [Algorithm](ComputerScience/Algorithm/index.md)
   - Operating System
   - Network
   - Database
 - Language
-  - Java
+  - [Java](Language/Java/index.md)
   - Kotlin
 - Cloud
   - AWS

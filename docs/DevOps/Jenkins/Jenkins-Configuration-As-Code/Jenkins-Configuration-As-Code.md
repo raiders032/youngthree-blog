@@ -188,7 +188,7 @@ workflow-cps:latest
  ```bash
  $ docker cp jenkins:/var/jenkins_home/jobs/defaultJob/config.xml defaultJob.xml
  $ ls
- Dockerfile      README.md       build           build.gradle    defaultJob.xml  gradle          gradlew         gradlew.bat     plugins.txt     settings.gradle
+ Dockerfile      index.md       build           build.gradle    defaultJob.xml  gradle          gradlew         gradlew.bat     plugins.txt     settings.gradle
  ```
 
 
@@ -369,7 +369,7 @@ COPY defaultJob.xml /usr/share/jenkins/ref/jobs/default-job/config.xml
 
 ````bash
 $ ls
-Dockerfile      README.md       build           build.gradle    casc.yml        defaultJob.xml  gradle          gradlew         gradlew.bat     plugins.txt     seedJob.groovy  settings.gradle
+Dockerfile      index.md       build           build.gradle    casc.yml        defaultJob.xml  gradle          gradlew         gradlew.bat     plugins.txt     seedJob.groovy  settings.gradle
 ````
 
 - 이제 최종 젠킨스 이미지를 빌드하고 컨테이너를 실행시킨다.
