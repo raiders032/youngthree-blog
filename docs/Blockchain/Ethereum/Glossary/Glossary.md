@@ -157,7 +157,7 @@
 
 ### Stale Block
 
-<img src="./images/stale-block.png" alt="image-20211103171645657" style="zoom:50%;" />
+![image-20211103171645657](./images/stale-block.png)
 
 * 블록생성에 성공하였고, 검증 작업시, 오류가 없어서 네트워크를 통해 전파되었으나, 더 빨리 전파 된 다른 채굴자에 의한 블록에 순위가 밀리는 바람에 주체인에 산입되지 못한 블록이다.
 * 이더리움과 같은 짧은 블록 생성 주기(15초)를 가지는 블록체인에서는 스테일 블록이 생성될 확률이 높다.
@@ -275,7 +275,7 @@
 
 ## Ethash
 
-<img src="./images/ethash.png" alt="image-20211103162956109" style="zoom:50%;" />
+![image-20211103162956109](./images/ethash.png)
 
 * 이더리움은 이더해시(Ethash)라는 작업증명 알고리즘을 사용하여 채굴할 수 있다.
 * 이더리움은 비트코인과 같은 작업증명(PoW) 방식의 합의 알고리즘을 사용하고 있고 있지만, 기존 비트코인의 SHA-256 방식을 사용하지 않고, Hashimoto/Dagger hybrid인 이더해시(Ethash) 방식을 사용한다.
@@ -374,7 +374,7 @@
 
 ## Merkle-Patricia Tree
 
-<img src="./images/merkle.png" alt="image-20211103164512521" style="zoom:50%;" />
+![image-20211103164512521](./images/merkle.png)
 
 * 머클 트리와의 차이점
   * 머클 트리를 수정한 트리로써, 각 노드가 하나의 해시값을 가지고 있는 것이 아니라 해시값 중 한 글자만 가지고 있는 트리. 트리를 탐색함으로써 전체 해시값을 얻게 된다.
