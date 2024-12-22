@@ -2,7 +2,7 @@
 title: "Database Migration Service (DMS)"
 descriptio n: "AWS Database Migration Service (DMS) 완벽 가이드: AWS Database Migration Service(DMS)의 핵심 기능과 활용 방법을 상세히 알아봅니다. 데이터베이스 마이그레이션의 기본 개념부터 실시간 복제, 보안 설정까지 실무에 필요한 모든 내용을 다룹니다."
 tags: ["DMS", "RDS", "EC2", "AWS", "DATABASE", "CLOUD"]
-keywords: ["AWS DMS", "Database Migration Service", "디엠에스", "데이터베이스 마이그레이션", "AWS 데이터베이스", "AWS 마이그레이션", "AWS DB 이전", "AWS 디비 이전", "데이터베이스 이전", "데이터베이스 복제", "실시간 복제", "CDC", "Change Data Capture", "온프레미스", "클라우드 마이그레이션"]
+keywords: ["AWS DMS", "Database Migration Service", "디엠에스", "데이터베이스 마이그레이션", "AWS 데이터베이스", "AWS 마이그레이션", "AWS Database 이전", "AWS 디비 이전", "데이터베이스 이전", "데이터베이스 복제", "실시간 복제", "CDC", "Change Data Capture", "온프레미스", "클라우드 마이그레이션"]
 draft: false
 hide_title: true
 ---

@@ -112,7 +112,7 @@ $ watch "crictl ps | grep etcd"
 - env: DB=mysql
 
 ```bash
-$ kubectl run eshop-main --image nginx:1.17 -n ecommerce --env=DB=mysql
+$ kubectl run eshop-main --image nginx:1.17 -n ecommerce --env=Database=mysql
 ```
 
 
