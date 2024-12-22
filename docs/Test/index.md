@@ -1,5 +1,4 @@
 ##  Test
-
 * [Code Coverage](Code-Coverage/Code-Coverage.md)
 * [Integration Testing](Integration-Testing/Integration-Testing/Integration-Testing.md)
 * [JUnit](JUnit/JUnit.md)
@@ -14,8 +13,5 @@
 * [Unit Testing](Unit-Testing/README.md)
 * [WireMock](WireMock/WireMock.md)
 
-
-
 참고자료
-
 * [단위 테스트](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791161755748)

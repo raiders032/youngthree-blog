@@ -4,8 +4,6 @@
 - [Kubectl CLI](Kubectl-CLI/Kubectl-CLI.md)
 - [Helm](Helm/Helm.md)
 
- 
-
 ---
 
 * [Affinity](Affinity/Affinity.md)
@@ -53,10 +51,7 @@
 * [Volume](Volumes/Volumes.md)
   * emptyDir, hostPath
 
-
-
 참고
-
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
 * [쿠버네티스 인 액션](https://product.kyobobook.co.kr/detail/S000001804912)
 * [쿠버네티스 완벽 가이드](http://www.yes24.com/Product/Goods/102847901)
