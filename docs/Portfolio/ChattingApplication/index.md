@@ -118,9 +118,7 @@ hide_title: true
 - Auto Scaling 정책 최적화
 
 ## 8. 프로젝트 링크
-- [서비스 URL](https://chatchat.example.com)
-- [프로젝트 시연 영상](https://youtube.com/...)
-- [GitHub Repository](https://github.com/...)
+- [서비스 URL](https://www.streetcoder.club)
 
 ## 9. 실행 화면
 [스크린샷 및 설명]
