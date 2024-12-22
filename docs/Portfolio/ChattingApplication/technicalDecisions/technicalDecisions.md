@@ -1,8 +1,8 @@
 # 기술적 의사결정 목록
 
 ## 아키텍처 설계
-- 실시간 채팅 시스템에서 HTTP Long Polling, Server-Sent Events, WebSocket 중 어떤 프로토콜이 최적의 선택일까?
-- 다중 서버 환경에서 WebSocket 세션을 안정적으로 유지하면서 어떻게 시스템 확장성을 확보할 수 있을까?
+- [실시간 채팅 시스템에서 HTTP Long Polling, Server-Sent Events, WebSocket 중 어떤 프로토콜이 최적의 선택일까?](choosing-realtime-chat-protocol.md)
+- [다중 서버 환경에서 WebSocket 세션을 안정적으로 유지하면서 어떻게 시스템 확장성을 확보할 수 있을까?](scaling-stateful-websocket-servers.md)
 - 채팅 애플리케이션의 특성을 고려했을 때, 전통적인 RDB와 NoSQL 중 어떤 데이터베이스 아키텍처가 더 적합할까?
 - 메시지의 발신자 정보를 임베딩할지 참조할지 결정하는데 있어서, 실시간 업데이트와 조회 성능 중 어떤 것을 우선시해야 할까?
 
