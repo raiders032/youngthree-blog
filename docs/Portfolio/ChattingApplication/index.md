@@ -43,6 +43,7 @@ sidebar_position: 1
 - Infrastructure as Code를 통한 리소스 관리 자동화
 - CI/CD 파이프라인 구축
 - 컨테이너 기반 마이크로서비스 아키텍처 구현
+- 개발 환경 생성 및 제거 자동화 시스템 구축(업무 시간에만 개발 환경 운영)
 
 ## 3. 기술 스택
 
@@ -53,17 +54,35 @@ sidebar_position: 1
 - **Message Protocol**: WebSocket, HTTP API
 
 ### 3.2 DevOps (단독 구현)
-- **Infrastructure**: AWS (ECS, DocumentDB, ElastiCache, ALB, Route 53, ACM)
-- **IaC**: AWS CloudFormation
-- **Container**: Docker, AWS ECS
-- **CI/CD**: GitHub Actions, AWS ECR
-- **Monitoring**: AWS CloudWatch
+- **Infrastructure**
+  - AWS ECS (컨테이너 오케스트레이션)
+  - AWS DocumentDB (데이터베이스)
+  - AWS ElastiCache (Redis 캐싱 및 Message Broker)
+  - AWS ALB (로드밸런싱)
+  - AWS Route 53 (DNS 관리)
+  - AWS ACM (인증서 관리)
+  - AWS EventBridge (환경 스케줄링)
+  - AWS Step Functions (워크플로우 관리)
+  - AWS Lambda (이벤트 처리)
+  - AWS S3 (채팅 첨부파일 및 미디어 저장소)
+  - AWS Secrets Manager (데이터베이스 자격증명 관리)
+  - AWS Parameter Store (환경 설정 관리)
+- **IaC**
+  - AWS CloudFormation(인프라스트럭처 코드화)
+- **Container**
+  - Docker(컨테이너 이미지 빌드)
+  - AWS ECS(컨테이너 관리)
+- **CI/CD**
+  - GitHub Actions(자동화된 빌드/배포)
+  - AWS ECR(컨테이너 이미지 저장소)
+- **Monitoring**
+  - AWS CloudWatch(로그 수집 및 모니터링)
 
 ## 4. 주요 개발 포인트
 
 ### 4.1 DevOps 환경 구축 (단독 수행)
-- CloudFormation을 활용한 인프라스트럭처 자동화
-- 네트워크, 데이터베이스, 로드밸런서, ECS 클러스터 등 모든 리소스의 코드화
+- AWS CloudFormation을 활용한 인프라스트럭처 자동화
+- 네트워크, 데이터베이스, 로드밸런서, ECS 클러스터 등 모든 AWS 리소스의 코드화
 - 멀티 스택 구조를 통한 체계적인 리소스 관리
 - GitHub Actions를 활용한 CI/CD 파이프라인 구축
 - 모듈별 자동 빌드 및 테스트
@@ -73,6 +92,7 @@ sidebar_position: 1
 - 서비스별 독립적인 스케일링 및 배포 가능한 구조
 - 로드밸런서를 통한 트래픽 분산
 - DNS 기반 서비스 라우팅
+- AWS EventBridge와 AWS Step Functions를 활용한 개발 환경 자동 시작/종료 구현
 
 ### 4.2 고성능 데이터 처리
 - 비동기 프로그래밍 모델 적용
@@ -101,22 +121,6 @@ sidebar_position: 1
 ## 7. 프로젝트 고민거리 및 해결과정
 - 프로젝트를 진행하면서 마주친 다양한 기술적 도전 과제들과 그 해결 과정을 정리했습니다.
 - 이러한 기술적 고민들과 해결 과정에 대한 상세 내용은 [기술적 의사결정 및 문제해결 과정](./technicalDecisions/technicalDecisions)에서 확인하실 수 있습니다.
-
-### 7.1 아키텍처 설계
-- WebSocket vs HTTP Long Polling 등 실시간 통신 프로토콜 선택
-- Stateful한 WebSocket 서버의 수평 확장 전략
-- 채팅 시스템에 최적화된 데이터베이스 아키텍처 설계
-- 사용자 프로필 정보의 임베딩 vs 참조 결정
-
-### 7.2 성능 최적화
-- 대규모 채팅방의 실시간 읽음 처리 최적화
-- 효율적인 메시지 식별자 전략 (UUID vs Sequential ID)
-- HTTP API와 WebSocket 이벤트의 역할 분담
-
-### 7.3 인프라 자동화
-- CloudFormation을 활용한 멀티 스택 아키텍처 구현
-- GitHub Actions와 CloudFormation의 통합 전략
-- Auto Scaling 정책 최적화
 
 ## 8. 프로젝트 링크
 - [서비스 URL](https://www.streetcoder.club)
