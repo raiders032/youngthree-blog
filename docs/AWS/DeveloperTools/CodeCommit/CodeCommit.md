@@ -75,8 +75,8 @@ aws codecommit create-repository --repository-name MyDemoRepo --repository-descr
 ```bash
 git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/MyDemoRepo
     cd MyDemoRepo
-    echo "Hello, CodeCommit!" > index.md
-    git add index.md
+    echo "Hello, CodeCommit!" > technicalDecisions.md
+    git add technicalDecisions.md
     git commit -m "Initial commit"
     git push origin master
 ```

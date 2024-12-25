@@ -99,7 +99,7 @@ hide_title: true
 
 ## 7. 프로젝트 고민거리 및 해결과정
 - 프로젝트를 진행하면서 마주친 다양한 기술적 도전 과제들과 그 해결 과정을 정리했습니다.
-- 이러한 기술적 고민들과 해결 과정에 대한 상세 내용은 [기술적 의사결정 및 문제해결 과정](./technicalDecisions/technicalDecisions.md)에서 확인하실 수 있습니다.
+- 이러한 기술적 고민들과 해결 과정에 대한 상세 내용은 [기술적 의사결정 및 문제해결 과정](./technicalDecisions/technicalDecisions)에서 확인하실 수 있습니다.
 
 ### 7.1 아키텍처 설계
 - WebSocket vs HTTP Long Polling 등 실시간 통신 프로토콜 선택
