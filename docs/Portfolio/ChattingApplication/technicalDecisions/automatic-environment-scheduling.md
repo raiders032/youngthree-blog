@@ -14,9 +14,7 @@ hide_title: true
   - 환경 시작/중지를 수동으로 관리해야 하는 운영상의 부담
   - 일관성 없는 리소스 관리로 인한 비효율
 
-### 1.2 AWS CloudFormation 스택 구조
-- 현재 시스템은 다음과 같은 중첩 스택 구조로 이루어져 있습니다
-
+### 1.2 현재 AWS CloudFormation 스택 구조
 ```
 ChatAppMasterStack
 ├── NetworkStack (VPC, 서브넷, 보안그룹 등)
@@ -25,6 +23,7 @@ ChatAppMasterStack
 ├── ECSClusterStack (ECS 클러스터, EC2 인스턴스)
 └── ServerStack (ECS 서비스, 작업 정의)
 ```
+- 현재 시스템은 다음과 같은 중첩 스택 구조로 이루어져 있습니다
 - 이 구조에서는 마스터 스택을 생성하거나 삭제하면 모든 중첩 스택이 자동으로 함께 생성되거나 삭제됩니다. 
 - 이러한 특성을 활용하여 환경 전체를 한 번에 관리할 수 있습니다.
 
@@ -48,11 +47,13 @@ ChatAppMasterStack
 - 절감 가능 금액: $119.90 (약 75% 절감)
 
 ## 2. 해결 방안
+- 개발/스테이징 환경의 비용을 최적화하기 위해 다음과 같은 자동화 시스템을 구축합니다.
+- 자동화 시스템은 AWS 서비스를 활용해 환경 시작/중지 프로세스를 자동화하고, Discord로 알림을 전송합니다.
 
 ### 2.1 시스템 구성 요소
 - **EventBridge**: 정해진 시간에 자동으로 Step Functions를 실행합니다.
 - **Step Functions**: 환경 생성/삭제 과정을 조율합니다.
-  - 총 2개의 상태 머신을 사용해 환경 시작/중지 프로세스를 구현합니다.
+  - 총 2개의 상태 머신을 사용해 환경 시작/중지와 관련된 복잡한 프로세스를 구현합니다.
   - EnvironmentStartStateMachine: 개발 환경을 시작하는 프로세스
   - EnvironmentStopStateMachine: 개발 환경을 중지하는 프로세스
 - **Lambda Functions**: 세부 작업 수행 (ECR 태그 조회, Discord 알림 등)
@@ -65,62 +66,61 @@ ChatAppMasterStack
 **환경 시작 프로세스 (오전 9시)**:
 1. EventBridge가 Start Step Function 실행
 2. Step Function이 다음 작업 순차 실행:
-  - 기존 스택 존재 여부 확인
-  - ECR에서 최신 이미지 태그 조회
-  - ChatAppMasterStack 생성
-  - 진행 상황 Discord 알림
+   - 기존 스택 존재 여부 확인
+   - ECR에서 최신 이미지 태그 조회
+   - ChatAppMasterStack 생성
+   - 진행 상황 Discord 알림
 
 **환경 중지 프로세스 (오후 6시)**:
 1. EventBridge가 Stop Step Function 실행
 2. Step Function이 다음 작업 순차 실행:
-  - 스택 상태 확인
-  - ChatAppMasterStack 삭제
-  - 진행 상황 Discord 알림
+   - 스택 상태 확인
+   - ChatAppMasterStack 삭제
+   - 진행 상황 Discord 알림
 
 ## 3. 상세 구현
+- 자동화 시스템의 구성 요소는 AWS CloudFormation을 사용해 정의합니다.
+- 자동화 시스템의 핵심인 EventBridge, Step Functions, Lambda Functions에 대해서만 구현 방법을 소개합니다.
 
 ### 3.1 EventBridge 스케줄러 구현
+- 먼저 EventBridge 스케줄러를 정의합니다.
+- `StartEnvironmentRule`과 `StopEnvironmentRule`을 생성하여 평일 오전 9시와 오후 6시에 Step Functions을 실행하도록 설정합니다.
+- 이때, Step Functions은 환경 시작/중지 프로세스를 실행합니다.
 
-infrastructure-scheduler.yaml에서 정의된 주요 컴포넌트:
-
-**IAM 역할 구성**:
+**AWS CloudFormation 템플릿**
 ```yaml
-# CloudFormation 실행 역할
-CloudFormationServiceRole:
-  Type: AWS::IAM::Role
-  Properties:
-    AssumeRolePolicyDocument:
-      Version: '2012-10-17'
-      Statement:
-        - Effect: Allow
-          Principal:
-            Service: cloudformation.amazonaws.com
-          Action: sts:AssumeRole
-    ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/AdministratorAccess
+  SchedulerStartRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: 'EventBridge rule to start development environment at 9 AM'
+      ScheduleExpression: 'cron(0 0 ? * MON-FRI *)'
+      State: ENABLED
+      Targets:
+        - Arn: !Ref EnvironmentStartStateMachine
+          Id: "StartDevelopmentEnvironment"
+          RoleArn: !GetAtt EventBridgeRole.Arn
 
-# Lambda 실행 역할
-LambdaRole:
-  Type: AWS::IAM::Role
-  Properties:
-    AssumeRolePolicyDocument:
-      Statement:
-        - Effect: Allow
-          Principal:
-            Service: lambda.amazonaws.com
-          Action: sts:AssumeRole
-    Policies:
-      - PolicyName: ECRAccess
-        PolicyDocument:
-          Statement:
-            - Effect: Allow
-              Action: 
-                - ecr:DescribeImages
-                - ecr:ListImages
-              Resource: '*'
+  SchedulerStopRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: 'EventBridge rule to stop development environment at 6 PM'
+      ScheduleExpression: 'cron(0 9 ? * MON-FRI *)'
+      State: ENABLED
+      Targets:
+        - Arn: !Ref EnvironmentStopStateMachine
+          Id: "StopDevelopmentEnvironment"
+          RoleArn: !GetAtt EventBridgeRole.Arn
+
 ```
+- `ScheduleExpression`을 사용해 스케줄을 정의합니다.
+- `Targets`에 실행할 Step Functions을 지정합니다.
 
-**Lambda 함수 구현**:
+### 3.2 Lambda Functions 구현
+- `GetECRTagsFunction`과 `SendDiscordNotificationFunction`을 정의합니다.
+- `GetECRTagsFunction`: ECR에서 최신 이미지 태그를 조회하는 함수
+- `SendDiscordNotificationFunction`: Discord로 알림을 전송하는 함수
+
+**AWS CloudFormation 템플릿**
 ```yaml
   GetECRTagsFunction:
     Type: AWS::Lambda::Function
@@ -132,7 +132,7 @@ LambdaRole:
         ZipFile: |
           import boto3
           import json
-
+          
           def handler(event, context):
               ecr = boto3.client('ecr')
               try:
@@ -142,33 +142,28 @@ LambdaRole:
                           'tagStatus': 'TAGGED'
                       }
                   )
-
+          
                   if not response.get('imageDetails'):
                       raise Exception("No tagged images found in repository chat-chat-http")
-
+          
                   # Sort by image pushed time to get the most recent
                   sorted_images = sorted(
                       response['imageDetails'],
                       key=lambda x: x['imagePushedAt'],
                       reverse=True
                   )
-
+          
                   tag = sorted_images[0]['imageTags'][0]
                   return {
                       'APIServerImageTag': tag,
                       'ChatServerImageTag': tag,
                       'NotificationServerImageTag': tag
                   }
-
+          
               except Exception as e:
                   print(f"Error fetching tags: {str(e)}")
                   raise Exception(f"Failed to get valid tag: {str(e)}")
-```
-- ECR에서 태드 된 이미지를 조회하고, 최신 이미지 태그를 반환합니다.
-- 모듈의 버전은 통일되어 있으므로, 모든 서버에 동일한 이미지 태그를 사용합니다.
-  - 따라서 대표적으로 http 모듈의 이미지 태그를 사용합니다.
 
-```yaml
   SendDiscordNotificationFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -197,132 +192,425 @@ LambdaRole:
               resp = http.request('POST', webhook_url, body=encoded_msg, 
                                   headers={'Content-Type': 'application/json'})
               return {"status_code": resp.status}
-      Environment:
-        Variables:
-          DISCORD_WEBHOOK_URL: !Ref DiscordWebhookUrl
 ```
-- Discord Webhook URL을 사용해 Discord 채널로 알림을 전송합니다.
+- `GetECRTagsFunction`은 ECR에서 이미지 태그를 조회하는 함수입니다.
+  - `describe_images` 메서드를 사용해 chat-chat-http 리포지토리의 태그된 이미지를 조회합니다.
+  - 가장 최신 이미지를 선택하여 반환합니다.
+  - 각 모듈은 같은 이미지 태그를 사용하므로 대표적으로 하나의 태그만 사용했습니다.
+- `SendDiscordNotificationFunction`은 Discord로 알림을 전송하는 함수입니다.
+  - Discord Webhook URL을 환경 변수로부터 읽어와 알림 메시지를 전송합니다.
+  - `title`, `description`, `color` 등의 파라미터를 받아 사용자 정의 메시지를 전송합니다.
+  - Step Functions에서 상황에 맞는 메시지를 전송하기 위해 사용됩니다.
 
+### 3.3 Step Functions 구현
+- `EnvironmentStartStateMachine`과 `EnvironmentStopStateMachine`을 정의합니다.
+- `EnvironmentStartStateMachine`: 개발 환경 시작 프로세스 정의
+- `EnvironmentStopStateMachine`: 개발 환경 중지 프로세스 정의
 
-**Step Functions 상태 머신 구성**:
-```json
-{
-  "StartAt": "NotifyWorkflowStart",
-  "States": {
-    "NotifyWorkflowStart": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::lambda:invoke",
-      "Parameters": {
-        "FunctionName": "${SendDiscordNotificationFunction.Arn}",
-        "Payload": {
-          "title": "환경 시작 프로세스 시작",
-          "description": "개발 환경 구성을 시작합니다...",
-          "color": 3447003
-        }
-      },
-      "Next": "CheckStackExists"
-    },
-    "CheckStackExists": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::aws-sdk:cloudformation:describeStacks",
-      "Parameters": {
-        "StackName": "ChatAppMasterStack"
-      },
-      "Next": "EvaluateStackStatus",
-      "Catch": [
+#### 3.2.1 EnvironmentStartStateMachine
+- 개발 환경 시작 프로세스를 정의합니다.
+- 환경 시작 전에 기존 스택이 존재하는지 확인하고, ECR에서 이미지 태그를 조회한 후 스택을 생성합니다.
+- 이미 스택이 존재하거나 스택 생성이 진행 중인 경우 알림을 전송하고 프로세스를 종료합니다.
+
+**AWS CloudFormation 템플릿**
+```yaml
+  EnvironmentStartStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: !GetAtt StepFunctionsRole.Arn
+      DefinitionString:
+        !Sub |
         {
-          "ErrorEquals": ["CloudFormation.ValidationError"],
-          "Next": "GetECRTags"
+          "Comment": "Development Environment Start Workflow",
+          "StartAt": "NotifyWorkflowStart",
+          "TimeoutSeconds": 3600,
+          "States": {
+            "NotifyWorkflowStart": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Development Environment Startup Initiated",
+                  "description": "Starting ChatApp infrastructure deployment process...",
+                  "color": 3447003
+                }
+              },
+              "Next": "CheckStackExists"
+            },
+            "CheckStackExists": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:cloudformation:describeStacks",
+              "Parameters": {
+                "StackName": "ChatAppMasterStack"
+              },
+              "ResultPath": "$.stackInfo",
+              "Next": "EvaluateInitialStackStatus",
+              "Catch": [
+                {
+                  "ErrorEquals": ["CloudFormation.CloudFormationException"],
+                  "ResultPath": "$.error",
+                  "Next": "GetECRTags"
+                }
+              ]
+            },
+            "EvaluateInitialStackStatus": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Variable": "$.stackInfo.Stacks[0].StackStatus",
+                  "StringMatches": "*_COMPLETE",
+                  "Next": "NotifyStackAlreadyExists"
+                },
+                {
+                  "Variable": "$.stackInfo.Stacks[0].StackStatus",
+                  "StringMatches": "*_IN_PROGRESS",
+                  "Next": "NotifyStackInProgress"
+                }
+              ],
+              "Default": "GetECRTags"
+            },
+            "NotifyStackInProgress": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Environment Start Failed",
+                  "description": "Stack operation already in progress. Please wait for it to complete.",
+                  "color": 15158332
+                }
+              },
+              "End": true
+            },
+            "NotifyStackAlreadyExists": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Environment Start Skipped",
+                  "description": "ChatApp infrastructure is already running",
+                  "color": 3447003
+                }
+              },
+              "End": true
+            },
+            "GetECRTags": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${GetECRTagsFunction.Arn}",
+                "Payload.$": "$"
+              },
+              "ResultPath": "$.imageTags",
+              "Next": "CreateStack",
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ]
+            },
+            "CreateStack": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:cloudformation:createStack",
+              "Parameters": {
+                "StackName": "ChatAppMasterStack",
+                "RoleARN": "${CloudFormationServiceRole.Arn}",
+                "TemplateURL": "https://${S3BucketName}.s3.amazonaws.com/${S3KeyPrefix}master-stack.yaml",
+                "Parameters": [
+                  {
+                    "ParameterKey": "APIServerImageTag",
+                    "ParameterValue.$": "$.imageTags.Payload.APIServerImageTag"
+                  },
+                  {
+                    "ParameterKey": "ChatServerImageTag",
+                    "ParameterValue.$": "$.imageTags.Payload.ChatServerImageTag"
+                  },
+                  {
+                    "ParameterKey": "NotificationServerImageTag",
+                    "ParameterValue.$": "$.imageTags.Payload.NotificationServerImageTag"
+                  }
+                ],
+                "Capabilities": [
+                  "CAPABILITY_IAM",
+                  "CAPABILITY_NAMED_IAM"
+                ]
+              },
+              "Next": "WaitForStackOperation",
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ]
+            },
+            "WaitForStackOperation": {
+              "Type": "Wait",
+              "Seconds": 60,
+              "Next": "CheckStackDeployment"
+            },
+            "CheckStackDeployment": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:cloudformation:describeStacks",
+              "Parameters": {
+                "StackName": "ChatAppMasterStack"
+              },
+              "ResultPath": "$.deploymentCheck",
+              "Next": "EvaluateDeploymentStatus",
+              "Catch": [
+                {
+                  "ErrorEquals": ["CloudFormation.CloudFormationException"],
+                  "ResultPath": "$.error",
+                  "Next": "SendFailureNotification"
+                }
+              ]
+            },
+            "EvaluateDeploymentStatus": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Variable": "$.deploymentCheck.Stacks[0].StackStatus",
+                  "StringEquals": "CREATE_COMPLETE",
+                  "Next": "SendSuccessNotification"
+                },
+                {
+                  "Variable": "$.deploymentCheck.Stacks[0].StackStatus",
+                  "StringMatches": "*_IN_PROGRESS",
+                  "Next": "WaitForStackOperation"
+                }
+              ],
+              "Default": "SendFailureNotification"
+            },
+            "SendSuccessNotification": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Development Environment Started",
+                  "description": "ChatApp infrastructure deployed successfully",
+                  "color": 3066993
+                }
+              },
+              "End": true
+            },
+            "SendFailureNotification": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Infrastructure Deployment Failed",
+                  "description.$": "$.error.Cause",
+                  "color": 15158332
+                }
+              },
+              "End": true
+            }
+          }
         }
-      ]
-    }
-    // ... 이하 생략
-  }
-}
 ```
+- `NotifyWorkflowStart`: 개발 환경 시작을 알리는 Discord 알림을 전송합니다.
+- `CheckStackExists`: ChatAppMasterStack이 이미 존재하는지 확인합니다.
+  - 존재하면 `EvaluateInitialStackStatus`로 이동합니다. 
+  - 존재하지 않으면 `GetECRTags`로 이동합니다. 
+- `EvaluateInitialStackStatus`: ChatAppMasterStack의 상태를 확인합니다.
+    - `*_COMPLETE` 상태이면 `NotifyStackAlreadyExists`로 이동합니다. 
+    - `*_IN_PROGRESS` 상태이면 `NotifyStackInProgress`로 이동합니다.
+- `GetECRTags`: ECR에서 최신 이미지 태그를 조회합니다.
+- `CreateStack`: ChatAppMasterStack을 생성합니다.
+- `WaitForStackOperation`: 스택 생성 작업이 완료될 때까지 60초 대기합니다.
+- `CheckStackDeployment`: 스택 생성 상태를 확인합니다.
+- `EvaluateDeploymentStatus`: 스택 생성 상태를 평가합니다.
+  - `CREATE_COMPLETE` 상태이면 `SendSuccessNotification`으로 이동합니다.
+  - `*_IN_PROGRESS` 상태이면 `WaitForStackOperation`으로 이동합니다.
 
-### 3.2 프론트엔드 구현
+#### 3.2.2 EnvironmentStopStateMachine
+- 개발 환경 중지 프로세스를 정의합니다.
+- `EnvironmentStopStateMachine`은 `EnvironmentStartStateMachine`과 유사한 구조를 가집니다.
+- 중지 프로세스를 수행하고, Discord로 알림을 전송합니다.
 
-프론트엔드에서는 백엔드 상태를 주기적으로 확인하고, 상태에 따라 적절한 화면을 표시합니다:
-
-```typescript
-// 백엔드 상태 확인 훅
-const useBackendStatus = () => {
-  const [isAvailable, setIsAvailable] = useState(true);
-  const [retryCount, setRetryCount] = useState(0);
-  
-  useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const response = await fetch('https://api.streetcoder.club/actuator/health');
-        const data = await response.json();
-        
-        if (data.status === 'UP') {
-          setIsAvailable(true);
-          setRetryCount(0);
-        } else {
-          handleBackendDown();
+**AWS CloudFormation 템플릿**
+```yaml
+  EnvironmentStopStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: !GetAtt StepFunctionsRole.Arn
+      DefinitionString:
+        !Sub |
+        {
+          "Comment": "Development Environment Stop Workflow",
+          "StartAt": "NotifyWorkflowStart",
+          "TimeoutSeconds": 3600,
+          "States": {
+            "NotifyWorkflowStart": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Development Environment Shutdown Initiated",
+                  "description": "Starting ChatApp infrastructure shutdown process...",
+                  "color": 3447003
+                }
+              },
+              "Next": "CheckStackExists"
+            },
+            "CheckStackExists": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:cloudformation:describeStacks",
+              "Parameters": {
+                "StackName": "ChatAppMasterStack"
+              },
+              "ResultPath": "$.stackInfo",
+              "Next": "EvaluateStackStatus",
+              "Catch": [
+                {
+                  "ErrorEquals": ["CloudFormation.CloudFormationException"],
+                  "ResultPath": "$.error",
+                  "Next": "NotifyStackNotExists"
+                }
+              ]
+            },
+            "EvaluateStackStatus": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Variable": "$.stackInfo.Stacks[0].StackStatus",
+                  "StringMatches": "*_IN_PROGRESS",
+                  "Next": "NotifyStackInProgress"
+                }
+              ],
+              "Default": "DeleteStack"
+            },
+            "NotifyStackInProgress": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Environment Stop Failed",
+                  "description": "Stack operation already in progress. Please wait for it to complete.",
+                  "color": 15158332
+                }
+              },
+              "End": true
+            },
+            "NotifyStackNotExists": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Environment Stop Skipped",
+                  "description.$": "$.error.Cause",
+                  "color": 3447003
+                }
+              },
+              "End": true
+            },
+            "DeleteStack": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:cloudformation:deleteStack",
+              "Parameters": {
+                "StackName": "ChatAppMasterStack",
+                "RoleARN": "${CloudFormationServiceRole.Arn}"
+              },
+              "Next": "WaitForStackOperation",
+              "Retry": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "IntervalSeconds": 30,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2.0
+                }
+              ]
+            },
+            "WaitForStackOperation": {
+              "Type": "Wait",
+              "Seconds": 60,
+              "Next": "CheckStackDeletion"
+            },
+            "CheckStackDeletion": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:cloudformation:describeStacks",
+              "Parameters": {
+                "StackName": "ChatAppMasterStack"
+              },
+              "ResultPath": "$.deletionCheck",
+              "Next": "EvaluateDeletionStatus",
+              "Catch": [
+                {
+                  "ErrorEquals": ["CloudFormation.CloudFormationException"],
+                  "ResultPath": "$.error",
+                  "Next": "SendSuccessNotification"
+                }
+              ]
+            },
+            "EvaluateDeletionStatus": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Variable": "$.deletionCheck.Stacks[0].StackStatus",
+                  "StringEquals": "DELETE_COMPLETE",
+                  "Next": "SendSuccessNotification"
+                },
+                {
+                  "Variable": "$.deletionCheck.Stacks[0].StackStatus",
+                  "StringMatches": "*_IN_PROGRESS",
+                  "Next": "WaitForStackOperation"
+                }
+              ],
+              "Default": "SendFailureNotification"
+            },
+            "SendSuccessNotification": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Development Environment Stopped",
+                  "description": "ChatApp infrastructure deleted successfully",
+                  "color": 3066993
+                }
+              },
+              "End": true
+            },
+            "SendFailureNotification": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${SendDiscordNotificationFunction.Arn}",
+                "Payload": {
+                  "title": "Infrastructure Deletion Failed",
+                  "description.$": "$.deletionCheck.Stacks[0].StackStatus",
+                  "color": 15158332
+                }
+              },
+              "End": true
+            }
+          }
         }
-      } catch (error) {
-        handleBackendDown();
-      }
-    };
-
-    const handleBackendDown = () => {
-      setIsAvailable(false);
-      
-      // 3번까지만 재시도
-      if (retryCount < 3) {
-        setTimeout(() => {
-          setRetryCount(prev => prev + 1);
-        }, 5000);
-      }
-    };
-
-    // 30초마다 상태 체크
-    const interval = setInterval(checkHealth, 30000);
-    return () => clearInterval(interval);
-  }, [retryCount]);
-
-  return isAvailable;
-};
-
-// 애플리케이션 컨테이너
-const AppContainer = () => {
-  const isBackendAvailable = useBackendStatus();
-
-  if (!isBackendAvailable) {
-    return (
-      <MaintenancePage
-        startTime="오전 9시"
-        contactEmail="support@streetcoder.club"
-      />
-    );
-  }
-
-  return <MainApplication />;
-};
-
-// 유지보수 페이지 컴포넌트
-const MaintenancePage = ({ startTime, contactEmail }) => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="text-center max-w-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          시스템 점검 중
-        </h1>
-        <p className="text-gray-600 mb-4">
-          현재 시스템 정기 점검이 진행 중입니다.
-          {startTime}에 서비스가 재개될 예정입니다.
-        </p>
-        <p className="text-sm text-gray-500">
-          문의사항: {contactEmail}
-        </p>
-      </div>
-    </div>
-  );
-};
 ```
+- `NotifyWorkflowStart`: 개발 환경 중지를 알리는 Discord 알림을 전송합니다.
+- `CheckStackExists`: ChatAppMasterStack이 존재하는지 확인합니다.
+    - 존재하면 `EvaluateStackStatus`로 이동합니다.
+    - 존재하지 않으면 `NotifyStackNotExists`로 이동합니다.
+- `EvaluateStackStatus`: ChatAppMasterStack의 상태를 확인합니다.
+  - 스택 작업이 이미 진행 중인 경우 `NotifyStackInProgress`로 이동합니다.
+  - 그렇지 않으면 `DeleteStack`으로 이동합니다.
+- `DeleteStack`: ChatAppMasterStack을 삭제합니다.
+- `WaitForStackOperation`: 스택 삭제 작업이 완료될 때까지 60초 대기합니다.
+- `CheckStackDeletion`: 스택 삭제 상태를 확인합니다.
+- `EvaluateDeletionStatus`: 스택 삭제 상태를 평가합니다.
+    - `DELETE_COMPLETE` 상태이면 `SendSuccessNotification`으로 이동합니다.
+    - `*_IN_PROGRESS` 상태이면 `WaitForStackOperation`으로 이동합니다.
 
 ## 4. 도입 효과
 
@@ -338,11 +626,9 @@ const MaintenancePage = ({ startTime, contactEmail }) => {
 
 ### 4.3 기술적 이점
 - AWS 네이티브 서비스를 활용한 안정적인 운영
-- 프론트엔드 중심의 상태 관리로 사용자 경험 향상
 - 확장 가능한 자동화 아키텍처 구축
 
 ## 5. 향후 개선 계획
-
 - 수동 제어 기능 추가 (긴급 상황 대응)
 - 상태 모니터링 및 메트릭 수집 강화
 - 알림 채널 다변화 (이메일, 슬랙 등)
