@@ -5,6 +5,7 @@ tags: ["CI/CD", "GITHUB_ACTIONS", "AWS", "DOCKER", "ECS"]
 keywords: ["CI/CD", "파이프라인", "깃허브액션", "github actions", "도커", "docker", "AWS", "ECS", "자동화", "automation", "배포", "deployment"]
 draft: false
 hide_title: true
+sidebar_position: 3
 ---
 
 # CI/CD 파이프라인

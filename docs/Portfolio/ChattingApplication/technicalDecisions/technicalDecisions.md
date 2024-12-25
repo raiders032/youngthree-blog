@@ -1,9 +1,9 @@
 ---
 title: "기술적 의사결정 목록"
 description: "실시간 채팅 플랫폼 개발 프로젝트에서의 기술적 의사결정 목록을 정리합니다."
-sidebar_position: 1 
 draft: false
-hide_title: true
+hide_title: false
+sidebar_position: 4
 ---
 
 # 기술적 의사결정 목록

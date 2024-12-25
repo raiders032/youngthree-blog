@@ -1,10 +1,11 @@
 ---
-title: "실시간 채팅 플랫폼 개발기"
+title: "CHAT CHAT"
 description: "AWS 기반의 클라우드 네이티브 실시간 채팅 플랫폼 개발 프로젝트를 소개합니다. 마이크로서비스 아키텍처, WebSocket 기반 실시간 통신, DevOps 환경 구축 등 주요 기술 스택과 개발 과정을 상세히 다룹니다."
 tags: ["WEBSOCKET_API", "RESTFUL_API", "AWS", "EC2", "API_GATEWAY", "AMPLIFY"]
 keywords: ["채팅", "실시간채팅", "웹소켓", "websocket", "AWS", "클라우드", "cloud", "마이크로서비스", "microservices", "데브옵스", "devops", "도커", "docker", "스프링", "spring", "코틀린", "kotlin", "레디스", "redis", "몽고DB", "mongodb", "웹플럭스", "webflux"]
 draft: false
 hide_title: true
+sidebar_position: 1
 ---
 
 # ChatChat - 채팅 플랫폼

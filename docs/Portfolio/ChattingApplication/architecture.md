@@ -4,7 +4,8 @@ description: "실시간 채팅 플랫폼 ChatChat의 시스템 아키텍처를 �
 tags: ["AWS", "EC2", "API_GATEWAY", "AMPLIFY", "WEBSOCKET_API", "RESTFUL_API"]
 keywords: ["시스템아키텍처", "system architecture", "마이크로서비스", "microservices", "AWS", "클라우드", "cloud", "웹소켓", "websocket", "도큐먼트DB", "documentdb", "레디스", "redis", "로드밸런서", "load balancer", "오토스케일링", "autoscaling", "컨테이너", "container", "도커", "docker"]
 draft: false
-hide_title: true
+hide_title: false
+sidebar_position: 2
 ---
 
 ## 1. 핵심 설계 원칙
