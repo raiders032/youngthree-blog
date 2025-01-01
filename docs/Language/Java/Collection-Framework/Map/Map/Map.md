@@ -208,7 +208,7 @@ public class Hashtable<K,V>
 * TreeMap은 이진 트리(Red-Black tree)를 기반으로 한 Map 콜렉션이다. 
 * TreeMap에 객체를 저장하면 자동으로 정렬된다.
 * TreeMap은 정렬을 위해 엔트리의 키가 Comparable을 구현해야 한다.
-	* [Comparable-Comparator.md](../../Comparable-Comparator/Comparable-Comparator.md)
+	* [Comparable-Comparator.md](../../../Comparable-Comparator/Comparable-Comparator.md)
 * Comparable를 구현하지 않은 객체를 키로 사용하려면 TreeMap 생성시 정렬자(Comparator의 구현체)를 제공하면 된다.
 * 기본적으로 부모 키값과 비교해서 키 값이 낮은 것은 왼쪽 자식노드에, 키 값이 높은 것은 오른쪽 자식 노드에 객체를 저장한다.
 * thread-safe하지 않다
