@@ -49,8 +49,7 @@ hide_title: true
 
 
 ## 5 트랜잭션 사용 예시
-
-![[Pasted image 20240817193719.png]]
+![Pasted image 20240817193719.png](images/Pasted%20image%2020240817193719.png)
 
 - 이 예시에서는 하나의 트랜잭션으로 두 개의 테이블을 동시에 업데이트합니다:
 	1. `AccountBalance` 테이블의 계좌 잔액을 업데이트합니다.
