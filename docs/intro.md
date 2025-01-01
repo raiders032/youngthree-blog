@@ -13,7 +13,7 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
 - Computer Science
   - [Data Structure](ComputerScience/DataStructure/index.md)
   - [Algorithm](ComputerScience/Algorithm/index.md)
-  - Operating System
+  - [Operating System](ComputerScience/OS/index.md)
   - [Network](Network/index.md)
   - [Database](Database/index.md)
 - Language
