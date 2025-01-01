@@ -10,7 +10,8 @@
 - [CAP 이론](CAP/CAP/CAP.md)
 
 ## 동시성 제어
-- [트랜잭션(Transaction)](/docs/Database/Transaction/Transaction.md)
+- [트랜잭션(Transaction)](/docs/Database/Transaction/Transaction/Transaction.md)
+- [트랜잭션 전파](Transaction/TransactionPropagation/TransactionPropagation.md)
 - [격리 수준(Isolation Levels)](Isolation-Levels/Isolation-Levels.md)
   - Dirty reads, Non-repeatable reads, Phantom reads
   - READ UNCOMMITED, READ COMMITED

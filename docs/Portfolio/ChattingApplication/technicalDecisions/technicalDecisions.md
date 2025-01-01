@@ -49,6 +49,6 @@ sidebar_position: 4
 ## 클라우드 비용 최적화
 - [개발/스테이징 환경의 서버를 업무 시간에만 가동하도록 EventBridge 스케줄링을 어떻게 구성할까?](automatic-environment-scheduling.md)
 - ECS 클러스터의 Auto Scaling 정책을 어떻게 설정해야 비용 효율적일까?
-- DocumentDB와 ElastiCache의 인스턴스 타입과 용량을 어떻게 최적화할 수 있을까?
+- DocumentDB 비용 최적화를 위한 인스턴스 클래스 및 스토리지 설정은 어떻게 해야 할까?
 - S3 수명 주기 정책을 통해 스토리지 비용을 어떻게 효율적으로 관리할 수 있을까?
 - CloudFormation 스택 관리 자동화를 통해 불필요한 리소스 비용을 어떻게 줄일 수 있을까?
