@@ -1,5 +1,5 @@
 ---
-title: "도큐사우루스(Docusaurus) 소개와 특징"
+title: "Docusaurus 소개와 특징"
 description: "Facebook이 개발한 정적 사이트 생성기 도큐사우루스의 핵심 특징과 장점을 알아봅니다. React 기반의 문서화 도구로서 Markdown을 활용한 손쉬운 기술 문서 작성 방법과 주요 기능을 상세히 설명합니다."
 tags: ["DOCUSAURUS", "REACT", "MARKDOWN", "DOCUMENTATION", "FRONTEND", "WEB"]
 keywords: ["도큐사우루스", "Docusaurus", "문서화", "documentation", "정적사이트생성기", "static site generator", "마크다운", "markdown", "리액트", "react", "페이스북", "facebook", "기술문서", "technical documentation"]
