@@ -22,6 +22,7 @@
 
 ## 수학
 - [에라토스테네스의 체](Sieve-of-Eratosthenes/Sieve-of-Eratosthenes.md)
+- [유클리드 호제법](EuclideanAlgorithm/EuclideanAlgorithm.md)
 
 ## 배열 처리
 - [누적합](PrefixSum/PrefixSum.md)
@@ -29,3 +30,4 @@
 
 ## 기타
 - [그리디 알고리즘](Greedy-Algorithm/Greedy-Algorithm.md)
+- [다이나믹 프로그래밍](Dynamic-Programming/Dynamic-Programming.md)
