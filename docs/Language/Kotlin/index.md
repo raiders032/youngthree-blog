@@ -11,7 +11,7 @@
 - [Collection](Collection/Collection.md)
 - [Enum](Enum/Enum.md) 
 - [Exception](Exception/Exception.md) 
-- [Functions﻿](Functions/Functions﻿.md)
+- [Functions](Functions/Functions﻿.md)
   - expression, statement
   - Default arguments, Named arguments, Variable number of arguments
 - [Interface](Interface/Interface.md)
