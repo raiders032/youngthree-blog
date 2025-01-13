@@ -1,6 +1,7 @@
 ## Kotlin
 
 - [Annotation](./Annotation/Annotation.md) 
+- [Array](Array/Array.md)
 - [Class](Class/Class.md)
   - abstract class, open
   - nested class, inner

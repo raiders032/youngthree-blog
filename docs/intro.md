@@ -24,9 +24,8 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
   - [Design Pattern](Design-Pattern/index.md)
 - Backend
   - [Spring](Spring/index.md)
-- Reactive Programming
-  - [Reactive Programming](Reactive-Programming/index.md)
-  - [Reactive Stream](Reactive-Programming/Reactive-Stream/Reactive-Stream.md)
+- Messaging System
+  - [Kafka](MessageQueue/Kafka/index.md)
 - Test
   - [Test](Test/index.md)
 - NoSQL
@@ -41,6 +40,9 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
   - [Coach](Portfolio/Coach/index.md)
 - Problem Solving
   - [프로그래머스 문제 풀이](ProblemSolving/Programmers/index.md)
+- Reactive Programming
+  - [Reactive Programming](Reactive-Programming/index.md)
+  - [Reactive Stream](Reactive-Programming/Reactive-Stream/Reactive-Stream.md)
 - Blockchain
   - Bitcoin
   - Ethereum

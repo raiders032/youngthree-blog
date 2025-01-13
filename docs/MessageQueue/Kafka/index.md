@@ -3,7 +3,6 @@ title: "Kafka"
 ---
 
 ## Kafka
-
 - [Kafka](Kafka/Kafka.md)
 - [Broker](Broker/Broker.md)
   - 브로커, 컨트롤러, 코디네이터, Replication, ISR
