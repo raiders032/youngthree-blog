@@ -1,5 +1,5 @@
 ---
-title: "그래들 플러그인 완벽 가이드: 코어, 커뮤니티, 커스텀 플러그인 마스터하기"
+title: "Plugin"
 description: "그래들의 플러그인 시스템을 상세히 알아봅니다. 코어 플러그인부터 커스텀 플러그인 개발까지, 실제 예제와 함께 그래들 플러그인의 모든 것을 다룹니다. 빌드 자동화를 효율적으로 구현하고 싶은 개발자를 위한 실용적인 가이드입니다."
 tags: ["GRADLE_PLUGIN", "GRADLE", "BUILD_TOOL", "JAVA", "KOTLIN"]
 keywords: ["그래들", "gradle", "플러그인", "plugin", "빌드도구", "build tool", "빌드 자동화", "build automation", "코어플러그인", "core plugin", "커스텀플러그인", "custom plugin", "빌드스크립트", "build script", "그레이들", "그래이들"]
