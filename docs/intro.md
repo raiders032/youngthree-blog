@@ -22,8 +22,10 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
 - Software Engineering
   - [Object Oriented Programming](OOP/index.md)
   - [Design Pattern](Design-Pattern/index.md)
-- Backend
+- Spring
   - [Spring](Spring/index.md)
+- Build Tool
+  - [Gradle](Gradle/index.md)
 - Messaging System
   - [Kafka](MessageQueue/Kafka/index.md)
 - Test
