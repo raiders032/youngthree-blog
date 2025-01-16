@@ -1,5 +1,5 @@
 ---
-title: "WebSocket 완벽 가이드: 실시간 양방향 통신의 핵심"
+title: "WebSocket"
 description: "WebSocket 프로토콜의 동작 원리와 HTTP와의 차이점을 상세히 알아봅니다. 실제 구현 예제와 함께 WebSocket의 핵심 개념부터 고급 활용법까지 다루는 종합 가이드입니다."
 tags: ["WEBSOCKET_API", "RESTFUL_API", "API_GATEWAY", "BACKEND", "WEB"]
 keywords: ["웹소켓", "WebSocket", "실시간통신", "양방향통신", "풀듀플렉스", "full-duplex", "소켓통신", "Socket", "핸드쉐이크", "handshake", "HTTP", "TCP", "네트워크", "프로토콜", "Protocol"]
