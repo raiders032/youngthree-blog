@@ -1,4 +1,4 @@
-# 1 도커
+##  1 도커
 
 - 리눅스 컨테이너에 여러 기능을 추가해 애플리케이션을 컨테이너로서 좀 더 쉽게 사용할 수 있게 만들어진 오픈소스 프로젝트
 - 기존에 쓰이던 가상화 방법인 가상 머신과는 달리 도커 컨테이너는 성능의 손실이 거의 없다
@@ -7,13 +7,13 @@
 
 
 
-# 2 도커와 기존 가상화 기술
+##  2 도커와 기존 가상화 기술
 
 ![image-20210615210521717](./images/image-20210615210521717.png)
 
 
 
-## 2.1 Virtual Machines
+###  2.1 Virtual Machines
 
 - 하이퍼바이저를 통해 여러 개의 운영체제를 하나의 호스트에서 생성해 사용한다.
 - 하이퍼바이저에 의해 생성되고 관리되는 운영체제를 Guest OS라고 한다.
@@ -30,7 +30,7 @@
 
 
 
-## 2.2 Docker
+###  2.2 Docker
 
 - 가상화된 공간을 생성하기 위해 리눅스의 자체 기능인 chroot, namespace, cgroup을 사용함으로써 프로세스 단위의 격리 환경을 만들기 때문에 성능 손실이 거의 없다.
 - 컨테이너에 필요한 커널은 호스트의 커널을 공유한다
@@ -40,9 +40,9 @@
 
 
 
-# 3 Docker의 장점
+##  3 Docker의 장점
 
-## 3.1 애플리케이션의 개발과 배포 용이성
+###  3.1 애플리케이션의 개발과 배포 용이성
 
 - 도커 컨테이너는 호스트 OS 위에서 실행되는 격리된 공간이다
 - 컨테이너 내부에 수많은 소프트웨어를 설치하고 설정 파일을 수정해도 호스트 OS에는 영향이 없다.
@@ -52,20 +52,20 @@
 
 
 
-# 4 Docker Engine 설치
+##  4 Docker Engine 설치
 
 - 도커는 다양한 운영체제에서 사용할 수 있다
 - 도커는 리눅스 컨테이너를 제어하는 API를 Go 언어로 구현한 libcontainer를 사용하기 때문에 대부분의 리눅스 운영체제에서 사용 가능하다
 
 
 
-## 4.1 우분투
+###  4.1 우분투
 
 ```shell
-#Uninstall old versions
+## Uninstall old versions
 sudo apt-get remove docker docker-engine docker.io containerd runc
 
-#SET UP THE REPOSITORY
+## SET UP THE REPOSITORY
 sudo apt-get update
 sudo apt-get install \
     apt-transport-https \
@@ -74,7 +74,7 @@ sudo apt-get install \
     gnupg-agent \
     software-properties-common
 
-#Add Docker’s official GPG key
+## Add Docker’s official GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
 sudo add-apt-repository \
@@ -82,47 +82,47 @@ sudo add-apt-repository \
    $(lsb_release -cs) \
    stable"
    
-#INSTALL DOCKER ENGINE
+## INSTALL DOCKER ENGINE
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-#To run Docker without root privileges
+## To run Docker without root privileges
 sudo usermod -aG docker $USER
 ```
 
 
 
-## 4.2 아마존 리눅스
+###  4.2 아마존 리눅스
 
 ```bash
 sudo yum update -y
 
-# 최신 도커 엔진 패키지를 설치합니다.
+##  최신 도커 엔진 패키지를 설치합니다.
 sudo amazon-linux-extras install docker
 
 sudo yum install docker
 
-# 도커 서비스를 시작합니다.
+##  도커 서비스를 시작합니다.
 sudo service docker start
 
-# ec2-user를 사용하지 않고도 도커 명령을 실행할 수 있도록 docker 그룹에 sudo.를 추가합니다.
+##  ec2-user를 사용하지 않고도 도커 명령을 실행할 수 있도록 docker 그룹에 sudo.를 추가합니다.
 sudo usermod -a -G docker ec2-user
 
-# 도커 컴포즈 설치
+##  도커 컴포즈 설치
 sudo curl -L "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 sudo chmod +x /usr/local/bin/docker-compose
 
-#섪치 확인
+## 섪치 확인
 docker-compose --version
 ```
 
 
 
-## 4.3 cent os
+###  4.3 cent os
 
 ```bash
-#Uninstall old versions
+## Uninstall old versions
 sudo yum remove docker \
                   docker-client \
                   docker-client-latest \
@@ -132,40 +132,40 @@ sudo yum remove docker \
                   docker-logrotate \
                   docker-engine
   
-#Set up the repository
+## Set up the repository
 sudo yum install -y yum-utils
 sudo yum-config-manager \
 --add-repo \
 https://download.docker.com/linux/centos/docker-ce.repo
 
-#Install Docker Engine
+## Install Docker Engine
 sudo yum install docker-ce docker-ce-cli containerd.io
 
-#Start Docker
+## Start Docker
 sudo systemctl start docker
 sudo usermod -a -G docker $USER
 
-#docker-compose install
+## docker-compose install
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
 
 
-# 5 Docker Daemon
+##  5 Docker Daemon
 
 - 도커의 구조는 크게 클라이언트로서의 도커와 서버로서의 도커로 나누어진다.
 
 
 
-## 5.1 Docker Daemon이란?
+###  5.1 Docker Daemon이란?
 
 - 실제로 컨테이너를 생성하고 실행하며 이미지를 관리하는 주체는 도커 서버이고 이는 `dockerd` 라는 프로세스로서 동작한다.
 - 도커 엔진은 외부에서 API 입력을 받아 도커 엔진의 기능을 수행하는데 도커 프로세스가 실행되어 서버로서 입력을 받을 준비가 된 상태를 도커 데몬이라고 한다
 
 
 
-## 5.2 Docker 클라이언트
+###  5.2 Docker 클라이언트
 
 - 도커 데몬에게 API를 입력하기 위해 CLI를 제공하는데 이것이 도커 클라이언트다
 - CLI에서 우리가 자주 사용하는 `docker`가 도커 클라이언트다 

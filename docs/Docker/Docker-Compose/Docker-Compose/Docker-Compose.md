@@ -1,4 +1,4 @@
-# 1 Docker Compose 소개
+##  1 Docker Compose 소개
 
 - Docker Compose는 다중 컨테이너 도커 애플리케이션을 정의하고 실행하기 위한 도구입니다.
 - 하나의 호스트에서 여러 컨테이너를 쉽게 관리할 수 있게 해줍니다.
@@ -8,7 +8,7 @@
 
 
 
-# 2 기본 명령어
+##  2 기본 명령어
 
 - `docker compose build`
 	- 이미지만 빌드하고 컨테이너는 시작하지 않습니다.
@@ -45,7 +45,7 @@
 
 
 
-# 3 설치 방법
+##  3 설치 방법
 
 - Mac이나 Windows의 Docker Desktop을 설치하면 Docker Compose도 함께 설치됩니다.
 - Linux 시스템의 경우 별도 설치가 필요합니다.
@@ -61,7 +61,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 
 
-# 4 Docker Compose 파일 작성
+##  4 Docker Compose 파일 작성
 
 - YAML 형식으로 작성합니다.
 - 버전 3 형식이 가장 널리 사용됩니다.
@@ -70,7 +70,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 
 
-# 5 주의사항
+##  5 주의사항
 
 - 실제 운영 환경에서는 보안을 위해 민감한 정보를 환경 변수 파일로 관리해야 합니다.
 - 서비스 간의 의존성을 올바르게 설정해야 합니다.

@@ -1,8 +1,8 @@
-# 1 도커 네트워크
+##  1 도커 네트워크
 
 
 
-## 1.1 컨테이너 가상 IP
+###  1.1 컨테이너 가상 IP
 
 * 컨테이너는 가상 IP주소를 할당받는다.
 * 기본적으로 도커 컨테이너는 172.17.0.x 의 IP 주소를 순차적으로 할당 받는다.
@@ -18,7 +18,7 @@
 ```bash
 $ docker run -it --name network_test ubuntu:14.04
 
-# 컨테이너의 IP 주소 확인 172.17.0.2를 할당 받았다
+##  컨테이너의 IP 주소 확인 172.17.0.2를 할당 받았다
 $ root@8b597aa63feb:/# ifconfig
 eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:02
           inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
@@ -39,7 +39,7 @@ lo        Link encap:Local Loopback
 
 
 
-## 1.2 veth 네트워크 인터페이스
+###  1.2 veth 네트워크 인터페이스
 
 * 외부와 연결이 필요한 경우 컨테이너를 시작할 때 `veth`라는 네트워크 인터페이스를 생성해야한다.
 * `veth`: 외부와의 네트워크를 제공하기 위해 필요한 가상 네트워크 인터페이스
@@ -53,13 +53,13 @@ lo        Link encap:Local Loopback
 - 도커가 설치된 호스트에서 실행중인 컨테이너의 수만큼 veth가 존재한다.
 
 ```bash
-# 도커가 설치된 호스트에서 현재 2개의 컨테이너가 실행 중
+##  도커가 설치된 호스트에서 현재 2개의 컨테이너가 실행 중
 $ docker ps
 CONTAINER ID   IMAGE                                   COMMAND                  CREATED          STATUS          PORTS                                           NAMES
 80e9f140fecc   neptunes032/ra-backend:0.0.1-SNAPSHOT   "java -jar /app.jar"     9 minutes ago    Up 9 minutes    0.0.0.0:8080->8080/tcp, :::8080->8080/tcp       RA-Backend
 10e55ed604e1   mongo                                   "docker-entrypoint.s…"   12 minutes ago   Up 12 minutes   0.0.0.0:27017->27017/tcp, :::27017->27017/tcp   mongodb
 
-# 도커가 설치된 호스트에서 실행중인 컨테이너의 수만큼 veth를 확인할 수 있다
+##  도커가 설치된 호스트에서 실행중인 컨테이너의 수만큼 veth를 확인할 수 있다
 $ ifconfig
 ...
 veth8f01bdc: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -81,7 +81,7 @@ veth8f5dad1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 
 
-# 2 도커의 기본 네트워크 구조
+##  2 도커의 기본 네트워크 구조
 
 - 도커는 리눅스의 network namespace 기술을 사용해 격리된 네트워크를 구성한다.
 - 브릿지 네트워크를 사용해 도커 컨테이너를 생성하면 아래와 같은 과정이 진행된다. 
@@ -121,7 +121,7 @@ veth8f5dad1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 
 
-# 3 Docker Networking Drivers
+##  3 Docker Networking Drivers
 
 * 컨테이너를 생성하면 기본적으로 `docker0` 브리지를 통해 외부와 통신할 수 있는 환경이 제공된다
 * 사용자의 선택에 따라 다른 네트워크 드라이브를 사용할 수 있다
@@ -130,7 +130,7 @@ veth8f5dad1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 
 
-## 3.1 Bridge
+###  3.1 Bridge
 
 * 가장 흔히 쓰이는 드라이버이다.
 * 아무런 설정을 하지않고 컨테이너를 생성하면 자동으로 `docker0`를 사용한다.
@@ -142,13 +142,13 @@ veth8f5dad1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 **브리지 네트워크 생성 및 사용**
 
 ```bash
-# 브리지 네트워크 생성
+##  브리지 네트워크 생성
 docker network create --driver bridge network-name
 
-# 브리지 네트워크 사용
+##  브리지 네트워크 사용
 docker run -it --name mynetwork --net network-name ubuntu:14.04
 
-# 컨테이너 내부에서 IP 확인
+##  컨테이너 내부에서 IP 확인
 root@e0fda4968d27:/# ifconfig
 eth0      Link encap:Ethernet  HWaddr 02:42:ac:13:00:02
           inet addr:172.19.0.2  Bcast:172.19.255.255  Mask:255.255.0.0
@@ -169,7 +169,7 @@ lo        Link encap:Local Loopback
 
 
 
-## 3.2 Host
+###  3.2 Host
 
 * 네트워크를 호스트로 설정하면 호스트의 네트워크 환경을 그대로 쓸 수 있다
 * 호스트 드라이버 네트워크는 별도 생성없이 기존의 `host`라는 이름의 네트워크를 사용한다
@@ -181,7 +181,7 @@ lo        Link encap:Local Loopback
 
 
 ```bash
-# 호스트와 컨테이너 내부에서 ifconfig 결과가 같다
+##  호스트와 컨테이너 내부에서 ifconfig 결과가 같다
 docker run -it --name network_host --net host ubuntu:14.04
 root@gcloud-238:/# ifconfig
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -216,16 +216,16 @@ docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 
 
-## 3.3 Overlay
+###  3.3 Overlay
 
-## 3.4 Macvlan
+###  3.4 Macvlan
 
-## 3.5 None
+###  3.5 None
 
 * 아무런 네트워크를 사용하지 않는 것을 뜻한다
 
 ```bash
-# lo 외에 인터페이스가 존재하지 않는다
+##  lo 외에 인터페이스가 존재하지 않는다
 docker run -it --name network_none --net none ubuntu:14.04
 root@b8e8bdd56ff1:/# ifconfig
 lo        Link encap:Local Loopback
@@ -239,7 +239,7 @@ lo        Link encap:Local Loopback
 
 
 
-# 4 Default Bridge Network
+##  4 Default Bridge Network
 
 * 도커를 설치하면 항상 Default Bridge Network가 생성된다.
 * 네트워크 설정없이 컨테이너를 실행하면 Default Bridge Network를 사용한다.
@@ -259,7 +259,7 @@ lo        Link encap:Local Loopback
 
 
 
-# 5 요청의 종류
+##  5 요청의 종류
 
 1. 컨테이너에서 WWW로
    * 특별한 설정 없이 가능

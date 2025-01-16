@@ -1,4 +1,4 @@
-# 1 Dockerfile
+##  1 Dockerfile
 
 * Dockerfile이란 docker image를 만들기 위한 설정파일이다
 * 완성된 이미지를 생성하기위해 컨테이너에 설치해야 하는 패키지, 추가해야 하는 소스코드, 실행해야 하는 명령어와 쉘 스크립트 등을 하나의 Dockerfile에 기록하면 도커는 이 파일을 읽고 컨테이너에서 작업을 수행하고 이를 이미지로 만들어 낸다
@@ -7,14 +7,14 @@
 
 
 
-# 2 Instruction
+##  2 Instruction
 
 - 명령어는 소문자로 표기해도 상관은 없지만 일반적으로 대문자로 표기한다.
 - Dokcerfile의 명령어는 위에서 아래로 한 줄씩 차례대로 실행된다.
 
 
 
-## [FROM](https://docs.docker.com/engine/reference/builder/#from)
+###  [FROM](https://docs.docker.com/engine/reference/builder/#from)
 
 * 베이스 이미지를 지정한다.
 * 이미지 생성시 기반이 되는 이미지 레이어
@@ -23,7 +23,7 @@
 
 
 
-## [RUN](https://docs.docker.com/engine/reference/builder/#run)
+###  [RUN](https://docs.docker.com/engine/reference/builder/#run)
 
 * 도커 이미지가 생성되기 전에 수행할 쉘 명령어
 * 추가적으로 필요한 파일 다운 받기 위한 명령어 명시
@@ -33,7 +33,7 @@
 
 
 
-## [CMD](https://docs.docker.com/engine/reference/builder/#cmd)
+###  [CMD](https://docs.docker.com/engine/reference/builder/#cmd)
 
 * 컨테이너가 시작되었을 때 실행할 실행 파일 또는 쉘 스크립트
 * Dockerfile 파일 내에서 1번만 정의가 가능합니다.
@@ -57,7 +57,7 @@ CMD command param1 param2 (shell form)
 
 
 
-## [LABEL](https://docs.docker.com/engine/reference/builder/#label)
+###  [LABEL](https://docs.docker.com/engine/reference/builder/#label)
 
 - 이미지에 메타데이터를 추가합니다.
 - 메타데이터는 키와 밸류 의 쌍 형태로 저장된다
@@ -68,7 +68,7 @@ CMD command param1 param2 (shell form)
 
 
 
-## [EXPOSE](https://docs.docker.com/engine/reference/builder/#expose)
+###  [EXPOSE](https://docs.docker.com/engine/reference/builder/#expose)
 
 * docker container 외부에 노출할 포트를 지정한다.
 * 실제로 포트를 개방하는건 아니다.
@@ -76,7 +76,7 @@ CMD command param1 param2 (shell form)
 
 
 
-## [ENV](https://docs.docker.com/engine/reference/builder/#env)
+###  [ENV](https://docs.docker.com/engine/reference/builder/#env)
 
 * 환경변수를 지정한다.
 * Dockerfile 과 애플리케이션 코드에서 사용 가능
@@ -96,7 +96,7 @@ ENV MY_CAT=fluffy
 
 
 
-## [ADD](https://docs.docker.com/engine/reference/builder/#add)
+###  [ADD](https://docs.docker.com/engine/reference/builder/#add)
 
 * 파일을 이미지에 추가한다
 * 추가하는 파일은 Dockerfile이 위치한 디렉터리인 빌드 컨텍스트에서 가져온다
@@ -111,11 +111,11 @@ ENV MY_CAT=fluffy
 **예시**
 
 ```dockerfile
-# “hom” 으로 시작하는 모든 파일을 이미지에 추가한다
+##  “hom” 으로 시작하는 모든 파일을 이미지에 추가한다
 ADD hom* /mydir/
-# 상대경로 이미지의 <WORKDIR>/relativeDir/로 test.txt 파일을 추가
+##  상대경로 이미지의 <WORKDIR>/relativeDir/로 test.txt 파일을 추가
 ADD test.txt relativeDir/
-# 절대경로 이미지의 /absoluteDir/ 경로로 test.txt 파일을 추가
+##  절대경로 이미지의 /absoluteDir/ 경로로 test.txt 파일을 추가
 ADD test.txt /absoluteDir/
 ```
 
@@ -127,7 +127,7 @@ ADD test.txt /absoluteDir/
 
 
 
-## [COPY](https://docs.docker.com/engine/reference/builder/#copy)
+###  [COPY](https://docs.docker.com/engine/reference/builder/#copy)
 
 **forms**
 
@@ -149,7 +149,7 @@ COPY [--chown=<user>:<group>] ["<src>",... "<dest>"]
 
 
 
-## [VOLUME](https://docs.docker.com/engine/reference/builder/#volume)
+###  [VOLUME](https://docs.docker.com/engine/reference/builder/#volume)
 
 * Anonymous  Volume을 지정할 수 있다.
 * 컨테이너 생성 시 호스트와 공유할 컨테이너 내부의 디렉토리를 설정한다
@@ -173,7 +173,7 @@ VOLUME /myvol /var/db
 
 
 
-## [USER](https://docs.docker.com/engine/reference/builder/#user)
+###  [USER](https://docs.docker.com/engine/reference/builder/#user)
 
 * docker container를 실행할 user를 지정해준다.
 * 루트 권한이 필요하지 않다면 USER를 사용하는 것이 좋다
@@ -192,7 +192,7 @@ USER nys
 
 
 
-## [WORKDIR](https://docs.docker.com/engine/reference/builder/#workdir)
+###  [WORKDIR](https://docs.docker.com/engine/reference/builder/#workdir)
 
 * 작업 디렉토리를 지정한다.
 	* 셸에서 cd 명령어를 입력하는 것과 같은 기능을 한다.
@@ -202,7 +202,7 @@ USER nys
 
 
 
-## [ARG](https://docs.docker.com/engine/reference/builder/#arg)
+###  [ARG](https://docs.docker.com/engine/reference/builder/#arg)
 
 * Dockerfile 내에서 사용될 변수 값을 설정한다.
 * `ARG <name>[=<default value>]` 형태로 지정
@@ -231,13 +231,13 @@ RUN echo "Based on commit: $gitcommithash"
 ```
 
 ```bash
-# dockerfile 내부에서 사용할 ARG로 user1=what_user를 설정
+##  dockerfile 내부에서 사용할 ARG로 user1=what_user를 설정
 docker build --build-arg user1=what_user .
 ```
 
 
 
-## **ENTRYPOINT**
+###  **ENTRYPOINT**
 
 * 컨테이너가 시작되었을 때  실행할 실행 파일 또는 쉘 스크립트
 * Dockerfile 파일 내에서 1번만 정의가 가능합니다.
@@ -283,14 +283,14 @@ CMD ["5"]
 - 컨테이너 내부에서 실행중인 프로세스 목록을 보면 아래와 같다.
 
 ```bash
-# exec 형식 컨테이너 내부 프로세스 조회
+##  exec 형식 컨테이너 내부 프로세스 조회
 $ docker exec 4567d ps x
 PID TTY STAY TIME COMMAND
   1               node app.js
  12               ps x
 
-# shell 형식 컨테이너 내부 프로세스 조회
-# 메인 프로세스가 node 프로세스가 아닌 Shell 프로세스다 노드 프로세스는 shell 프로세스에서 시작된다
+##  shell 형식 컨테이너 내부 프로세스 조회
+##  메인 프로세스가 node 프로세스가 아닌 Shell 프로세스다 노드 프로세스는 shell 프로세스에서 시작된다
 $ docker exec 4567d ps x
 PID TTY STAY TIME COMMAND
   1               /bin/sh -c node app.js
@@ -300,7 +300,7 @@ PID TTY STAY TIME COMMAND
 
 
 
-# 3 이미지 생성
+##  3 이미지 생성
 
 * Dockerfile을 사용하여 Docker 이미지를 생성하는 과정을 살펴봅시다.
 - `docker build` 명령어는 Dockerfile에 기록된 지시사항을 따라 컨테이너를 실행한 후, 그 결과로 완성된 이미지를 생성합니다.
@@ -320,14 +320,14 @@ docker build -t imagename ./
 
 
 
-# 4 `.dockerignore`
+##  4 `.dockerignore`
 
 * dockerfile 빌드시 `.dockerignore` 파일에 명시된 파일을 컨텍스트에서 제거한다
 * `.dockerignore`의 위치는 컨텍스트 취상위 즉, build 명령어에서 dockerfile이 위치한 경로와 같아야한다.
 
 
 
-# 5 Multi Stage Docker Build
+##  5 Multi Stage Docker Build
 
 * 하나의 dockerfile안에 여러 개의 FROM이미지를 정의함으로써 빌드 완료 시 최종적으로 생성될 이미지의 크기를 줄일 수 있다
 * 멀티 스테이지 빌드는 반드시 필요한 실행 파일만 최종 이미지 결과물에 포함시켜 이미지 크기를 줄일 수 있다
@@ -359,7 +359,7 @@ ENTRYPOINT ["java","-cp","app:app/lib/*","com.emailservice.EmailServiceApplicati
 
 
 
-# 6 예시
+##  6 예시
 
 ```dockerfile
 FROM node:alpine AS builder
@@ -376,14 +376,14 @@ COPY --from=builder /app/build /usr/share/nginx/html
 ```
 
 ```dockerfile
-# mysql 이미지를 사용 기본 설정을 변경하는 경우
+##  mysql 이미지를 사용 기본 설정을 변경하는 경우
 FROM mysql:5.7
 
 ADD ./my.cnf /etc/mysql/conf.d/my.cnf
 ```
 
 ```dockerfile
-#nginx 이미지를 사용 기본 설정을 적용하는 경우
+## nginx 이미지를 사용 기본 설정을 적용하는 경우
 FROM nginx
 
 COPY ./default.conf /etc/nginx/conf.d/default.conf

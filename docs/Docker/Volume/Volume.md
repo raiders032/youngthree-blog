@@ -1,8 +1,8 @@
-# 1 Persistent Data
+##  1 Persistent Data
 
 
 
-## 1.1 이미지 레이어와 컨테이너 레이어
+###  1.1 이미지 레이어와 컨테이너 레이어
 
 ![image-20201117215748040](./images/docker.png)
 
@@ -16,7 +16,7 @@
 
 
 
-# 2 Docker Volume
+##  2 Docker Volume
 
 * 쉽게 말하면 로컬 머신의 폴더이다. 볼륨은 이미지와 컨테이너 안에 있는 것이 아니고 호스트 머신에 존재한다.
   * 볼륨을 만들면 새로운 디렉토리가 호스트 파일 시스템에 생긴다.
@@ -30,7 +30,7 @@
 
 
 
-## 2.1  Anonymous  Volume
+###  2.1  Anonymous  Volume
 
 * `docker run -v /app/data`
 * `Dockerfile`에서 사용 가능
@@ -46,7 +46,7 @@
 
 
 
-## 2.2 Named Volume
+###  2.2 Named Volume
 
 * 한 컨테이너의 종속적이지 않다.
   * 컨테이너를 삭제해도 볼륨은 삭제되자 않는다.
@@ -65,7 +65,7 @@
 
 
 
-# 3 Bind Mounts
+##  3 Bind Mounts
 
 * Docker Volume과 마찬가지로 호스트 파일 시스템을 이용한다.
   * Bind Mount는 호스트 파일 시스템에 위치한 디렉토리이다.
@@ -95,7 +95,7 @@
 
 
 
-# 4 Volume Container
+##  4 Volume Container
 
 ![image-20201117215748040](./images/volumes.png)
 
