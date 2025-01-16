@@ -39,6 +39,9 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
   - [Kubernetes](Kubernetes/index.md)
   - Cloud
     - AWS
+- Infrastructure as Code
+  - [CloudFormation](AWS/CloudFormation/index.md)
+  - [Terraform](Terraform/index.md)
 - Portfolio
   - [Chatting Application](Portfolio/ChattingApplication/index.md)
   - [Coach](Portfolio/Coach/index.md)
