@@ -11,22 +11,22 @@ hide_title: true
 
 - TCP(Transmission Control Protocol)는 신뢰할 수 없는 공용망에서도 정보 유실 없는 통신을 보장하는 핵심 프로토콜입니다.
 - TCP/IP 프로토콜 스택의 전송 계층(Transport Layer)에 위치하며, 다음과 같은 특징을 가집니다.
-    - 세션을 안전하게 연결하고 데이터를 분할하여 전송
-    - 세그먼트에 번호를 부여하고 전송 확인을 통한 신뢰성 보장
-    - 수신자의 처리 능력을 고려한 전송 크기 조절
-    - 흐름 제어와 혼잡 제어를 통한 안정적인 통신
+  - 세션을 안전하게 연결하고 데이터를 분할하여 전송
+  - 세그먼트에 번호를 부여하고 전송 확인을 통한 신뢰성 보장
+  - 수신자의 처리 능력을 고려한 전송 크기 조절
+  - 흐름 제어와 혼잡 제어를 통한 안정적인 통신
 
 :::info[계층별 프로토콜과 데이터 단위]
 
 - 응용 계층 (Application Layer): 메시지 (Message)
-    - HTTP, FTP, SMTP 등
+	- HTTP, FTP, SMTP 등
 - 전송 계층 (Transport Layer): 세그먼트 (Segment)
-    - TCP, UDP
+	- TCP, UDP
 - 인터넷 계층 (Internet Layer): 패킷 (Packet)
-    - IP, ICMP, ARP
+	- IP, ICMP, ARP
 - 네트워크 액세스 계층 (Network Access Layer): 프레임 (Frame)
-    - 이더넷, Wi-Fi
-      :::
+	- 이더넷, Wi-Fi
+	  :::
 
 ## 2. TCP 세그먼트 헤더 구조
 
@@ -63,12 +63,12 @@ hide_title: true
 
 ### 4.1 시작하기 전 상태
 
-- **서버**: 
-  - 처음에는 CLOSED 상태
-  - `socket()` 함수 호출로 소켓 생성
-  - `bind()` 함수로 포트 번호 할당
-  - `listen()` 함수 호출로 `LISTEN` 상태로 전환
-  - 이제 서버는 클라이언트의 연결 요청을 받을 준비 완료
+- **서버**:
+	- 처음에는 CLOSED 상태
+	- `socket()` 함수 호출로 소켓 생성
+	- `bind()` 함수로 포트 번호 할당
+	- `listen()` 함수 호출로 `LISTEN` 상태로 전환
+	- 이제 서버는 클라이언트의 연결 요청을 받을 준비 완료
 
 #### 4.2 way Handshake 연결 과정 상세 설명
 
@@ -77,11 +77,11 @@ hide_title: true
 ##### Step 1: 클라이언트의 연결 요청
 
 - **클라이언트 동작**:
-    - CLOSED → SYN_SENT로 상태 변경
-    - SYN 세그먼트 생성 및 전송
+	- CLOSED → SYN_SENT로 상태 변경
+	- SYN 세그먼트 생성 및 전송
 - **서버 동작**:
-    - LISTEN 상태에서 SYN 세그먼트 수신
-    - 클라이언트의 ISN(100) 저장
+	- LISTEN 상태에서 SYN 세그먼트 수신
+	- 클라이언트의 ISN(100) 저장
 
 **전송되는 세그먼트 구조**
 
@@ -98,9 +98,9 @@ TCP 세그먼트 구조:
 ##### Step 2: 서버의 응답
 
 - 서버 동작:
-  - LISTEN 상태에서 SYN 세그먼트 수신
-  - LISTEN → SYN_RECEIVED로 상태 변경
-  - SYN+ACK 세그먼트 생성 및 전송
+	- LISTEN 상태에서 SYN 세그먼트 수신
+	- LISTEN → SYN_RECEIVED로 상태 변경
+	- SYN+ACK 세그먼트 생성 및 전송
 
 **전송되는 세그먼트**
 
@@ -117,12 +117,12 @@ TCP 세그먼트 구조:
 ##### Step 3: 클라이언트의 최종 확인
 
 - 클라이언트 동작:
-    - SYN_SENT 상태에서 ACK 세그먼트 수신
-    - SYN_SENT → ESTABLISHED로 상태 변경
-    - ACK 세그먼트 생성 및 전송
+	- SYN_SENT 상태에서 ACK 세그먼트 수신
+	- SYN_SENT → ESTABLISHED로 상태 변경
+	- ACK 세그먼트 생성 및 전송
 - 서버 동작:
-    - SYN_RECEIVED 상태에서 ACK 세그먼트 수신
-    - SYN_RECEIVED → ESTABLISHED로 상태 변경
+	- SYN_RECEIVED 상태에서 ACK 세그먼트 수신
+	- SYN_RECEIVED → ESTABLISHED로 상태 변경
 - 양방향 데이터 통신 준비 완료
 
 **전송되는 세그먼트**
@@ -180,47 +180,47 @@ TCP에서 시퀀스 번호는 바이트 스트림의 위치를 나타냅니다:
 ### 6.1 첫 번째 단계: Active Close 시작
 
 - **Active Close 측 동작**
-    - ESTABLISHED → FIN_WAIT_1 상태로 전환
-    - FIN 패킷 전송
-    - "더 이상 보낼 데이터가 없음"을 알림
+	- ESTABLISHED → FIN_WAIT_1 상태로 전환
+	- FIN 패킷 전송
+	- "더 이상 보낼 데이터가 없음"을 알림
 
 - **Passive Close 측 동작**
-    - ESTABLISHED → CLOSE_WAIT 상태로 전환
-    - ACK 패킷으로 FIN 수신 확인
-    - 아직 보낼 데이터가 있을 수 있음
+	- ESTABLISHED → CLOSE_WAIT 상태로 전환
+	- ACK 패킷으로 FIN 수신 확인
+	- 아직 보낼 데이터가 있을 수 있음
 
 ### 6.2 두 번째 단계: Passive Close의 데이터 전송
 
 - **Active Close 측**
-    - FIN_WAIT_1 → FIN_WAIT_2 상태로 전환
-    - ACK 수신 후 상태 변경
-    - 여전히 데이터를 받을 수 있음
+	- FIN_WAIT_1 → FIN_WAIT_2 상태로 전환
+	- ACK 수신 후 상태 변경
+	- 여전히 데이터를 받을 수 있음
 
 - **Passive Close 측**
-    - CLOSE_WAIT 상태 유지
-    - 남은 데이터 전송 완료
-    - 응용 프로그램의 close() 호출 대기
+	- CLOSE_WAIT 상태 유지
+	- 남은 데이터 전송 완료
+	- 응용 프로그램의 close() 호출 대기
 
 ### 6.3 세 번째 단계: Passive Close 종료
 
 - **Passive Close 측**
-    - CLOSE_WAIT → LAST_ACK 상태로 전환
-    - FIN 패킷 전송
-    - "모든 데이터 전송 완료"를 알림
+	- CLOSE_WAIT → LAST_ACK 상태로 전환
+	- FIN 패킷 전송
+	- "모든 데이터 전송 완료"를 알림
 
 - **Active Close 측**
-    - FIN_WAIT_2 → TIME_WAIT 상태로 전환
-    - ACK 패킷 전송
+	- FIN_WAIT_2 → TIME_WAIT 상태로 전환
+	- ACK 패킷 전송
 
 ### 6.4 마지막 단계: 연결 종료 완료
 
 - **Passive Close 측**
-    - LAST_ACK → CLOSED 상태로 전환
-    - 연결 즉시 종료
+	- LAST_ACK → CLOSED 상태로 전환
+	- 연결 즉시 종료
 
 - **Active Close 측**
-    - TIME_WAIT 상태에서 대기 (2MSL 시간 동안)
-    - 이후 CLOSED 상태로 전환
+	- TIME_WAIT 상태에서 대기 (2MSL 시간 동안)
+	- 이후 CLOSED 상태로 전환
 
 ### 6.5 TIME_WAIT의 중요성
 
@@ -234,12 +234,12 @@ TCP에서 시퀀스 번호는 바이트 스트림의 위치를 나타냅니다:
 #### 6.5.2 실제 영향
 
 - 서버 측에서 주로 발생
-    - 클라이언트의 연결 종료 요청에 대한 응답으로 발생
-    - 포트 재사용에 제한이 생길 수 있음
+	- 클라이언트의 연결 종료 요청에 대한 응답으로 발생
+	- 포트 재사용에 제한이 생길 수 있음
 - 성능 고려사항
-    - 많은 클라이언트 연결이 있는 서버의 경우 영향
-    - TIME_WAIT 상태의 소켓이 리소스를 점유
-    - SO_REUSEADDR 소켓 옵션으로 일부 해결 가능
+	- 많은 클라이언트 연결이 있는 서버의 경우 영향
+	- TIME_WAIT 상태의 소켓이 리소스를 점유
+	- SO_REUSEADDR 소켓 옵션으로 일부 해결 가능
 
 ### 6.6 종료 과정의 예외 상황
 
@@ -252,9 +252,9 @@ TCP에서 시퀀스 번호는 바이트 스트림의 위치를 나타냅니다:
 #### 6.6.2 비정상 종료
 
 - RST(Reset) 패킷 사용
-    - 즉시 연결 종료
-    - TIME_WAIT 상태 없이 종료
-    - 데이터 유실 가능성 있음
+	- 즉시 연결 종료
+	- TIME_WAIT 상태 없이 종료
+	- 데이터 유실 가능성 있음
 
 :::warning[주의사항]
 TIME_WAIT 상태를 임의로 줄이거나 우회하는 것은 권장되지 않습니다. 네트워크의 신뢰성과 안정성을 위한 중요한 메커니즘입니다.
