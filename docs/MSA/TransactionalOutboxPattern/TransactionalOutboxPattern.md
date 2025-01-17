@@ -1,5 +1,5 @@
 ---
-title: "트랜잭셔널 아웃박스 패턴으로 분산 시스템 데이터 일관성 확보하기"
+title: "Transactional Outbox Pattern"
 description: "분산 시스템에서 데이터 일관성을 보장하기 위한 트랜잭셔널 아웃박스 패턴을 상세히 설명합니다. 폴링 발행기 패턴, 트랜잭션 로그 테일링 패턴과의 비교를 통해 각 패턴의 장단점과 적절한 사용 상황을 알아봅니다."
 tags: ["DISTRIBUTED_SYSTEM", "DATABASE", "TRANSACTION", "ARCHITECTURE", "BACKEND", "SYSTEM_DESIGN"]
 keywords: ["트랜잭셔널 아웃박스", "transactional outbox", "분산 시스템", "distributed system", "데이터 일관성", "data consistency", "폴링 발행기", "polling publisher", "트랜잭션 로그 테일링", "transaction log tailing", "이벤트 발행", "메시지 큐", "message queue", "데이터베이스", "database"]
