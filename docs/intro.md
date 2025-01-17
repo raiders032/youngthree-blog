@@ -25,8 +25,9 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
 - [Spring](Spring)
   - [Spring Cloud](Spring/SpringCloud/index.md)
   - [Spring Batch](Spring/SpringBatch/index.md)
-- Messaging System
-  - [Kafka](MessageQueue/Kafka/index.md)
+- [Messaging System](MessageSystem/index.md)
+  - [Kafka](MessageSystem/Kafka/index.md)
+  - [Redis Pub/Sub](MessageSystem/RedisPubSub/RedisPubSub.md)
 - [Test](Test/index.md)
 - Build Tool
   - [Gradle](Gradle/index.md)
@@ -48,6 +49,7 @@ AWS, 백엔드 개발, 데이터베이스 등 다양한 기술 스택에 대한 
   - [프로그래머스 문제 풀이](ProblemSolving/Programmers/index.md)
 - [Reactive Programming](Reactive-Programming/index.md)
   - [Reactive Stream](Reactive-Programming/Reactive-Stream/Reactive-Stream.md)
+- [System Design](SystemDesign/index.md)
 - Blockchain
   - Bitcoin
   - Ethereum
