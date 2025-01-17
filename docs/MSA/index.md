@@ -2,5 +2,8 @@
 title: "MSA"
 ---
 
-## Micro Service Architecture
+## Microservice Architecture
 - [Circuit Breaker](CircuitBreaker/CircuitBreaker.md)
+
+### Patterns
+- [Transactional Outbox Pattern](TransactionalOutboxPattern/TransactionalOutboxPattern.md)

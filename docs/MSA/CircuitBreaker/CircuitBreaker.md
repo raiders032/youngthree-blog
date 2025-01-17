@@ -101,3 +101,8 @@ Circuit Breaker는 전기 회로의 차단기처럼 장애가 발생한 서비�
 :::note
 성공적인 Circuit Breaker 구현을 위해서는 시스템의 특성에 맞는 세심한 설정과 지속적인 모니터링이 필요합니다.
 :::
+
+참고
+- https://engineering.linecorp.com/ko/blog/applying-circuitbreaker-to-channel-gateway
+- https://engineering.linecorp.com/ko/blog/circuit-breakers-for-distributed-services
+- http://martinfowler.com/bliki/CircuitBreaker.html
