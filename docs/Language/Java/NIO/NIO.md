@@ -1,3 +1,12 @@
+---
+title: "NIO"
+description: "Java의 네트워크 프로그래밍 방식의 발전 과정을 상세히 알아봅니다. 전통적인 IO부터 NIO, 그리고 Netty까지 각각의 특징과 장단점을 예제 코드와 함께 살펴보며, 실제 개발에서 어떤 방식을 선택해야 하는지 이해합니다."
+tags: ["NIO", "NETTY", "TCP", "SOCKET", "CHANNEL", "BUFFER", "SELECTOR", "JAVA", "NETWORK", "SERVER"]
+keywords: ["자바 NIO", "네티", "TCP 서버", "소켓 프로그래밍", "채널", "버퍼", "셀렉터", "비동기 IO", "논블로킹 IO", "자바 네트워크 프로그래밍", "NIO 버퍼", "NIO 채널", "netty framework", "네트워크 서버", "이벤트 루프"]
+draft: false
+hide_title: true
+---
+
 ## 1 NIO
 
 - 자바 4에서 new Input/Ouput이라는 뜻으로 java.nio 패키지가 추가되었다.
@@ -285,7 +294,7 @@ SelectionKey key = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT
 - 등록 시, 관심 있는 이벤트 유형으로 `OP_ACCEPT`를 지정하여, 연결 수락을 감지할 수 있다.
 - 클라이언트 연결이 들어오면, Selector는 해당 이벤트를 감지하고, 애플리케이션은 이 정보를 사용하여 해당 이벤트를 처리할 수 있다.
 
-## 4.3 준비된 채널 선택
+### 4.3 준비된 채널 선택
 
 - Selector는 등록된 채널들 중에서 I/O 작업이 가능한 채널을 선택하는 역할을 한다.
 - `select()` 메소드를 호출하여 준비된 채널들을 선택할 수 있다.
@@ -324,114 +333,269 @@ while (true) {
 
 ## 5 TCP 블로킹 채널
 
-- NIO를 이용해 TCP 서버/클라이언트를 개발할 때 블로킹, 넌블로킹, 비동기 구현 방식 중 하나를 선택한다.
-- NIO에서 TCP 네트워크 통신을 위해 사용되는 채널은`java.nio.channels.ServerSocketChannel`과 `java.nio.channels.SocketChannel`이다.
-	- 이 두 채널은 IO의 ServerSocket과 Socket에 대응된다.
-	- [[IO]] 참고
-	- ServerSocket과 Socket은 버퍼를 사용하지 않고 블로킹 방식만 지원한다.
-	- ServerSocketChannel과 SocketChannel은 버퍼를 이용하고 블로킹과 논블로킹 방식 모두 지원한다.
+이 장에서는 간단한 TCP 서버를 통해 Java의 네트워크 프로그래밍 방식의 발전 과정을 살펴보겠습니다. 우리가 만들 서버는 다음과 같은 간단한 기능을 수행합니다:
 
-### 5.1 ServerSocketChannel
+1. 클라이언트의 연결을 수락
+2. 연결된 클라이언트에게 "Hi!" 메시지 전송
+3. 메시지 전송 후 연결 종료
 
-- [레퍼런스](<https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/ServerSocketChannel.html>)
-- ServerSocketChannel을 사용해서 서버 소켓을 생성하고 연결을 수락해보자.
+### 5.1 Old I/O (OIO) 방식
 
-**예시**
+가장 전통적인 방식으로, Java의 초기부터 제공된 블로킹 I/O를 사용한 구현입니다.
 
 ```java
-ServerSocketChannel serverSocketChannel = null;  
-try {  
-    // ServerSocketChannel 객체 얻기  
-    serverSocketChannel = ServerSocketChannel.open();  
-  
-    // ServerSocketChannel은 기본적으로 블로킹 방식으로 동작하지만 명시적으로 표시했다.   
-serverSocketChannel.configureBlocking(true);  
-  
-    // 포트 바인딩  
-    serverSocketChannel.bind(new InetSocketAddress(8080));  
-  
-    while (true) {  
-        // 클라이언트 연결 수락 연결 요청이 들어오기까지 블로킹된다. 반환값은 클라이언트와 통실할 SocketChannel 객체  
-        SocketChannel socketChannel = serverSocketChannel.accept();  
-  
-        // 연결된 클라이언트의 IP와 포트를 알고 싶으면 아래와 같이 InetSocketAddress 객체를 얻을 수 있다.  
-        InetSocketAddress socketAddress = (InetSocketAddress) socketChannel.getRemoteAddress();  
-  
-        log.info("연결 된 호스트: {}", socketAddress.getHostName());  
-    }  
-} catch (Exception e){}  
-  
-if (serverSocketChannel.isOpen()){  
-    try {  
-        // 더 이상 연결 수락이 필요 없다면 포트를 언바인딩 한다.  
-        serverSocketChannel.close();  
-    } catch (Exception e) {}  
+public class PlainOioServer {
+    public void serve(int port) throws IOException {
+        // 서버 소켓 생성 및 포트 바인딩
+        final ServerSocket socket = new ServerSocket(port); 
+        try {
+            for (;;) {
+                // 클라이언트 연결 대기 (블로킹)
+                final Socket clientSocket = socket.accept(); 
+                System.out.println(
+                    "Accepted connection from " + clientSocket);
+                // 새 스레드 생성하여 클라이언트 처리
+                new Thread(new Runnable() {                 
+                    @Override
+                    public void run() {
+                        OutputStream out;
+                        try {
+                            out = clientSocket.getOutputStream();
+                            // 클라이언트에 메시지 전송
+                            out.write("Hi!\r\n".getBytes(
+                                Charset.forName("UTF-8")));
+                            out.flush();
+                            // 연결 종료
+                            clientSocket.close();               
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                clientSocket.close();
+                            } catch (IOException ex) {
+                                // ignore on close
+                            }
+                        }
+                    }
+                }).start();                                    
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 ```
 
-### 5.2 SocketChannel
+**특징:**
+- 구현이 직관적이고 이해하기 쉽습니다.
+- 각 클라이언트 연결마다 새로운 스레드를 생성합니다.
+- accept(), read(), write() 메소드가 모두 블로킹됩니다.
+- 다수의 클라이언트 연결시 많은 스레드가 생성되어 리소스 낭비가 발생할 수 있습니다.
 
-- 클라이언트가 서버에 요청할 때 SocketChannel을 이용한다.
+### 5.2 NIO 블로킹 방식
 
-**예시**
+Java NIO를 사용하지만, 여전히 블로킹 방식으로 동작하는 구현입니다.
 
 ```java
-SocketChannel socketChannel = null;  
-  
-try {  
-    // SocketChannel은 기본적으로 블로킹 방식으로 동작하지만 명시적으로 표시했다.  
-    socketChannel.configureBlocking(true);  
-  
-    // 서버 연결 요청 서버와 연결이 완료될 때까지 블로킹 된다.  
-    socketChannel.connect(new InetSocketAddress("localhost", 8080));  
-}catch (Exception e) {}  
-  
-if (socketChannel.isOpen()){  
-    try {  
-        socketChannel.close();  
-    } catch (Exception e) {}  
+public class PlainNioBlockingServer {
+    public void serve(int port) throws IOException {
+        ServerSocketChannel serverChannel = ServerSocketChannel.open();
+        serverChannel.configureBlocking(true); // 블로킹 모드
+        ServerSocket serverSocket = serverChannel.socket();
+        serverSocket.bind(new InetSocketAddress(port));
+        
+        try {
+            while (true) {
+                // 클라이언트 연결 대기 (블로킹)
+                final SocketChannel clientChannel = serverChannel.accept();
+                System.out.println("Accepted connection from " + clientChannel);
+                
+                // 새 스레드를 생성하여 클라이언트 처리
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // 메시지 전송을 위한 버퍼 준비
+                            ByteBuffer buffer = ByteBuffer.wrap("Hi!\r\n".getBytes());
+                            
+                            // 버퍼의 모든 데이터를 클라이언트에 전송
+                            while (buffer.hasRemaining()) {
+                                clientChannel.write(buffer);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                // 연결 종료
+                                clientChannel.close();
+                            } catch (IOException ex) {
+                                // ignore on close
+                            }
+                        }
+                    }
+                }).start();
+            }
+        } finally {
+            serverChannel.close();
+        }
+    }
 }
 ```
 
-## 6 TCP 논블로킹
+**특징:**
+- NIO의 Channel과 Buffer를 사용합니다.
+- OIO와 마찬가지로 각 클라이언트마다 새로운 스레드를 생성합니다.
+- 버퍼를 사용하여 데이터 처리가 더 효율적입니다.
+- 여전히 블로킹 방식으로 동작하여 동시성 처리에 한계가 있습니다.
 
-- 논블로킹 방식은 connect(), accept(), read(), write() 메서드가 블로킹되지 않는다.
+## 6 TCP 논블로킹 채널
 
-### 6.1 ServerSocketChannel
+### 6.1 NIO 논블로킹 방식
 
-- [레퍼런스](<https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/ServerSocketChannel.html>)
-
-**주요 메서드**
-
-```java
-public abstract SocketChannel accept() throws IOException
-```
-
-- 클라이언트의 연결 요청이 없으면 즉시 null을 반환한다.
-- 연결 요청이 있다면 새로운 연결이 가능해지거나 I/O error가 발생하기 전까지만 블록된다.
-
-**예시**
+Java NIO의 논블로킹 특성과 Selector를 활용한 가장 발전된 형태의 구현입니다.
 
 ```java
-while(true){
-	SocketChannel socketChannel = serverSocketChannel.accept();
+public class PlainNioServer {
+    public void serve(int port) throws IOException {
+        // ServerSocketChannel 열기
+        ServerSocketChannel serverChannel = ServerSocketChannel.open();
+        // 비동기 모드로 설정 
+        serverChannel.configureBlocking(false);
+        // 로컬 포트에 바인딩
+        ServerSocket ssocket = serverChannel.socket();
+        InetSocketAddress address = new InetSocketAddress(port);
+        ssocket.bind(address);
+
+        // Selector 생성 및 채널 등록
+        Selector selector = Selector.open();
+        serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+        final ByteBuffer msg = ByteBuffer.wrap("Hi!\r\n".getBytes());
+
+        for (;;) {
+            try {
+                // 블로킹되어 새로운 이벤트를 기다림
+                selector.select(); 
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                break;
+            }
+
+            // 준비된 이벤트들을 얻어옴
+            Set<SelectionKey> readyKeys = selector.selectedKeys();
+            Iterator<SelectionKey> iterator = readyKeys.iterator();
+
+            while (iterator.hasNext()) {
+                SelectionKey key = iterator.next();
+                iterator.remove();
+
+                try {
+                    // 새로운 연결 수락
+                    if (key.isAcceptable()) {
+                        ServerSocketChannel server = (ServerSocketChannel)key.channel();
+                        SocketChannel client = server.accept();
+                        client.configureBlocking(false);
+                        client.register(selector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, msg.duplicate());
+                        System.out.println("Accepted connection from " + client);
+                    }
+                    // 클라이언트에 데이터 쓰기
+                    if (key.isWritable()) {
+                        SocketChannel client = (SocketChannel)key.channel();
+                        ByteBuf buffer = (ByteBuf)key.attachment(); 
+                        while (buffer.hasRemaining()) {
+                            if (client.write(buffer) == 0) {
+                                break;
+                            }
+                        }
+                        client.close();
+                    }
+                } catch (IOException ex) {
+                    key.cancel();
+                    try {
+                        key.channel().close();
+                    } catch (IOException cex) {
+                    }
+                }
+            }
+        }
+    }
 }
 ```
 
-- accept 메서드는 클라이언트 요청이 없다면 블로킹되지 않고 바로 리턴되기 때문에 while 루프를 쉴새 없이 실행되어 CPU를 과도하게 사용하는 문제가 있다.
-- 이런 경우 이벤트 리스너 역할을 하는 셀렉터를 사용한다.
-- 논블로킹 채널을 셀렉터에 등록하면 클라이언트의 연결 요청이 들어오거나 데이터가 도착하는 경우 채널은 셀렉터에 통보한다.
-- 셀렉터는 통보한 채널들을 선택해서 작업 스레드가 accept 또는 read 메서드를 실행해서 즉시 작업을 처리하도록 한다.
+**특징과 장점:**
+1. **단일 스레드로 다중 연결 처리**
+	- Selector를 사용하여 여러 채널의 이벤트를 효율적으로 관리
+	- 스레드 생성 비용 절감
+2. **리소스 효율성**
+	- 논블로킹 방식으로 동작하여 스레드 대기 시간 최소화
+	- 버퍼를 사용한 효율적인 메모리 관리
+3. **확장성**
+	- 다수의 클라이언트 연결을 효율적으로 처리
+	- 시스템 리소스를 효율적으로 사용
 
-### 6.2 SocketChannel
+### 6.2 세 가지 방식의 비교
 
-- [레퍼런스](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/SocketChannel.html)
+1. **OIO (Old I/O)**
+	- 장점: 구현이 단순하고 이해하기 쉬움
+	- 단점: 클라이언트당 스레드 생성으로 인한 리소스 낭비
+2. **NIO 블로킹**
+	- 장점: 버퍼를 사용한 효율적인 데이터 처리
+	- 단점: OIO와 마찬가지로 클라이언트당 스레드 생성 필요
+3. **NIO 논블로킹**
+	- 장점: 단일 스레드로 다수의 클라이언트 처리 가능
+	- 단점: 구현이 복잡하고 디버깅이 어려움
 
-**주요 메서드**
+## 7 Netty 소개
+
+- 지금까지 Java NIO를 사용한 네트워크 프로그래밍에 대해 알아보았습니다. 
+- NIO는 강력한 기능을 제공하지만, 직접 사용하기에는 몇 가지 어려움이 있습니다:
+  - 복잡한 버퍼 관리
+  - 까다로운 이벤트 처리 로직
+  - 디버깅의 어려움
+  - 동시성 처리의 복잡성
+- 이러한 문제를 해결하기 위해 등장한 것이 바로 Netty입니다.
+
+### 7.1 Netty란?
+
+- Netty는 비동기 이벤트 기반 네트워크 애플리케이션 프레임워크입니다. 
+- NIO의 복잡한 처리를 추상화하여 개발자가 비즈니스 로직에 집중할 수 있게 해줍니다.
+- [자세한 내용은 Netty Introduction 참고](../../../Netty/Introduction/Introduction.md)
+
+### 7.2 앞서 본 TCP 서버를 Netty로 구현
+
+- 이전에 살펴본 "Hi!" 메시지를 전송하는 서버를 Netty로 구현하면 다음과 같습니다:
 
 ```java
-public abstract boolean connect(SocketAddress remote)
-                         throws IOException
+public class NettyNioServer {
+    public void server(int port) throws Exception {
+        final ByteBuf buf = Unpooled.copiedBuffer("Hi!\r\n",
+                CharsetUtil.UTF_8);
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(group).channel(NioServerSocketChannel.class)
+                .localAddress(new InetSocketAddress(port))
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) 
+                        throws Exception {
+                        ch.pipeline().addLast(
+                            new ChannelInboundHandlerAdapter() {
+                                @Override
+                                public void channelActive(
+                                    ChannelHandlerContext ctx) throws Exception {
+                                    ctx.writeAndFlush(buf.duplicate())
+                                        .addListener(
+                                            ChannelFutureListener.CLOSE);
+                                }
+                            });
+                    }
+                });
+            ChannelFuture f = b.bind().sync();
+            f.channel().closeFuture().sync();
+        } finally {
+            group.shutdownGracefully().sync();
+        }
+    }
+}
 ```
-
-- 
