@@ -4,8 +4,6 @@
 - 자바 7에서 IO와 NIO 사이의 일관성 없는 클래스 설계를 바로 잡고 비동기 채널 등의 네트워크 지원을 대폭 강화한 NIO2 API가 추가 되었다.
 - NIO2는 기존 java.nio의 하위 패키지로 제공된다.
 
-
-
 ### 1.1 IO와 차이점
 
 **스트림과 채널**
@@ -14,18 +12,14 @@
 - 하지만 NIO는 채널 기반이다. 채널은 스트림과 달리 양방향으로 입출력이 가능하다.
 - 따라서 하나의 파일에서 데이터를 읽고 쓰는 작업을 모두 해야 한다면 FileChannel 하나만 생성하면 된다.
 
-
-
 **버퍼**
 
 - IO에서는 출력 스트림이 1바이트를 쓰면 입력 스트림이 1바이트를 읽는다.
 	- IO는 스트림에서 읽은 데이터를 즉시 처리하기 때문에 입력된 전체 데이터를 별도로 저장하지 않으면 입력된 데이터 위치를 이동해 가면서 자유롭게 이용할 수 없다.
 	- IO에서는 추가적으로 보조 스트림인 `BufferedInputStream`, `BufferedOutputStream`을 연결해 버퍼를 사용해 복수 개의 바이트를 한꺼번에 입력받고 출력할 수 있다.
 - IO와 다르게 NIO는 기본적으로 버퍼를 사용한다.
-	- Channel에서 데이터를 읽으면 Buffer에 담긴다. 
+	- Channel에서 데이터를 읽으면 Buffer에 담긴다.
 	- Channel에 데이터를 쓰려면 먼저 Buffer에 데이터를 담고 Buffer에 담긴 데이터를 Channel에 쓴다.
-
-
 
 **논블로킹**
 
@@ -34,10 +28,8 @@
 	- 블로킹을 빠져나가는 유일한 방법은 스트림을 닫는 것이다.
 - 반면에 NIO는 블로킹과 논블로킹을 모두 지원한다. NIO의 블로킹이 IO의 블로킹과 다른점은 스레드를 인터럽트해서 빠져나갈수 있다.
 - NIO의 논블로킹은 입출력 작업 준비가 완되된 채널만 선택해서 작업 스레드가 처리하기 때문에 작업 스레드가 블로킹 되지 않는다.
-- NIO 논블로킹의 핵심 객체는 멀티플렉서인 셀럭터다. 
+- NIO 논블로킹의 핵심 객체는 멀티플렉서인 셀럭터다.
 	- 셀렉터는 복수 개의 채널 중에서 준비 완료된 채널을 선택하는 방법을 제공한다.
-
-
 
 ## 2 버퍼
 
@@ -46,8 +38,6 @@
 - 버퍼가 사용하는 메모리의 위치에 따라 non-direct 버퍼와 direct 버퍼로 분류된다.
 	- non-direct 버퍼: JVM이 관리하는 힙 메모리 공간을 이용하는 버퍼
 	- direct 버퍼: 운영체제가 관리하는 메모리 공간을 이용하는 버퍼
-
-
 
 ### 2.1 종류
 
@@ -59,22 +49,16 @@
 	- 그리고 임시 다이렉트 버퍼를 사용해서 운영체제의 native I/O 기능을 수행한다.
 	- 따라서 직접 다이렉트 버퍼를 사용하는 것보다는 입출력 성능이 낮다.
 
-
-
 #### 2.1.2 direct buffer
 
 - 운영체제의 메모리를 할당받기 위해 운영체제의 네이티브 C 함수를 호출하고 여러가지 처리를 해야하므로 상대적으로 버퍼 생성이 느리다.
 	- 따라서 자주 생성하지 않고 생성한 버퍼를 재사용하는 것이 적합하다.
 - 운영체제가 관리하는 메모리를 사용하므로 운영체제가 허용하는 범위 내에서 대용량 버퍼를 사용할 수 있다.
 
-
-
 ### 2.2 버퍼 생성
 
 - 데이터 타입별로 넌다이렉트 버퍼를 생성하기 위해서는 각 Buffer 클래스의 `allocate()`와 `wrap()` 메서드를 호출하면 된다.
 - 다이렉트 버퍼는 `allocateDirect()` 메서드를 호출하면 된다.
-
-
 
 **allocate() 메서드**
 
@@ -84,8 +68,6 @@ CharBuffer charBuffer = CharBuffer.allocate(100);
 ```
 
 - 최대 100개의 바이트를 저장하는 ByteBuffer를 생성하고 최대 100개의 문자를 저장하는 CharBuffer를 생성하는 코드
-
-
 
 **wrap() 메서드**
 
@@ -97,8 +79,6 @@ ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
 - 각 타일별 Buffer는 모두 wrap() 메서드를 가지고 있다.
 - wrap()는 이미 생성되어 있는 자바 배열을 래핑해서 Buffer 객체를 생성한다.
 
-
-
 **allocateDirect()**
 
 ```java
@@ -109,8 +89,6 @@ CharBuffer charBuffer = byteBuffer.asCharBuffer();
 - allocateDirect() 메서드는 JVM 힙 메모리 바깥쪽 즉 운영체제가 관리하는 메모리에 다이렉트 버퍼를 생성한다.
 - 이 메서드는 각 타입별 Buffer 클래스에는 없고 ByteBuffer만 제공한다.
 	- 따라서 각 타입별로 다이렉트 버퍼를 생성하고 싶다면 asXX() 메서드를 호출해 얻을 수 있다.
-
-
 
 ### 2.3 Buffer의 위치 속성
 
@@ -131,12 +109,9 @@ CharBuffer charBuffer = byteBuffer.asCharBuffer();
 	- mark
 		- reset() 메서드를 호출했을 때 돌아갈 위치를 기록하는 속성이다.
 
-
-
 ### 2.4 Buffer 메서드
 
 - [레퍼런스](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/Buffer.html)
-
 
 #### 2.4.1 clear()
 
@@ -151,8 +126,6 @@ public Buffer clear() {
 
 - 버퍼의 위치 속성을 초기화 한다.
 
-
-
 #### 2.4.2 flip()
 
 ```java
@@ -166,10 +139,8 @@ public Buffer flip() {
 
 - 데이터를 읽기 위해 위치 속성값을 변경한다.
 
-
-
-
 #### 2.4.3 mark()
+
 ```java
 public Buffer mark() {  
     mark = position;  
@@ -178,8 +149,6 @@ public Buffer mark() {
 ```
 
 - 현재 위치를 마킹한다.
-
-
 
 #### 2.4.3 reset()
 
@@ -195,8 +164,6 @@ public Buffer reset() {
 
 - 현재 위치(position)을 마킹한 위치로 변경한다.
 
-
-
 ## 3 Channel
 
 - 채널은 NIO에서 데이터를 읽고 쓰는 연결을 나타낸다.
@@ -204,15 +171,11 @@ public Buffer reset() {
 - 채널은 항상 버퍼와 함께 사용되며, 데이터는 버퍼를 통해 채널로 흐르거나 채널에서 버퍼로 흐른다.
 - 채널은 블로킹과 논블로킹 모드를 모두 지원할 수 있다.
 
-
-
 ### 3.1 FileChannel
 
 - [레퍼런스](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/FileChannel.html)
 - `java.nio.channels.FileChannel`을 이용하면 파일 읽기와 쓰기를 할 수 있다.
 - FileChannel은 동기화 처리가 되어 있어 쓰레드 세이프하다.
-
-
 
 #### 3.1.1 FileChannel 생성과 닫기
 
@@ -224,7 +187,6 @@ public static FileChannel open(Path path, OpenOption... options)
 - 첫 번째 path는 열거나 생성하고자 하는 파일의 경로를 Path 객체로 생성해 지정한다.
 - 두 번째 옵션은 [StandardOpenOption의](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/StandardOpenOption.html) 열거 상수를 나열하면 된다.
 
-
 ```java
 FileChannel open = FileChannel.open(  
         Paths.get("/test.txt"),  
@@ -235,12 +197,10 @@ FileChannel open = FileChannel.open(
 
 - `/test.txt`  파일을 생성하고 쓰려면 위와 같이 채널을 생성한다.
 
-
-
 #### 3.1.2 파일 읽기와 쓰기
 
 - FileChannel의 read와 write 메서드는 블로킹된다.
-- NIO에서는 비동기 파일 입출력 작업을 위해  AsynchronousFileChannel 클래스를 별도로 제공한다.
+- NIO에서는 비동기 파일 입출력 작업을 위해 AsynchronousFileChannel 클래스를 별도로 제공한다.
 
 ```java
 public abstract int write(ByteBuffer src)
@@ -251,7 +211,6 @@ public abstract int write(ByteBuffer src)
 - ByteBuffer의 position부터 limit까지 파일에 쓰여진다.
 - ByteBuffer에서 파일로 쓰여진 바이트 수가 반환된다.
 
-
 ```java
 public abstract int read(ByteBuffer dst)
 ```
@@ -260,8 +219,6 @@ public abstract int read(ByteBuffer dst)
 - 매개값으로 ByteBuffer 객체를 주면 파일에서 읽혀지는 바이트를 ByteBuffer의 position 부터 ByteBuffer에 저장한다.
 - 반환값은 파일에서 ByteBuffer로 읽혀진 바이트 수다.
 - 더 이상 읽을 바이트가 없다면 `-1`을 반환한다.
-
-
 
 **파일 복사 예시**
 
@@ -288,8 +245,6 @@ fileChannelTo.close();
 
 - `/Users/YT/Documents/test.txt`파일을 `/Users/YT/Documents/test2.txt`로 복사하는 예시
 
-
-
 ## 4 Selctor
 
 - Selctor는 하나의 스레드가 여러 채널의 이벤트를 모니터링할 수 있게 해주는 구성 요소이다.
@@ -297,8 +252,6 @@ fileChannelTo.close();
 	- 이를 통해 하나의 스레드가 여러 네트워크 연결을 효율적으로 관리할 수 있다.
 - 선택자는 논블로킹 I/O 작업에 사용되며, 블로킹 방식의 문제를 해결해주는 중요한 기능이다.
 - `Selector.open()` 메소드로 선택자를 생성하고, 채널에 `configureBlocking(false)`를 호출하여 논블로킹 모드로 설정한 후 선택자에 채널을 등록한다.
-
-
 
 ### 4.1 Selctor 생성
 
@@ -309,19 +262,15 @@ fileChannelTo.close();
 	- 논블로킹으로 설정된 채널만 등록할 수 있다.
 - Selector는 특정 이벤트(예: 연결 요청, 데이터 도착)가 발생할 때까지 블로킹하거나, 블로킹하지 않고 주기적으로 채널의 상태를 확인할 수 있다.
 
-
-
 ### 4.2 Channel 등록
 
-- Selector에 채널을 등록하기 위해서는 채널을 논블로킹 모드로 설정해야 한다. 
+- Selector에 채널을 등록하기 위해서는 채널을 논블로킹 모드로 설정해야 한다.
 	- 이는 `configureBlocking(false)` 메소드를 호출하여 수행할 수 있다.
-- 채널을 Selector에 등록하기 위해서는 채널의 `register()` 메소드를 사용한다. 
-	- 이 메소드는 `SelectionKey` 객체를 반환한다. 
+- 채널을 Selector에 등록하기 위해서는 채널의 `register()` 메소드를 사용한다.
+	- 이 메소드는 `SelectionKey` 객체를 반환한다.
 	- 이 키는 Selector와 채널 간의 관계를 나타낸다.
-- `register()` 메소드는 관심 있는 I/O 이벤트 유형을 인자로 받는다. 
+- `register()` 메소드는 관심 있는 I/O 이벤트 유형을 인자로 받는다.
 	- 예를 들어, 읽기, 쓰기, 연결 가능, 수락 가능 등의 이벤트가 있다.
-
-
 
 **예시**
 
@@ -332,22 +281,18 @@ SelectionKey key = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT
 
 ```
 
-- 위 코드에서 `ServerSocketChannel`은 논블로킹 모드로 설정되고, Selector에 등록된다. 
+- 위 코드에서 `ServerSocketChannel`은 논블로킹 모드로 설정되고, Selector에 등록된다.
 - 등록 시, 관심 있는 이벤트 유형으로 `OP_ACCEPT`를 지정하여, 연결 수락을 감지할 수 있다.
 - 클라이언트 연결이 들어오면, Selector는 해당 이벤트를 감지하고, 애플리케이션은 이 정보를 사용하여 해당 이벤트를 처리할 수 있다.
-
-
 
 ## 4.3 준비된 채널 선택
 
 - Selector는 등록된 채널들 중에서 I/O 작업이 가능한 채널을 선택하는 역할을 한다.
 - `select()` 메소드를 호출하여 준비된 채널들을 선택할 수 있다.
-	-  이 메소드는 하나 이상의 채널이 작업 준비가 되었을 때까지 블로킹된다.
+	- 이 메소드는 하나 이상의 채널이 작업 준비가 되었을 때까지 블로킹된다.
 	- 최소 하나의 SelectionKey로부터 작업 처리가 준비되었다는 통보가 올 때까지 블로킹된다.
 - `select(long timeout)`은 지정된 시간 동안 블로킹되며, `selectNow()`는 즉시 반환된다.
 - select, selectNow 메서드의 반환 값은 준비된 SelectionKey의 수이다.
-
-
 
 **예시**
 
@@ -377,26 +322,22 @@ while (true) {
 - 각 `SelectionKey`는 특정 채널의 준비된 이벤트를 나타낸다.
 	- `isAcceptable()`, `isConnectable()`, `isReadable()`, `isWritable()` 등의 메소드를 사용하여 해당 이벤트에 따라 적절한 처리를 할 수 있다.
 
-
-
 ## 5 TCP 블로킹 채널
 
 - NIO를 이용해 TCP 서버/클라이언트를 개발할 때 블로킹, 넌블로킹, 비동기 구현 방식 중 하나를 선택한다.
-- NIO에서 TCP 네트워크 통신을 위해 사용되는 채널은`java.nio.channels.ServerSocketChannel`과 `java.nio.channels.SocketChannel`이다. 
+- NIO에서 TCP 네트워크 통신을 위해 사용되는 채널은`java.nio.channels.ServerSocketChannel`과 `java.nio.channels.SocketChannel`이다.
 	- 이 두 채널은 IO의 ServerSocket과 Socket에 대응된다.
 	- [[IO]] 참고
 	- ServerSocket과 Socket은 버퍼를 사용하지 않고 블로킹 방식만 지원한다.
 	- ServerSocketChannel과 SocketChannel은 버퍼를 이용하고 블로킹과 논블로킹 방식 모두 지원한다.
-
-
 
 ### 5.1 ServerSocketChannel
 
 - [레퍼런스](<https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/ServerSocketChannel.html>)
 - ServerSocketChannel을 사용해서 서버 소켓을 생성하고 연결을 수락해보자.
 
-
 **예시**
+
 ```java
 ServerSocketChannel serverSocketChannel = null;  
 try {  
@@ -428,13 +369,9 @@ if (serverSocketChannel.isOpen()){
 }
 ```
 
-
-
 ### 5.2 SocketChannel
 
 - 클라이언트가 서버에 요청할 때 SocketChannel을 이용한다.
-
-
 
 **예시**
 
@@ -456,19 +393,13 @@ if (socketChannel.isOpen()){
 }
 ```
 
-
-
 ## 6 TCP 논블로킹
 
 - 논블로킹 방식은 connect(), accept(), read(), write() 메서드가 블로킹되지 않는다.
 
-
-
 ### 6.1 ServerSocketChannel
 
 - [레퍼런스](<https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/ServerSocketChannel.html>)
-
-
 
 **주요 메서드**
 
@@ -478,8 +409,6 @@ public abstract SocketChannel accept() throws IOException
 
 - 클라이언트의 연결 요청이 없으면 즉시 null을 반환한다.
 - 연결 요청이 있다면 새로운 연결이 가능해지거나 I/O error가 발생하기 전까지만 블록된다.
-
-
 
 **예시**
 
@@ -494,12 +423,9 @@ while(true){
 - 논블로킹 채널을 셀렉터에 등록하면 클라이언트의 연결 요청이 들어오거나 데이터가 도착하는 경우 채널은 셀렉터에 통보한다.
 - 셀렉터는 통보한 채널들을 선택해서 작업 스레드가 accept 또는 read 메서드를 실행해서 즉시 작업을 처리하도록 한다.
 
-
 ### 6.2 SocketChannel
 
 - [레퍼런스](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/channels/SocketChannel.html)
-
-
 
 **주요 메서드**
 
