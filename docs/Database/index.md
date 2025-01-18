@@ -17,7 +17,8 @@ title: "Database"
 ## 동시성 제어
 
 - [트랜잭션(Transaction)](/docs/Database/Transaction/Transaction/Transaction.md)
-- [트랜잭션 전파](Transaction/TransactionPropagation/TransactionPropagation.md)
+- [트랜잭션 전파(TransactionPropagation)](Transaction/TransactionPropagation/TransactionPropagation.md)
+- [분산 트랜잭션(DistributedTransaction)](DistributedTransation/DistributedTransaction.md)
 - [격리 수준(Isolation Levels)](Isolation-Levels/Isolation-Levels.md)
 	- Dirty reads, Non-repeatable reads, Phantom reads
 	- READ UNCOMMITED, READ COMMITED
@@ -34,6 +35,7 @@ title: "Database"
 ## 데이터베이스 유형
 
 - [NoSQL](NoSQL/NoSQL.md)
+  - [MongoDB](MongoDB/index.md)
 
 ## 응용
 
