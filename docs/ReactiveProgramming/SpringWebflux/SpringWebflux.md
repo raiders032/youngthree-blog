@@ -1,91 +1,70 @@
-##  1 Spring Webflux
+## 1 Spring Webflux
 
-###  1.1 용도
+### 1.1 용도
 
 * 비동기 논블록킹 리액티브 개발에 사용
 * 효율적으로 동작하는 고성능 웹 애플리케이션 개발
 * 서비스간 호출이 많은 마이크로서비스 아키텍처에 적합
 
-
-###  1.2 비동기 논블록킹 리액티브 개발
+### 1.2 비동기 논블록킹 리액티브 개발
 
 * 비동기 논블록킹 리액티브 웹 애플리케이션을 개발하려면
 * WebFlux + 리액티브 리포지토리, 리액티브 원격 API 호출, 리액티브 지원 외부 서비스, @Async 블록킹 IO
 * 코드에서 블록킹 작업이 발생하지 않도록 Flux 스트림 또는 Mono에 데이터 넣어서 전달
 
+## 2 동기 비동기
 
-
-##  2 동기 비동기
-
-###  2.1 동기
+### 2.1 동기
 
 * 동기란 A와 B가 시작시간 또는 종료시간이 일치하는 것을 의미한다
-
-
 
 **동기에 다양한 예시**
 
 * A, B 쓰레드가 동시에 작업을 시작하면 동기
-  * CyclicBarrier
+	* CyclicBarrier
 * A(메소드 리턴시간), B(결과를 전달받는 시간)이 일치하면 동기
 * A끝나는 시간과 B가 시작하는 시간이 같으면 동기
-  * synchronized
-  * BlockingQueue
+	* synchronized
+	* BlockingQueue
 
+### 2.2 비동기
 
-
-###  2.2 비동기
-
-
-
-###  2.3 블록킹 논블록킹
+### 2.3 블록킹 논블록킹
 
 * 동기, 비동기와는 관점이 다르다
 * 내가 직접 제어할 수 없는 대상을 상대하는 방법이다
 * 대상이 제한적이다
-  * IO
-  * 멀티쓰레드 동기화
+	* IO
+	* 멀티쓰레드 동기화
 
+## 3 @Async
 
-
-##  3 @Async
-
-###  3.1 @Async 메서드가 지원하는 반환 타입
+### 3.1 @Async 메서드가 지원하는 반환 타입
 
 * void
 * `Future<T>`
 * `ListenableFuture<T>`
 * `CompletableFuture<T>`
 
-
-
-###  3.2 주의사항
+### 3.2 주의사항
 
 * @Async가 붙은 메서드를 호출할 때 마다 새로운 쓰레드를 만들고 버린다
 * 쓰레드 풀을 사용하는 것이 아니기 때문에 일회용 쓰레드를 만들어 쓰는것은 상당한 낭비
 * @Async를 본격적으로 사용한다면 쓰레드 풀을 지정해서 사용하자
 
+## Mono
 
+## Flux
 
-##  Mono
-
-
-
-##  Flux
-
-###  프로그래밍으로 아이템 Emitting
+### 프로그래밍으로 아이템 Emitting
 
 * 코드를 짜서 퍼블리셔 쉽게 만들기
 
-
-
-####  create 메서드
+#### create 메서드
 
 * generate 메서드와 비교하면 더 로우 레벨 직접 반복문을 제어한다
 
-
-
-####  generate 메서드
+#### generate 메서드
 
 * create 메서드와 비교하면 더 하이 레벨 직접 반복문을 제어하지 않는다
 * synchronousSink 사용
@@ -117,19 +96,13 @@ Flux.generate(() -> 1, (counter, synchronousSink) -> {
 }).subscribe(Util.subscriber());
 ```
 
-
-
-####  push 메서드
+#### push 메서드
 
 * create 메서드와 같지만 스레드세이프하지 않다
 
+## Operators
 
-
-##  Operators
-
-
-
-###  handle
+### handle
 
 ```java
 Flux.range(1, 20).handle((integer, synchronousSink) -> {
@@ -151,9 +124,7 @@ Flux.range(1, 20).handle((integer, synchronousSink) -> {
 }).subscribe(Util.subscriber());
 ```
 
-
-
-###  delayElements
+### delayElements
 
 ```java
 Flux.range(1, 100)
@@ -162,9 +133,7 @@ Flux.range(1, 100)
   .subscribe(Util.subscriber());
 ```
 
-
-
-###  onErrorReturn
+### onErrorReturn
 
 ```java
 Flux.range(1, 10)
@@ -191,7 +160,7 @@ Flux.range(1, 10)
 .. Completed 
 ```
 
-###  onErrorResume
+### onErrorResume
 
 ```java
 Flux.range(1, 10)
@@ -219,15 +188,13 @@ Flux.range(1, 10)
 .. Completed 
 ```
 
-
-
-###  onErrorContinue
+### onErrorContinue
 
 * onErrorReturn, onErrorResume은 에러 발생시 즉시 cancel() 메서드를 호출해 더 이상 진행되지 않는다
 * 더 진행하고 싶은 경우 onErrorContinue를 사용하라
 * `(e, o) -> {}`
-  * e: 예외 객체
-  * o: 예외를 발생시킨 객체 아래 예제에서는 `5`
+	* e: 예외 객체
+	* o: 예외를 발생시킨 객체 아래 예제에서는 `5`
 
 ```java
 Flux.range(1, 10)
@@ -265,17 +232,13 @@ Flux.range(1, 10)
 .. Completed 
 ```
 
-
-
-###  timeout
+### timeout
 
 * 설정한 시간이 지나면 fallback으로 전환한다
 
 ```java
 public final Flux<T> timeout(Duration timeout, @Nullable Publisher<? extends T> fallback)
 ```
-
-
 
 **예시**
 
@@ -304,8 +267,6 @@ private static Flux<Integer> fallback() {
 }
 ```
 
-
-
 **결과**
 
 * request이후 2초를 기다리는 동안 onNext 호출이 없어 fallback으로 전환 후 아이템을 받고있다
@@ -321,9 +282,7 @@ private static Flux<Integer> fallback() {
 ..Recevied : 802
 ```
 
-
-
-###  defaultIfEmpty
+### defaultIfEmpty
 
 * 어떠한 데이터의 emit 없이 완료될 때 반환할 기본 값을 설정한다
 
@@ -332,8 +291,6 @@ package reactor.core.publisher;
 
 public final Flux<T> defaultIfEmpty(T defaultV)
 ```
-
-
 
 **예시**
 
@@ -359,9 +316,7 @@ private static Flux<Integer> getOrderNumbers() {
 .. Completed 
 ```
 
-
-
-###  switchIfEmpty
+### switchIfEmpty
 
 * defaultIfEmpty와 마찬가지로 어떠한 데이터의 emit 없이 완료될 때 사용된다
 * 다른 점은 defaultIfEmpty 값을 반환하지만 switchIfEmpty는 다른 퍼블리셔를 구독한다
@@ -400,11 +355,7 @@ private static Flux<Integer> fallback() {
 .. Completed 
 ```
 
-
-
-###  transform
-
-
+### transform
 
 **예시**
 
@@ -445,10 +396,6 @@ BUILD SUCCESSFUL in 2s
 4 actionable tasks: 2 executed, 2 up-to-date
 2:29:59 오후: Task execution finished ':test --tests "com.example.webflux.reative.Transform.test"'.
 ```
-
-
-
-
 
 참고자료
 
