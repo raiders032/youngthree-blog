@@ -17,7 +17,7 @@ hide_title: true
 - 리액티브 프로그래밍이란 데이터나 이벤트의 흐름을 중심으로 하는 프로그래밍 방식입니다.
 - 마우스 클릭이나 네트워크 응답같은 이벤트가 발생했을 때, 이에 "반응"하여 처리하는 방식으로 동작합니다.
 - 리액터는 이러한 리액티브 프로그래밍을 Java에서 쉽게 구현할 수 있도록 도와줍니다.
-- [ReactiveProgramming 참고](../ReactiveProgramming/ReactiveProgramming.md)
+- [ReactiveProgramming 참고](../../ReactiveProgramming/ReactiveProgramming.md)
 
 **리액티브 프로그래밍 예시**
 
@@ -42,7 +42,7 @@ userRepository.findById(userId)
 	- Subscriber: 데이터를 소비하는 구독자
 	- Subscription: 발행자와 구독자 사이의 구독 관계
 	- Processor: 발행자이면서 동시에 구독자인 중간 처리자
-- [ReactiveStream 참고](../ReactiveStream/ReactiveStream.md)
+- [ReactiveStream 참고](../../ReactiveStream/ReactiveStream.md)
 
 ### 1.3 개발 배경과 Spring과의 관계
 
@@ -264,24 +264,16 @@ Flux.range(1, 100)
 ### 5.2 백프레셔 전략
 
 - 데이터가 너무 많이 들어올 때 처리하는 방법:
-  - BUFFER: 처리하지 못한 데이터를 임시 저장
-  - DROP: 처리하지 못하는 데이터는 무시
-  - LATEST: 가장 최신 데이터만 유지
-  - ERROR: 처리 용량 초과 시 오류 발생
+	- BUFFER: 처리하지 못한 데이터를 임시 저장
+	- DROP: 처리하지 못하는 데이터는 무시
+	- LATEST: 가장 최신 데이터만 유지
+	- ERROR: 처리 용량 초과 시 오류 발생
 
 ## 6. Scheduler 소개
 
-- Scheduler는 코드가 실행될 스레드를 제어합니다
-
-```java
-Flux.range(1, 100)
-    .publishOn(Schedulers.boundedElastic())  // 별도 스레드에서 실행
-    .doOnNext(i -> System.out.println(
-        "처리 중: " + i + 
-        " (스레드: " + Thread.currentThread().getName() + ")"
-    ))
-    .subscribe();
-```
+- Project Reactor의 Scheduler는 리액티브 스트림에서 작업이 실행될 스레드를 관리하는 핵심 컴포넌트입니다.
+- 개발자가 직접 스레드를 제어하는 대신, Scheduler가 작업의 실행 컨텍스트를 효율적으로 관리합니다.
+- [Scheduler 참고](../Scheduler/Scheduler.md)
 
 ## 7. Context 소개
 
