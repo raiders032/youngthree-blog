@@ -27,7 +27,7 @@ sidebar_position: 1
 
 ### ⚡ [리액티브 프로그래밍](ReactiveProgramming/index.md)
 - [리액티브 스트림](ReactiveProgramming/ReactiveStream/ReactiveStream.md)
-- [Project Reactor](ReactiveProgramming/ProjectReactor/ProjectReactor.md)
+- [Project Reactor](ReactiveProgramming/ProjectReactor/index.md)
 - [Spring Webflux](ReactiveProgramming/SpringWebflux/SpringWebflux.md)
 - [Netty](Netty/index.md)
 
