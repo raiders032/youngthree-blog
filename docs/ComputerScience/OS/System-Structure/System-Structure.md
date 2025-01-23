@@ -1,4 +1,4 @@
-## #  1 System Structure
+##  1 System Structure
 
 ![cpu-structure.png](images/cpu-structure.png)
 

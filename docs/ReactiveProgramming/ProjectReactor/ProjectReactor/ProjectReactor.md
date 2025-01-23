@@ -42,7 +42,7 @@ userRepository.findById(userId)
 	- Subscriber: 데이터를 소비하는 구독자
 	- Subscription: 발행자와 구독자 사이의 구독 관계
 	- Processor: 발행자이면서 동시에 구독자인 중간 처리자
-- [ReactiveStream 참고](../../ReactiveStream/ReactiveStream.md)
+- [ReactiveStream 참고](../../ReactiveStream/ReactiveStream/ReactiveStream.md)
 
 ### 1.3 개발 배경과 Spring과의 관계
 

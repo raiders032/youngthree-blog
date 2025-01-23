@@ -1,8 +1,8 @@
 ---
 title: "NIO"
 description: "Java의 네트워크 프로그래밍 방식의 발전 과정을 상세히 알아봅니다. 전통적인 IO부터 NIO, 그리고 Netty까지 각각의 특징과 장단점을 예제 코드와 함께 살펴보며, 실제 개발에서 어떤 방식을 선택해야 하는지 이해합니다."
-tags: ["NIO", "NETTY", "TCP", "SOCKET", "CHANNEL", "BUFFER", "SELECTOR", "JAVA", "NETWORK", "SERVER"]
-keywords: ["자바 NIO", "네티", "TCP 서버", "소켓 프로그래밍", "채널", "버퍼", "셀렉터", "비동기 IO", "논블로킹 IO", "자바 네트워크 프로그래밍", "NIO 버퍼", "NIO 채널", "netty framework", "네트워크 서버", "이벤트 루프"]
+tags: [ "NIO", "NETTY", "TCP", "SOCKET", "CHANNEL", "BUFFER", "SELECTOR", "JAVA", "NETWORK", "SERVER" ]
+keywords: [ "자바 NIO", "네티", "TCP 서버", "소켓 프로그래밍", "채널", "버퍼", "셀렉터", "비동기 IO", "논블로킹 IO", "자바 네트워크 프로그래밍", "NIO 버퍼", "NIO 채널", "netty framework", "네트워크 서버", "이벤트 루프" ]
 draft: false
 hide_title: true
 ---
@@ -15,13 +15,13 @@ hide_title: true
 
 ### 1.1 IO와 차이점
 
-**스트림과 채널**
+#### 스트림과 채널
 
 - IO는 스트림 기반이다. 따라서 데이터를 읽기 위해서는 입력 스트림을 생성해야 하고 데이터를 출력하기 위해서는 출력 스트림을 생성해야 한다.
 - 하지만 NIO는 채널 기반이다. 채널은 스트림과 달리 양방향으로 입출력이 가능하다.
 - 따라서 하나의 파일에서 데이터를 읽고 쓰는 작업을 모두 해야 한다면 FileChannel 하나만 생성하면 된다.
 
-**버퍼**
+#### 버퍼
 
 - IO에서는 출력 스트림이 1바이트를 쓰면 입력 스트림이 1바이트를 읽는다.
 	- IO는 스트림에서 읽은 데이터를 즉시 처리하기 때문에 입력된 전체 데이터를 별도로 저장하지 않으면 입력된 데이터 위치를 이동해 가면서 자유롭게 이용할 수 없다.
@@ -30,7 +30,7 @@ hide_title: true
 	- Channel에서 데이터를 읽으면 Buffer에 담긴다.
 	- Channel에 데이터를 쓰려면 먼저 Buffer에 데이터를 담고 Buffer에 담긴 데이터를 Channel에 쓴다.
 
-**논블로킹**
+#### 논블로킹
 
 - IO는 블록킹된다. 입력 스트림의 read() 메서드를 호출하면 데이터가 입력되기 전까지 스레드는 블로킹된다.
 - IO스레드가 블로킹되면 다른 일을 할 수 없고 블로킹을 빠져나가기 위해 인터럽트도 할 수 없다.
@@ -194,7 +194,9 @@ public static FileChannel open(Path path, OpenOption... options)
 
 - 정적 메서드인 open 메서드로 FileChannel을 생성할 수 있다.
 - 첫 번째 path는 열거나 생성하고자 하는 파일의 경로를 Path 객체로 생성해 지정한다.
-- 두 번째 옵션은 [StandardOpenOption의](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/StandardOpenOption.html) 열거 상수를 나열하면 된다.
+- 두 번째
+  옵션은 [StandardOpenOption의](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/StandardOpenOption.html)
+  열거 상수를 나열하면 된다.
 
 ```java
 FileChannel open = FileChannel.open(  
@@ -387,6 +389,7 @@ public class PlainOioServer {
 ```
 
 **특징:**
+
 - 구현이 직관적이고 이해하기 쉽습니다.
 - 각 클라이언트 연결마다 새로운 스레드를 생성합니다.
 - accept(), read(), write() 메소드가 모두 블로킹됩니다.
@@ -443,6 +446,7 @@ public class PlainNioBlockingServer {
 ```
 
 **특징:**
+
 - NIO의 Channel과 Buffer를 사용합니다.
 - OIO와 마찬가지로 각 클라이언트마다 새로운 스레드를 생성합니다.
 - 버퍼를 사용하여 데이터 처리가 더 효율적입니다.
@@ -523,6 +527,7 @@ public class PlainNioServer {
 ```
 
 **특징과 장점:**
+
 1. **단일 스레드로 다중 연결 처리**
 	- Selector를 사용하여 여러 채널의 이벤트를 효율적으로 관리
 	- 스레드 생성 비용 절감
@@ -547,17 +552,17 @@ public class PlainNioServer {
 
 ## 7 Netty 소개
 
-- 지금까지 Java NIO를 사용한 네트워크 프로그래밍에 대해 알아보았습니다. 
+- 지금까지 Java NIO를 사용한 네트워크 프로그래밍에 대해 알아보았습니다.
 - NIO는 강력한 기능을 제공하지만, 직접 사용하기에는 몇 가지 어려움이 있습니다:
-  - 복잡한 버퍼 관리
-  - 까다로운 이벤트 처리 로직
-  - 디버깅의 어려움
-  - 동시성 처리의 복잡성
+	- 복잡한 버퍼 관리
+	- 까다로운 이벤트 처리 로직
+	- 디버깅의 어려움
+	- 동시성 처리의 복잡성
 - 이러한 문제를 해결하기 위해 등장한 것이 바로 Netty입니다.
 
 ### 7.1 Netty란?
 
-- Netty는 비동기 이벤트 기반 네트워크 애플리케이션 프레임워크입니다. 
+- Netty는 비동기 이벤트 기반 네트워크 애플리케이션 프레임워크입니다.
 - NIO의 복잡한 처리를 추상화하여 개발자가 비즈니스 로직에 집중할 수 있게 해줍니다.
 - [자세한 내용은 Netty Introduction 참고](../../../Netty/Introduction/Introduction.md)
 

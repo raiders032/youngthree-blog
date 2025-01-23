@@ -83,7 +83,7 @@ hide_title: true
 
 - 리액티브 스트림즈는 비동기 스트림 처리를 위한 표준 명세입니다. 
 - 이는 리액티브 프로그래밍을 구현하는 데 필요한 최소한의 인터페이스와 규칙을 정의합니다.
-- [Reactive Stream 참고](../ReactiveStream/ReactiveStream.md)
+- [Reactive Stream 참고](../ReactiveStream/ReactiveStream/ReactiveStream.md)
 
 :::warning
 리액티브 스트림즈는 구체적인 구현이 아닌 인터페이스 명세입니다. 실제 구현은 각 라이브러리(예: Project Reactor, RxJava)가 담당합니다.

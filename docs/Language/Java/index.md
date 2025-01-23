@@ -54,6 +54,7 @@ title: "Java"
 	- ExecutorService, Executors, Runnable, Callable, Future
 - [ThreadLocal](ThreadLocal/ThreadLocal.md)
 - [Concurrent](Concurrent/Concurrent.md)
+- [VirtualThread](VirtualThread/VirtualThread.md)
 
 ### 입출력과 네트워킹
 - [IO](IO/IO.md)

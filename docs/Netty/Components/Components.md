@@ -85,6 +85,7 @@ ChannelFuture는 작업의 완료를 기다리는 동안 애플리케이션이 �
 - 애플리케이션 개발자 입장에서 Netty의 주요 컴포넌트는 ChannelHandler입니다.
 - ChannelHandler는 Netty 애플리케이션의 핵심 컴포넌트로, 실제 비즈니스 로직이 구현되는 곳입니다.
 - ChannelHandler는 네트워크 이벤트에 의해 트리거되는 메서드를 정의하고, 이를 통해 데이터 처리 로직을 구현합니다.
+- 이벤트 루프에 등록된 Channel에서 발생하는 이벤트는 ChannelHandler를 통해 처리됩니다.
 
 ### 5.1 주요 ChannelHandler 타입
 
@@ -101,6 +102,7 @@ ChannelFuture는 작업의 완료를 기다리는 동안 애플리케이션이 �
 ## 6. ChannelPipeline - 데이터 흐름 관리
 
 - ChannelPipeline은 ChannelHandler들의 체인을 관리하는 컨테이너입니다.
+- 즉 ChannelPipeline은 여러 ChannelHandler의 조합을 의미하며 데이터 처리 흐름을 관리합니다.
 
 ### 6.1 ChannelPipeline의 특징
 
