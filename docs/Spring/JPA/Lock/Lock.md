@@ -73,15 +73,13 @@
 
 ## 3 @Version
 
-- JPA가 제공하는 Optimistic Locking을 사용하려면 엔티티에 @Version 애노테이션이 붙은 필드가 필수적으로 필요하다
-	- 이 필드를 버전 애트리뷰트라고 한다
-- 버전 애트리뷰트가 있는 엔티티를 수정할 때 마다 버전이 하나씩 자동으로 증가한다
-- 그리고 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생한다.
+- JPA가 제공하는 Optimistic Locking을 사용하려면 엔티티에 @Version 애노테이션이 붙은 필드가 필수적으로 필요합니다.
+	- 이 필드를 버전 애트리뷰트라고 합니다.
+- 버전 애트리뷰트가 있는 엔티티를 수정할 때 마다 버전이 하나씩 자동으로 증가합니다.
+- 그리고 엔티티를 수정할 때 조회 시점의 버전과 수정 시점의 버전이 다르면 예외가 발생합니다. (OptimisticLockException이 발생)
 	- 예: 트랙잭션1이 조회한 엔티티를 수정하고 있는데 트랙잭션2에서 같은 엔티티를 수정하고 커밋해서 엔티티의 버전이 증가한다. 이후 트랜잭션1이 커밋할 때 버전 정보가 다르므로 예외 발생
 
-**Item.java**
-
-- 엔티티 클래스 Item의 버전 애트리뷰트  `version`
+### 3.1 사용 예시
 
 ```java
 @Entity
@@ -94,12 +92,14 @@ public class Item {
 }
 ```
 
-### 3.1 버전 애트리뷰트 규칙
+- 엔티티 클래스 Item의 버전 애트리뷰트  `version`은 Long 타입
 
-- 각각의 엔티티 클래스는 오직 하나의 버전 애트리뷰트만 가져야한다
-- 버전 애트리뷰트의 타입은 *int*, *Integer*, *long*, *Long*, *short*, *Short*, *java.sql.Timestamp*만 가능하다
+### 3.2 버전 애트리뷰트 규칙
 
-### 3.2 JPA Optimistic Locking 동작 방식
+- 각각의 엔티티 클래스는 오직 하나의 버전 애트리뷰트만 가질 수 있습니다.
+- 버전 애트리뷰트의 타입은 *int*, *Integer*, *long*, *Long*, *short*, *Short*, *java.sql.Timestamp*만 가능합니다.
+
+### 3.3 JPA Optimistic Locking 동작 방식
 
 - 엔티티를 수정하고 트랜잭션을 커밋하면서 영속성 컨텍스트를 플러시한다
 - 버전이 1인 엔티티를 수정하는 경우 아래와 같은 UPDATE 쿼리를 실행한다
@@ -115,7 +115,7 @@ WHERE ID = 1
 - 데이터베이스 버전과 엔티티 버전이 같으면 데이터를 수정하면서 동시에 버전도 하나 증가시키는 것을 볼 수 있다
 - 만약 데이터베이스에 버전이 이미 증가해서(1이 아니라 2라면) 수정 중인 엔티티의 버전(1)과 다르다면 수정할 대상이 없다 이 때는 버전이 이미 증가한 것으로 판단해서 JPA가 예외를 발생시킨다
 
-### 3.3 Lock Modes
+### 3.4 Lock Modes
 
 **LockModeType.java**
 
@@ -131,49 +131,44 @@ public enum LockModeType{
 }
 ```
 
-#### 3.3.1 NONE
+#### 3.4.1 NONE
 
-- 락 모드를 적용하지 않아도 엔티티에 버전 애트리뷰트가 있으면 Optimistic Locking이 적용된다
-- Second Lost Update Problem을 예방할 수 있다
+- 락 모드를 적용하지 않아도 엔티티에 버전 애트리뷰트가 있으면 Optimistic Locking이 적용됩니다.
+- Second Lost Update Problem을 예방할 수 있습니다.
 
-**동작방식**
+##### 동작방식
 
 - 조회한 엔티티를 수정할 때 버전을 체크하면서 버전을 증가한다(UPDATE 쿼리 사용)
 - 이때 데이터베이스의 버전 값이 현재 버전이 아니면 예외 발생
 
-#### 3.3.2 OPTIMISTIC
+#### 3.4.2 OPTIMISTIC
 
 - `NONE` 을 사용하면 엔티티를 수정해야 버전을 체크하지만 `OPTIMISTIC`을 사용하면 엔티티를 조회만 해도 버전을 체크한다
 - 쉽게 얘기하면 한 번 조회한 엔티티는 트랜잭션을 종료할 때까지 다른 트랜잭션에서 변경하지 않음을 보장한다
 - dirty read와 non repeatable read를 방지한다
 
-**동작방식**
+##### 동작방식
 
 - 트랜잭션을 커밋할 때 버전 정보를 조회해서(SELECT 쿼리 사용) 현재 엔티티의 버전과 같은지 검증하고 같지 않으면 예외가 발생한다.
 
-#### 3.3.3 OPTIMISTIC_FORCE_INCREMENT
+#### 3.4.3 OPTIMISTIC_FORCE_INCREMENT
 
 - Optimistic Locking을 사용하면서 버전 정보를 강제로 증가한다
 - 논리적인 단위의 엔티티 묶음을 관리할 떄 사용한다
 
-**동작방식**
+##### 동작방식
 
 - 엔티티를 수정하지 않아도 트랜잭션을 커밋할 때 UPDATE 쿼리를 사용해 버전을 강제로 증가시킨다
 - 이때 데이터베이스의 버전이 엔티티 버전과 다르다면 예외가 발생한다
 - 추가로 엔티티를 수정하면 수정 시 버전 UPDATE가 발생한다 따라서 총 2번의 버전 증가가 나타날 수 있다
+- OPTIMISTIC_FORCE_INCREMENT는 Aggregate Root에 사용할 수 있다.
+	- 예를 들어 Aggregate Root는 수정하지 않았지만 Aggregate Root가 관리하는 엔티티를 수정했을 때
+	- Aggregate Root의 버전을 강제로 증가시킬 수 있다
+- [OPTIMISTIC_FORCE_INCREMENT 참고](https://vladmihalcea.com/hibernate-locking-patterns-how-does-optimistic_force_increment-lock-mode-work/)
 
-> OPTIMISTIC_FORCE_INCREMENT는 Aggregate Root에 사용할 수 있다. 예를 들어 Aggregate Root는 수정하지 않았지만 Aggregate Root가 관리하는 엔티티를 수정했을 때
-> Aggregate Root의 버전을 강제로 증가시킬 수 있다
+### 3.5 JPA Lock 사용
 
-
-
-> OPTIMISTIC_FORCE_INCREMENT 참고
->
-> - https://vladmihalcea.com/hibernate-locking-patterns-how-does-optimistic_force_increment-lock-mode-work/
-
-### 3.4 JPA Lock 사용
-
-#### 3.4.1 EntityManager
+#### 3.5.1 EntityManager
 
 - 조회하면서 즉시 락 걸기
 
@@ -193,43 +188,51 @@ Student student = entityManager.find(Student.class, id);
 entityManager.refresh(student, LockModeType.OPTIMISTIC);
 ```
 
-#### 3.4.2 Query
+#### 3.5.2 Query
 
 ```java
 Query query = entityManager.createQuery("from Student where id = :id");
 query.setParameter("id", studentId);
-query.setLockMode(LockModeType.OPTIMISTIC_INCREMENT);
+query.setLockMode(LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 query.getResultList()
 ```
 
-#### 3.4.3 NamedQuery
+#### 3.5.3 NamedQuery
 
 ```java
 @NamedQuery(name="optimisticLock",
             query="SELECT s FROM Student s WHERE s.id LIKE :id",
-            lockMode = OPTIMISTIC_INCREMENT)
+            lockMode = OPTIMISTIC_FORCE_INCREMENT)
 ```
 
-### 3.5 주의사항
+### 3.6 주의사항
 
-- 버전 애트리뷰트는 엔티티를 통해 읽을 수 있지만 절대 개발자가 직접 업데이트하거나 증가시켜선 안된다
-	- 벌크 연산은 버전을 무시하기 때문에 벌크 연산을 할 경우 버전 필드를 직접 증가시켜야한다
-- 버전 애트리뷰트가 없어도 Optimistic Locking를 지원해주는 JPA 구현체도 있지만 항상 명시적으로 버전 애트리뷰트를 작성하자
-- 위처럼 자동 지원하지 않는 구현체를 사용했을 때 버전 애트리뷰트가 없는 엔티티의 락을 얻을려고 한다면PersitenceException 발생
+- 버전 애트리뷰트는 엔티티를 통해 읽을 수 있지만 절대 개발자가 직접 업데이트하거나 증가시켜선 안됩니다.
+	- 벌크 연산은 버전을 무시하기 때문에 벌크 연산을 할 경우 버전 필드를 직접 증가시켜야합니다.
+- 버전 애트리뷰트가 없어도 Optimistic Locking를 지원해주는 JPA 구현체도 있지만 항상 명시적으로 버전 애트리뷰트를 작성합시다.
+- 위처럼 자동 지원하지 않는 구현체를 사용했을 때 버전 애트리뷰트가 없는 엔티티의 락을 얻을려고 한다면 PersitenceException 발생합니다.
 
 ## 4 Pessimistic Locking
 
-- 비관적 락은 이름 그대로 트랜잭션의 충돌이 발생한다고 가정하고 우선 락을 걸는 방식이다
-- 데이터베이스가 제공하는 락 기능을 사용한다
-- 대표적으로 `select for update` 구문이 있다
+- 비관적 락은 이름 그대로 트랜잭션의 충돌이 발생한다고 가정하고 우선 락을 걸는 방식이다.
+- 데이터베이스가 제공하는 락 기능을 사용한다.
+- 대표적으로 `select for update` 구문이 있다.
 
-### 4.1 Lock Modes
+### 4.1 @Lock 애노테이션
 
-- JPA에서 사용할 수 있는 3가지 모드
-- `PESSIMISTIC_READ`: shared lock을 획득해서 다른 트랜잭션이 데이터를 업데이트 하거나 삭제하는 것을 막는다
-- `PESSIMISTIC_WRITE`: exclusive lock을 획득해서 다른 트랜잭션이 데이터를 읽기/업데이트/삭제하는 것을 막는다
-- `PESSIMISTIC_FORCE_INCREMENT`: `PESSIMISTIC_WRITE`와 똑같이 작동하며 추가적으로 versioned 엔티티의 version 애트리뷰트를 증가시킨다
-	- versioned 엔티티란 @Version 애노테이션이 붙은 엔티티를 말한다
+- JPA에서는 @Lock 애노테이션을 사용해 비관적 락을 쉽게 사용할 수 있습니다.
+- 엔티티에 대한 락을 획득하고 싶다면 쿼리 메소드에 @Lock 애노테이션을 사용하면 됩니다.
+- @Lock 애노테이션을 사용할 때 LockModeType을 지정해야 합니다.
+
+### 4.2 Lock Modes
+
+- LockModeType은 enum으로 정의되어 있습니다.
+- @Lock 애노테이션을 사용할 때 LockModeType을 지정하면 지정된 모드로 데이터베이스에 전달되어 락을 획득합니다.
+- JPA에서 사용할 수 있는 3가지 모드가 있습니다.
+	- `PESSIMISTIC_READ`: shared lock을 획득해서 다른 트랜잭션이 데이터를 업데이트 하거나 삭제하는 것을 막는다
+	- `PESSIMISTIC_WRITE`: exclusive lock을 획득해서 다른 트랜잭션이 데이터를 읽기/업데이트/삭제하는 것을 막는다
+	- `PESSIMISTIC_FORCE_INCREMENT`: `PESSIMISTIC_WRITE`와 똑같이 작동하며 추가적으로 versioned 엔티티의 version 애트리뷰트를 증가시킨다
+		- versioned 엔티티란 @Version 애노테이션이 붙은 엔티티를 말한다
 
 **LockModeType.java**
 
@@ -259,12 +262,28 @@ public enum LockModeType{
 - Pessimistic Locking 중 유일하게 버전 정보를 사용한다
 - Pessimistic Locking이지만 버전 정보를 강제로 증가시킨다
 
-### 4.2 타임 아웃
+### 4.3 관련 예외
 
-- Pessimistic Locking을 사용하면 Lock 획득할 때까지 트랜잭션이 대기한다
-- 무한정 기다릴 수는 없으므로 타임 아웃 시간을 지정할 수 있다
-- 대기시간 동안 응답이 없으면 javax.persistence.LockTimeoutException이 발생한다
-- 데이터베이스 특성에 따라 타임아웃이 동작하지 않을 수 있다
+#### 4.3.1 LockTimeoutException이
+
+- Pessimistic Locking을 사용하면 Lock 획득할 때까지 트랜잭션이 대기합니다.
+- 무한정 기다릴 수는 없으므로 타임 아웃 시간을 지정할 수 있습니다.
+- 대기시간 동안 응답이 없으면 javax.persistence.LockTimeoutException이 발생합니다.
+- 데이터베이스 특성에 따라 타임아웃이 동작하지 않을 수 있습니다.
+
+#### 4.3.2 TransactionRequiredException
+
+- LockModeType을 사용하려면 트랜잭션 내에서 사용해야 합니다.
+- 트랜잭션을 시작하지 않은 상태에서 LockModeType을 사용하면 javax.persistence.TransactionRequiredException이 발생합니다.
+
+##### 타임 아웃 설정
+
+```java
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "3000")})
+```
+
+- `javax.persistence.lock.timeout` 힌트를 사용해 타임아웃을 설정할 수 있습니다.
 
 참고
 

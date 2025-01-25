@@ -7,6 +7,7 @@ title: "Spring"
 ### Spring Framework
 
 - [Transaction Propagation](TransactionPropagation/TransactionPropagation.md)
+- [Spring Retry](SpringRetry/SpringRetry.md)
 
 ### Spring Cloud
 
@@ -16,4 +17,4 @@ title: "Spring"
 ### Spring JPA
 
 - [Lock.md](JPA/Lock/Lock.md)
-  - Silent Data Loss, Optimistic Lock, Pessimistic Lock 
+	- Silent Data Loss, Optimistic Lock, Pessimistic Lock 
