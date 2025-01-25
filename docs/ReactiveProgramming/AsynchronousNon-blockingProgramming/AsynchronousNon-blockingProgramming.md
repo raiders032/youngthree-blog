@@ -1,8 +1,8 @@
-# Asynchronous Non-blocking Programming
+## 1. Asynchronous Non-blocking Programming
 
 OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로킹 프로그래밍에 대해 알아봅니다.
 
-## 1. OS
+## 2. OS
 
 운영체제 수준에서 제공하는 I/O 모델과 시스템 콜은 모든 비동기-논블로킹 프로그래밍의 기초가 됩니다
 
@@ -23,7 +23,7 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 	- 대표적인 방법으로 멀티 프로세싱, 멀티 스레딩, I/O 멀티플렉싱을 소개합니다.
 	- 블로킹 방식의 한계부터 현대적인 비동기 방식까지의 발전 과정을 이해할 수 있습니다.
 
-## 2. Java
+## 3. Java
 
 - Java의 I/O 처리 방식은 전통적인 블로킹 방식에서 현대적인 논블로킹 방식으로 발전해왔습니다
 - [Java OIO](../../Language/Java/IO/IO.md)
@@ -33,9 +33,9 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 	- 현대적인 논블로킹 I/O 모델을 다룹니다.
 	- Channel, Buffer, Selector 등 핵심 개념과 실제 구현 방법을 배울 수 있습니다.
 
-## 3. Reactor Pattern
+## 4. Reactor Pattern
 
-### 3.1 Reactor Pattern 개요
+### 4.1 Reactor Pattern 개요
 
 - Reactor 패턴은 동시에 들어오는 여러 종류의 이벤트를 처리하기 위한 동시성을 다루는 디자인 패턴 중 하나입니다.
 - Reactor 패턴은 이벤트 기반 아키텍처의 근간이 되는 패턴입니다.
@@ -49,22 +49,22 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 	- 핸들러에서 이벤트를 처리한다.
 	- 다시 1~3 단계를 반복한다.
 
-### 3.2 구현체
+### 4.2 구현체
 
 - Netty
 - node.js
 - 각 구현체들은 Reactor 패턴을 기반으로 하면서도 고유한 특징을 가지고 있습니다.
 
-### 3.3 NIO로 구현해보는 간단한 Event Loop 예시
+### 4.3 NIO로 구현해보는 간단한 Event Loop 예시
 
-### 3.4 이벤트 루프를 블록하면 안 되는 이유
+### 4.4 이벤트 루프를 블록하면 안 되는 이유
 
 - 이벤트 루프의 블로킹은 전체 시스템의 성능에 치명적인 영향을 미칠 수 있습니다.
 - 결과적으로 핸들러에서 스레드 블록을 유발하는 작업이나 시간이 오래 걸리는 작업을 처리하는 경우에는 해당 시간 동안 이벤트 루프가 블록되기 때문에 발생한 이벤트를 처리하는 시간도 지연됩니다.
 - 이벤트 루프가 블록되는 문제를 피하고 높은 응답성을 유지하기 위해서는 스레드 블록을 유발하는 작업은 이벤트 루프가 아닌 별도 스레드에서 수행해야 합니다.
 - 또한 핸들러에 블록을 유발하는 작업은 없지만 이벤트를 처리하는 로직 자체가 CPU가 많이 필요한 작업을 포함하고 있어서 시간이 많이 필요한 경우에는 작업 범위를 분할해서 처리해야 합니다.
 
-## 4. Netty
+## 5. Netty
 
 - 현대적인 네트워크 애플리케이션 프레임워크입니다:
 - [Introduction.md](../../Netty/Introduction/Introduction.md)
@@ -73,17 +73,16 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 	- EventLoop, Channel, ChannelHandler, ChannelPipeline 등 주요 컴포넌트를 상세히 다룹니다.
 	- 각 컴포넌트가 어떻게 협력하여 비동기-논블로킹 처리를 구현하는지 이해할 수 있습니다.
 
-## 5. Reactive Streams
+## 6. Reactive Streams
 
-- 데이터 스트림을 비동기적으로 처리하기 위한 표준입니다
+- Reactive Streams는 non-blocking backpressure를 갖춘 비동기 스트림 처리를 위한 표준을 제공하는 것을 목적으로 합니다.
 - [ReactiveStream 개요](../ReactiveStream/ReactiveStream/ReactiveStream.md)
 	- Reactive Streams의 핵심 개념과 특징을 설명합니다.
-	- Observer Pattern과의 차이점을 이해할 수 있습니다.
 - [Backpressure란?](../ReactiveStream/Backpressure/Backpressure.md)
-	- 전통적인 Push 방식의 한계와 이를 해결하는 백프레셔 메커니즘을 설명합니다.
+	- 전통적인 옵저버 패턴의 Push 방식의 한계와 이를 해결하는 백프레셔 메커니즘을 설명합니다.
 	- 실제 시스템에서 부하 제어가 어떻게 이루어지는지 배울 수 있습니다.
 
-## 6. Project Reactor
+## 7. Project Reactor
 
 - Project Reactor는 Reactive Streams의 대표적인 구현체로써, Subscriber의 처리 능력을 존중하여 데이터 스트림을 비동적으로 처리할 수 있게한다.
 - [Backpressure.md](../ProjectReactor/Backpressure/Backpressure.md)
@@ -91,7 +90,7 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 - [Scheduler.md](../ProjectReactor/Scheduler/Scheduler.md)
 	- 비동기 처리를 위한 스케줄러의 동작 방식을 다룹니다.
 
-## 7. Spring WebFlux
+## 8. Spring WebFlux
 
 - Spring WebFlux는 Spring Framework의 일부로써, 비동기-논블로킹 웹 애플리케이션을 개발할 수 있게 해줍니다.
 - [SpringWebflux.md](../../Spring/SpringWebflux/SpringWebflux.md)

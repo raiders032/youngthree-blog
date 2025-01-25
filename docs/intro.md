@@ -26,7 +26,7 @@ sidebar_position: 1
 - [테스트 방법론](Test/index.md)
 
 ### ⚡ [리액티브 프로그래밍](ReactiveProgramming/index.md)
-- [리액티브 스트림](ReactiveProgramming/ReactiveStream/ReactiveStream/ReactiveStream.md)
+- [Reactive Streams](ReactiveProgramming/ReactiveStream/index.md)
 - [Project Reactor](ReactiveProgramming/ProjectReactor/index.md)
 - [Spring Webflux](ReactiveProgramming/SpringWebflux/SpringWebflux.md)
 - [Netty](Netty/index.md)
