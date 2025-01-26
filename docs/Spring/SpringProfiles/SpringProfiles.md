@@ -75,8 +75,8 @@ public class AppConfig {
 	- 모든 환경에서 공통으로 사용되는 기본 설정 정의
 		- 특정 프로파일이 활성화되면 해당 프로파일의 설정이 이 기본 설정을 덮어씁니다
 - 프로파일별 설정 파일:
-	- application-{profile}.properties 또는 application-{profile}.yml
-	- {profile} 부분에 실제 프로파일 이름이 들어갑니다
+	- `application-{profile}.properties` 또는 `application-{profile}.yml`
+	- `{profile}` 부분에 실제 프로파일 이름이 들어갑니다
 	- 예: development 프로파일용 application-development.yml
 - 설정 로드 우선순위:
 	- 프로파일 설정 파일이 기본 설정 파일보다 우선순위가 높습니다
@@ -136,7 +136,7 @@ spring:
 
 ## 5. @Profile 어노테이션 활용
 
-- @Profile 어노테이션은 특정 프로파일이 활성화됐을 때만 빈을 등록하거나 설정을 활성화하는 조건부 구성을 가능하게 합니다.
+- `@Profile` 어노테이션은 특정 프로파일이 활성화됐을 때만 빈을 등록하거나 설정을 활성화하는 조건부 구성을 가능하게 합니다.
 
 ### 5.1 클래스 레벨 적용
 
