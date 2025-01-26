@@ -3,14 +3,14 @@
 - SDKMAN!을 사용하여 Java를 설치하고 관리하는 방법에 대한 완벽 가이드를 제공하려고 합니다.
 - SDKMAN!은 Java, Groovy, Scala 등 다양한 소프트웨어 개발 키트(SDK)를 쉽게 설치하고 관리할 수 있는 도구입니다.
 
-## 1.1 주요 기능
+### 1.1 주요 기능
 
 - 다양한 JDK 배포판 지원 (Amazon Corretto, OpenJDK, Eclipse Temurin 등)
 - 여러 Java 버전 동시 설치 및 전환
 - 프로젝트별 Java 버전 관리
 - Gradle, Maven, Kotlin 등 다른 JVM 기반 도구도 관리 가능
 
-## 1.2 장점
+### 1.2 장점
 
 - 커맨드 라인 기반의 간단한 설치/관리
 - 버전 전환이 쉽고 빠름
@@ -30,7 +30,7 @@ $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 sdk version
 ```
 
-## 3 Java 설치
+## 3 특정 Java 설치
 
 ### 3.1 Java 버전 목록 조회
 
