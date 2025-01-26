@@ -1,5 +1,5 @@
 ---
-title: "Project Reactor 시작하기: 리액티브 프로그래밍의 첫걸음"
+title: "Project Reactor"
 description: "Java 리액티브 프로그래밍의 핵심 라이브러리인 Project Reactor를 처음 접하는 개발자를 위한 가이드입니다. 리액터의 기본 개념부터 실제 사용법까지, 단계별로 쉽게 설명합니다."
 tags: [ "PROJECT_REACTOR", "REACTIVE_PROGRAMMING", "SPRING_WEBFLUX", "JAVA", "BACKEND" ]
 keywords: [ "프로젝트 리액터", "project reactor", "리액터", "reactor", "리액티브", "reactive", "웹플럭스", "webflux", "스프링", "spring", "자바", "java", "백프레셔", "backpressure", "입문", "기초", "가이드" ]

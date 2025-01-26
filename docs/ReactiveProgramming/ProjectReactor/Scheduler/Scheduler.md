@@ -1,5 +1,5 @@
 ---
-title: "Project Reactor의 Scheduler 완벽 가이드"
+title: "Scheduler"
 description: "Project Reactor의 Scheduler를 상세히 알아봅니다. 기본 개념부터 실전 활용까지, 비동기 프로그래밍에서 스케줄러의 역할과 최적의 사용법을 다룹니다. 다양한 스케줄러 타입과 성능 최적화 방법을 실제 예제와 함께 설명합니다."
 tags: [ "PROJECT_REACTOR", "REACTOR", "REACTIVE_PROGRAMMING", "JAVA", "SPRING", "BACKEND" ]
 keywords: [ "프로젝트 리액터", "project reactor", "리액터", "reactor", "스케줄러", "scheduler", "비동기 프로그래밍", "async programming", "리액티브", "reactive", "자바", "java", "스프링", "spring", "백엔드", "backend", "동시성", "concurrency" ]

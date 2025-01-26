@@ -1,12 +1,11 @@
 ## 1. Asynchronous Non-blocking Programming
 
-OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로킹 프로그래밍에 대해 알아봅니다.
+- OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로킹 프로그래밍에 대해 알아봅니다.
 
 ## 2. OS
 
-운영체제 수준에서 제공하는 I/O 모델과 시스템 콜은 모든 비동기-논블로킹 프로그래밍의 기초가 됩니다
-
-- [IOModels.md](../../ComputerScience/OS/IOModels/IOModels.md)
+- 운영체제 수준에서 제공하는 I/O 모델과 시스템 콜은 모든 비동기-논블로킹 프로그래밍의 기초가 됩니다
+- [IO Models](../../ComputerScience/OS/IOModels/IOModels.md)
 	- 동기/비동기 블로킹/논블로킹의 개념과 I/O 모델에 대해 설명합니다.
 	- 제어권에 따라 블로킹/논블로킹을 구분하고, 작업 완료 여부에 따라 동기/비동기를 구분합니다.
 	- I/O 모델의 조합: 동기-블로킹, 동기-논블로킹, 비동기-논블로킹에 대해 설명합니다.
@@ -14,10 +13,10 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 - [OS Socket](../../ComputerScience/OS/Socket/Socket.md)
 	- Socket에 대한 개요와 File Descriptor에 대해 설명합니다.
 	- Socket 또한 파일이라는 개념을 이해하면, 소켓을 통한 입출력을 이해하는 데 도움이 됩니다.
-- [IOMultifexing.md](../../ComputerScience/OS/IOMultifexing/IOMultifexing.md)
+- [IO Multifexing](../../ComputerScience/OS/IOMultifexing/IOMultifexing.md)
 	- select, poll, epoll 시스템 콜의 동작 방식을 설명합니다.
 	- 이러한 시스템 콜들이 Java NIO나 Netty같은 상위 구현의 기반이 됩니다.
-- [MultipleConnections.md](../../ComputerScience/OS/MultipleConnections/MultipleConnections.md)
+- [Multiple Connections](../../ComputerScience/OS/MultipleConnections/MultipleConnections.md)
 	- 실제 서버 구현에서 다중 접속을 처리하는 다양한 방식을 소개합니다.
 	- 블로킹 TCP 서버의 문제점을 설명하고, 다중 접속 서버를 구현하는 방법을 소개합니다.
 	- 대표적인 방법으로 멀티 프로세싱, 멀티 스레딩, I/O 멀티플렉싱을 소개합니다.
@@ -32,6 +31,7 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 - [Java NIO](../../Language/Java/NIO/NIO.md)
 	- 현대적인 논블로킹 I/O 모델을 다룹니다.
 	- Channel, Buffer, Selector 등 핵심 개념과 실제 구현 방법을 배울 수 있습니다.
+  - Direct Buffer와 Non-Direct Buffer의 차이점을 이해하고, 각각의 장단점을 파악할 수 있습니다.
 
 ## 4. Reactor Pattern
 
@@ -85,9 +85,10 @@ OS레벨부터 애플리케이션 레벨에 이르기까지 비동기-논블로�
 ## 7. Project Reactor
 
 - Project Reactor는 Reactive Streams의 대표적인 구현체로써, Subscriber의 처리 능력을 존중하여 데이터 스트림을 비동적으로 처리할 수 있게한다.
-- [Backpressure.md](../ProjectReactor/Backpressure/Backpressure.md)
+- [Backpressure](../ProjectReactor/Backpressure/Backpressure.md)
 	- Project Reactor의 백프레셔 구현 방식을 설명합니다.
-- [Scheduler.md](../ProjectReactor/Scheduler/Scheduler.md)
+  - ERROR, DROP, BUFFER, LATEST 네 가지 백프레셔 전략을 설명합니다.
+- [Scheduler](../ProjectReactor/Scheduler/Scheduler.md)
 	- 비동기 처리를 위한 스케줄러의 동작 방식을 다룹니다.
 
 ## 8. Spring WebFlux

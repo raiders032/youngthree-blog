@@ -1,5 +1,5 @@
 ---
-title: "Project Reactor의 Backpressure 이해하기"
+title: "Backpressure"
 description: "리액티브 프로그래밍의 핵심 개념인 Backpressure에 대해 알아봅니다. Project Reactor에서 Backpressure가 어떻게 구현되고 활용되는지, 그리고 다양한 Backpressure 전략을 실제 예제와 함께 살펴봅니다."
 tags: [ "REACTIVE_PROGRAMMING", "PROJECT_REACTOR", "JAVA", "BACKEND", "SPRING" ]
 keywords: [ "백프레셔", "backpressure", "배압", "리액티브", "reactive", "프로젝트 리액터", "project reactor", "리액터", "reactor", "스프링", "spring", "자바", "java" ]
@@ -138,95 +138,95 @@ Flux.range(1, 100)
 
 ### 5.1 ERROR 전략
 
-- Project Reactor의 기본 Backpressure 전략입니다.
+- `onBackpressureError()`를 사용하여 ERROR 전략을 적용할 수 있습니다.
+- ERROR 전략은 Project Reactor의 기본 Backpressure 전략입니다.
 	- 별도의 Backpressure 전략을 지정하지 않으면 이 전략이 사용됩니다.
 - Subscriber의 처리 속도가 Publisher의 생성 속도를 따라가지 못할 때 Publisher가 IllegalStateException을 발생시킵니다.
-  - IllegalStateException의 하위 클래스인 OverflowException이 발생합니다.
+	- IllegalStateException의 하위 클래스인 OverflowException이 발생합니다.
 - 데이터 유실을 허용하지 않는 중요한 비즈니스 로직에서 사용합니다.
 - 시스템의 과부하 상태를 즉시 감지하고 대응해야 하는 경우에 적합
 - 디버깅과 테스트 단계에서 Backpressure 관련 문제를 발견하는데 유용합니다.
 - ERROR 전략을 사용하더라도 Project Reactor는 기본적으로 작은 크기(256개)의 버퍼를 제공합니다.
 
-#### 예제
+#### 5.1.1 ERROR 전략 동작 방식
 
-```java
-// ERROR 전략은 별도의 설정이 필요하지 않습니다 (기본값)
-Flux.interval(Duration.ofMillis(1)) // 1밀리초마다 데이터 생성
-    .subscribe(value -> {
-        Thread.sleep(100);          // 100밀리초 동안 처리
-        System.out.println(value);
-    }, error -> {
-        System.err.println("Error occurred: " + error.getMessage());
-        // "Could not emit value due to lack of requests" 에러 메시지 출력
-    });
-```
+![img_4.png](img_4.png)
+
+- onBackpressureError는 업스트림에 Long.MAX_VALUE 만큼의 데이터를 request합니다
+- 다운스트림의 request 양보다 더 많은 데이터가 emit되면
+- OverflowException을 발생시키며 하위 스트림으로 onError 시그널을 전달합니다.
+- 동시에 업스트림으로 구독 취소(cancel) 시그널을 보냅니다
 
 ### 5.2 DROP 전략
 
-- `onBackpressureDrop()`
-- Subscriber의 처리 능력을 초과하는 데이터를 버립니다.
-- 실시간 데이터 스트림에서 최신 데이터만 중요한 경우에 적합합니다.
-- 버퍼에는 들어가지 않은 오래된 데이터각 먼저 버려집니다.
+#### 5.2.1 `onBackpressureDrop()`
 
-#### 예제
+![img_2.png](img_2.png)
 
-```java
-Flux.range(1, 1000)
-    .onBackpressureDrop(dropped -> 
-        System.out.println("Dropped: " + dropped))
-    .subscribe(value -> {
-        Thread.sleep(100);
-        System.out.println("Processed: " + value);
-    });
-```
+- onBackpressureDrop()을 사용해서 DROP 전략을 적용할 수 있습니다.
+- 업스트림에서 발행된 데이터 중 다운스트림의 request 수를 초과하는 데이터는 DROP됩니다.
+- request(2)가 발생하면 녹색과 노란색 데이터만 다운스트림으로 전달되고 주황색은 DROP됩니다.
+- 이후 request(2)가 다시 발생하면 분홍색 데이터만 전달되고 마지막 데이터는 complete 됩니다.
+
+### 5.2.2 `onBackpressureDrop(Consumer<? super T> onDropped)`
+
+![img_3.png](img_3.png)
+
+- `onBackpressureDrop(Consumer<? super T> onDropped)`를 사용하면 버려진 데이터에 대한 추가 처리를 할 수 있습니다.
+- onDropped 콜백 함수를 통해 버려진 데이터를 로깅하거나 다른 처리를 할 수 있습니다.
 
 ### 5.3 LATEST 전략
 
-- `onBackpressureLatest()`
-- 버퍼가 가득 찬 경우 버퍼에 들어가길 기다리는 데이터 중 가장 최근에 생성된 데이터부터 버퍼에 채우는 전략입니다.
-- 중간 데이터는 무시
+- `onBackpressureLatest()`를 사용하여 LATEST 전략을 적용할 수 있습니다.
+- 이는 최신 정보만 중요한 실시간 시스템(예: 주식 시세, 센서 데이터)에 적합합니다.
 
-```java
-Flux.interval(Duration.ofMillis(1))
-    .onBackpressureLatest()
-    .subscribe(value -> {
-        Thread.sleep(1000);
-        System.out.println("Received: " + value);
-    });
-```
+#### 5.3.1 동작 방식
+
+![img_5.png](img_5.png)
+
+- 상단 타임라인:
+  - 4개의 데이터(초록, 노랑, 주황, 분홍)가 순차적으로 발생
+  - 마지막에 완료 신호(|)
+- 중간 버퍼:
+  - onBackpressureLatest 버퍼가 있음
+  - 다운스트림의 요청(request) 속도가 느릴 때 가장 최신 데이터만 유지
+  - 이전 데이터는 버림
+- 하단 타임라인(결과):
+  - request(2)로 처음 2개 데이터(초록, 노랑) 처리
+  - 그동안 들어온 데이터 중 최신 데이터(분홍)만 유지
+  - 다시 request(2)가 오면 유지했던 분홍 데이터 전달
+  - 완료 신호(|) 전달
+- 즉, 다운스트림이 처리하지 못한 데이터들 중 가장 최신 데이터만 보관하고 나머지는 버리는 방식입니다. 
+- 이는 실시간 데이터 처리에서 최신 정보만 필요한 경우 유용합니다.
 
 ### 5.4 BUFFER 전략
 
-- onBackpressureBuffer()는 Publisher 측에서 Subscriber가 처리하지 못한 데이터를 임시 버퍼에 저장하는 전략입니다.
-- 메모리에 데이터가 쌓이므로 메모리 사용량이 증가할 수 있습니다.
-- 버퍼가 가득 차면 설정된 전략에 따라 처리됩니다.
-- 다음과 같은 오버로딩된 메서드들을 제공합니다
-	- `onBackpressureBuffer()`
-		- 기본 버퍼 크기(256)을 사용합니다.
-		- 버퍼 초과 시 에러가 발생합니다.
-	- `onBackpressureBuffer(int maxSize)`
-		- 최대 버퍼 크기를 지정할 수 있습니다.
-			- 버퍼 초과 시 에러가 발생합니다.
-	- `onBackpressureBuffer(int maxSize, Consumer<? super T> onOverflow, BufferOverflowStrategy strategy)`
-		- maxSize: 버퍼의 최대 크기
-		- onOverflow: 초과 시 실행할 콜백 함수
-		- BufferOverflowStrategy: 버퍼 초과 시 전략
-			- BufferOverflowStrategy.ERROR: 에러 발생(기본값)
-				- BufferOverflowStrategy.DROP_OLDEST: 가장 오래된 데이터 삭제
-				- BufferOverflowStrategy.DROP_LATEST: 새로 들어오려는 데이터를 버퍼에 "넣지 않고" 버리는 전략입니다
+- `onBackpressureBuffer()`를 사용하여 BUFFER 전략을 적용할 수 있습니다.
 
-```java
-Flux.range(1, 1000)
-    .onBackpressureBuffer(256) // 최대 256개까지 버퍼링
-    .subscribe(value -> {
-        Thread.sleep(100); // 처리 시간 시뮬레이션
-        System.out.println(value);
-    });
-```
+#### 5.4.1 `onBackpressureBuffer()`
 
-:::tip
-실제 애플리케이션에서는 데이터의 중요도와 시스템 리소스를 고려하여 적절한 전략을 선택해야 합니다. 중요한 데이터를 다루는 경우 BUFFER 전략을, 실시간성이 중요한 경우 LATEST 전략을 고려해볼 수 있습니다.
-:::
+![img_6.png](img_6.png)
+
+- 업스트림 요청
+  - `request(unbounded)`로 업스트림에 무제한 데이터 요청 
+- 데이터 흐름
+  - 다운스트림 `request(2)`: 초록, 노랑 데이터 처리
+  - 추가 데이터(주황, 분홍)는 다운스트림 처리 속도 부족으로 버퍼에 저장
+  - 다운스트림 `request(1)`: 버퍼의 주황 데이터 전달
+  - 다운스트림 `request(1)`: 버퍼의 분홍 데이터 전달
+- 특징
+  - 업스트림으로부터 받은 데이터를 버퍼링
+  - 다운스트림 처리 준비될 때까지 데이터 보관
+  - 취소/에러 시 버퍼 데이터 폐기
+  - 에러는 버퍼 소진까지 지연
+  - 기본 버퍼 크기는 256개
+
+#### 5.4.2 `onBackpressureBuffer(int maxSize)`
+
+![img_7.png](img_7.png)
+
+
+
 
 ## 6. 실제 사용 사례
 
@@ -265,5 +265,7 @@ webClient.get()
 
 ## 7. 마치며
 
-Backpressure는 리액티브 시스템의 안정성을 보장하는 핵심 메커니즘입니다. Project Reactor는 다양한 Backpressure 전략을 제공하여 개발자가 상황에 맞는 최적의 선택을 할 수 있도록
-돕습니다. 효과적인 Backpressure 관리를 통해 안정적이고 탄력적인 리액티브 시스템을 구축할 수 있습니다.
+- Backpressure는 리액티브 시스템의
+- 안정성을 보장하는 핵심 메커니즘입니다.
+- Project Reactor는 다양한 Backpressure 전략을 제공하여 개발자가 상황에 맞는 최적의 선택을 할 수 있도록 돕습니다.
+- 효과적인 Backpressure 관리를 통해 안정적이고 탄력적인 리액티브 시스템을 구축할 수 있습니다.
