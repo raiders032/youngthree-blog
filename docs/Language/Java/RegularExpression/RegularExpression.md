@@ -1,5 +1,5 @@
 ---
-title: "Java 정규표현식 완벽 가이드: Pattern과 Matcher 클래스의 모든 것"
+title: "Regular Expression"
 description: "Java의 정규표현식 기능을 완벽하게 마스터하기 위한 가이드입니다. Pattern과 Matcher 클래스의 상세한 사용법부터 성능 최적화, 유니코드 지원까지 실전에서 바로 활용할 수 있는 내용을 다룹니다."
 tags: ["REGEX", "JAVA", "STRING", "PATTERN_MATCHING", "BACKEND"]
 keywords: ["정규표현식", "정규식", "regex", "regular expression", "레그엑스", "자바", "java", "패턴매칭", "pattern matching", "문자열처리", "Pattern클래스", "Matcher클래스", "유니코드", "Unicode"]

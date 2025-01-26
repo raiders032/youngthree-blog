@@ -1,5 +1,5 @@
 ---
-title: "Java TCP 소켓 프로그래밍 완벽 가이드"
+title: "TCP Socket Programming"
 description: "Java에서 TCP 소켓 프로그래밍을 구현하는 방법을 상세히 알아봅니다. 서버와 클라이언트 구현부터 실제 통신까지, 실습 예제와 함께 TCP 네트워크 프로그래밍의 기초를 마스터해보세요."
 tags: [ "JAVA", "NETWORK", "TCP", "SOCKET", "SERVER", "BACKEND" ]
 keywords: [ "자바", "java", "tcp", "소켓", "socket", "네트워크", "network", "서버", "server", "클라이언트", "client", "통신", "백엔드", "backend", "소켓프로그래밍", "네트워크프로그래밍" ]
