@@ -33,6 +33,16 @@ hide_title: true
 	- LocalServerChannel: 같은 JVM 내 통신용
 	- EmbeddedChannel: 테스트용
 
+### 2.2 Channel의 Life Cycle
+
+![img.png](images/img.png)
+
+- Channel은 다음과 같은 4가지의 상태를 가집니다.
+	- ChannelUnregistered: Channel이 등록되지 않은 상태
+	- ChannelRegistered: Channel이 EventLoop에 등록된 상태
+	- ChannelActive: Channel이 활성화된 상태(리모트 피어와 연결된 상태), 데이터 통신 가능
+	- ChannelInactive: Channel이 비활성화된 상태(리모트 피어와 연결이 끊긴 상태)
+
 ## 3. EventLoop - 이벤트 처리의 핵심
 
 - EventLoop는 연결의 수명주기 동안 발생하는 이벤트를 처리하는 핵심 컴포넌트입니다.
@@ -99,27 +109,89 @@ ChannelFuture는 작업의 완료를 기다리는 동안 애플리케이션이 �
 	- Encoder: Java 객체를 바이트로 변환
 	- Decoder: 바이트를 Java 객체로 변환
 
+### 5.3 ChannelHandler의 Life Cycle Method
+
+- ChannelHandler는 다음과 같은 3가지의 라이프 사이클 메서드를 가집니다
+	- handlerAdded: ChannelPipeline에 추가될 때 호출
+	- handlerRemoved: ChannelPipeline에서 제거될 때 호출
+	- exceptionCaught: ChannelPipeline에서 발생한 예외 처리
+- ChannelHandler의 서브 인터페이스인 ChannelInboundHandler, ChannelOutboundHandler에는 추가적인 라이프 사이클 메서드가 있습니다.
+
 ## 6. ChannelPipeline - 데이터 흐름 관리
 
 - ChannelPipeline은 ChannelHandler들의 체인을 관리하는 컨테이너입니다.
 - 즉 ChannelPipeline은 여러 ChannelHandler의 조합을 의미하며 데이터 처리 흐름을 관리합니다.
 
-### 6.1 ChannelPipeline의 특징
+### 6.1 Channel과의 관계
 
-- 각 Channel은 자신만의 ChannelPipeline을 가짐
+- 각 Channel은 생성 시 자신만의 ChannelPipeline을 가집니다.
+- 이 관계는 영원하며 Channel에서 ChannelPipeline를 추가하거나 제거할 수 없습니다.
+	- 즉 ChannelPipeline은 Channel은 1:1 관계입니다.
+
+### 6.2 ChannelPipeline의 특징
+
 - Handler 체인을 통해 데이터가 순차적으로 처리됨
 - 인바운드와 아웃바운드 이벤트가 각각 다른 경로로 전파
 
 ```plaintext
 [인바운드 이벤트 흐름]
-Socket → Handler1 → Handler2 → Handler3 → Application
+Socket → Inboud Handler1 → Inboud Handler2 → Inboud Handler3 → Application
 
 [아웃바운드 이벤트 흐름]
-Application → Handler3 → Handler2 → Handler1 → Socket
+Application → Outbound Handler3 → Outbound Handler2 → Outbound Handler1 → Socket
 ```
 
 :::warning
 ChannelPipeline에 Handler를 추가할 때는 순서가 매우 중요합니다. 잘못된 순서로 인해 데이터 처리가 의도한 대로 동작하지 않을 수 있습니다.
+:::
+
+### 6.3 ChannelPipeline 동적 수정
+
+- ChannelPipeline은 실행 중에도 동적으로 ChannelHandler를 추가, 제거, 교체할 수 있습니다.
+- 이러한 동적 수정 기능은 유연한 데이터 처리 로직 구현을 가능하게 합니다.
+
+#### ChannelHandler 수정 메서드
+
+ChannelPipeline은 다음과 같은 메서드를 통해 Handler를 동적으로 수정할 수 있습니다:
+
+- addFirst(): Pipeline의 첫 번째 위치에 Handler 추가
+- addLast(): Pipeline의 마지막 위치에 Handler 추가
+- addBefore(): 지정된 Handler 앞에 새로운 Handler 추가
+- addAfter(): 지정된 Handler 뒤에 새로운 Handler 추가
+- remove(): Handler 제거
+- replace(): 기존 Handler를 새로운 Handler로 교체
+
+#### 사용 예시
+
+```java
+ChannelPipeline pipeline = ...;
+
+// Handler 추가
+pipeline.addLast("handler1", firstHandler);
+pipeline.addLast("handler2", new SecondHandler());
+pipeline.addLast("handler3", new ThirdHandler());
+
+// Handler 제거
+pipeline.remove("handler3");
+pipeline.remove(firstHandler);  // 참조로 제거
+
+// Handler 교체
+pipeline.replace("handler2", "handler4", new FourthHandler());
+```
+
+:::info
+Handler 이름은 Pipeline 내에서 고유해야 합니다. 같은 이름의 Handler를 추가하려고 하면 예외가 발생합니다.
+:::
+
+#### 주의사항
+
+- Handler 수정은 thread-safe 합니다.
+- EventLoop 스레드에서 수정 작업을 수행하는 것이 권장됩니다.
+- Handler 제거 시 해당 Handler의 handlerRemoved() 메서드가 호출됩니다.
+- Handler 추가 시 해당 Handler의 handlerAdded() 메서드가 호출됩니다.
+
+:::warning
+Handler 수정은 실행 중인 Pipeline의 동작에 영향을 줄 수 있으므로, 신중하게 수행해야 합니다. 특히 운영 중인 시스템에서는 충분한 테스트를 거친 후 적용하세요.
 :::
 
 ## 7. 부트스트래핑 - 애플리케이션 시작하기
