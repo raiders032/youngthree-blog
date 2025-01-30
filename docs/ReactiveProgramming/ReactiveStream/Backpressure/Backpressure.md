@@ -1,5 +1,5 @@
 ---
-title: "리액티브 스트림의 백프레셔 이해하기"
+title: "Backpressure"
 description: "리액티브 스트림에서 데이터 흐름 제어를 위한 백프레셔의 개념과 구현 방식을 설명합니다. Observer 패턴의 한계부터 백프레셔를 통한 해결 방안까지 상세히 다룹니다."
 tags: [ "REACTIVE_PROGRAMMING", "REACTIVE_STREAMS", "BACKPRESSURE", "CONCURRENCY", "SYSTEM_DESIGN" ]
 keywords: [ "백프레셔", "리액티브스트림", "옵저버패턴", "동시성", "스트림제어", "데이터흐름", "시스템설계", "backpressure", "reactivestreams" ]

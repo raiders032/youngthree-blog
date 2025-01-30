@@ -1,5 +1,5 @@
 ---
-title: "Spring Cloud Gateway로 구현하는 효율적인 API 게이트웨이"
+title: "Spring Cloud Gateway"
 description: "마이크로서비스 아키텍처에서 중요한 역할을 하는 Spring Cloud Gateway의 핵심 개념과 활용 방법을 알아봅니다. 게이트웨이의 기본 구조부터 실제 적용 사례까지 상세히 다루어 실무에 적용할 수 있는 인사이트를 제공합니다."
 tags: [ "API_GATEWAY", "SPRING_CLOUD", "MSA", "SPRING", "BACKEND", "JAVA" ]
 keywords: [ "스프링 클라우드 게이트웨이", "spring cloud gateway", "API 게이트웨이", "api gateway", "마이크로서비스", "microservices", "스프링", "spring", "백엔드", "backend", "자바", "java", "서비스 메시", "service mesh" ]

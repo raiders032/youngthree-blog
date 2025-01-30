@@ -1,5 +1,5 @@
 ---
-title: "Reactive Streams 완벽 가이드"
+title: "Reactive Streams"
 description: "Reactive Streams의 등장 배경부터 핵심 컴포넌트인 Publisher, Subscriber, Subscription, Processor의 상세 스펙까지 알아봅니다. 비동기 스트림 처리의 표준을 이해하고 실제 프로젝트에 적용하기 위한 포괄적인 가이드입니다."
 tags: [ "REACTIVE_STREAMS", "JAVA", "ASYNC", "BACKEND", "PROGRAMMING" ]
 keywords: [ "리액티브 스트림즈", "reactive streams", "리액티브", "reactive", "비동기", "async", "논블록킹", "non-blocking", "자바", "java", "백엔드", "backend", "프로그래밍", "역압력", "backpressure", "발행구독", "pub/sub", "퍼블리셔", "publisher", "서브스크라이버", "subscriber" ]

@@ -1,5 +1,5 @@
 ---
-title: "리액티브 기술 완벽 가이드: 시스템, 프로그래밍, 스트림즈 총정리"
+title: "Reactive Programming"
 description: "리액티브 시스템, 리액티브 프로그래밍, 리액티브 스트림즈의 핵심 개념과 차이점을 명확히 설명합니다. 각 개념의 특징과 실제 활용 방안을 상세히 다루어 리액티브 기술의 전체적인 이해를 돕습니다."
 tags: ["REACTIVE_SYSTEMS", "REACTIVE_PROGRAMMING", "REACTIVE_STREAMS", "JAVA", "BACKEND", "ARCHITECTURE", "PROGRAMMING"]
 keywords: ["리액티브 시스템", "reactive systems", "리액티브 프로그래밍", "reactive programming", "리액티브 스트림즈", "reactive streams", "리액티브 선언문", "reactive manifesto", "백프레셔", "backpressure", "스트림", "stream", "비동기", "asynchronous", "논블로킹", "non-blocking"]

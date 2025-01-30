@@ -1,5 +1,5 @@
 ---
-title: "스프링 Retry로 안정적인 서비스 구현하기"
+title: "Spring Retry"
 description: "Spring Retry 라이브러리를 활용하여 일시적인 장애를 효과적으로 처리하는 방법을 알아봅니다. 재시도 로직 구현부터 실제 프로젝트 적용까지 상세히 다룹니다."
 tags: [ "SPRING_RETRY", "SPRING", "BACKEND", "JAVA" ]
 keywords: [ "스프링 리트라이", "spring retry", "리트라이", "retry", "재시도", "장애처리", "spring", "스프링", "백엔드", "java", "자바" ]
