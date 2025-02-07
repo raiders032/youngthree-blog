@@ -5,16 +5,12 @@
 - EC2 메트릭을 통해 인스턴스의 CPU 사용률, 네트워크 트래픽, 디스크 활동 등을 모니터링할 수 있습니다.
 - 이 글에서는 EC2 메트릭의 종류, CloudWatch와의 통합, 커스텀 메트릭 설정 방법, 그리고 메트릭의 해상도와 측정 주기에 대해 알아보겠습니다.
 
-
-
 ## 2 CloudWatch와 EC2 메트릭 통합
 
 - Amazon CloudWatch는 AWS 리소스와 애플리케이션을 실시간으로 모니터링하는 서비스입니다.
 - EC2 인스턴스는 기본적으로 CloudWatch와 통합되어 있어, 별도의 설정 없이도 기본 메트릭을 수집합니다.
 - CloudWatch는 EC2 인스턴스로부터 메트릭 데이터를 수집하고, 이를 그래프로 시각화하거나 경보를 설정하는 데 사용합니다.
 - 기본 모니터링은 5분 간격으로 메트릭을 수집하며, 상세 모니터링을 활성화하면 1분 간격으로 수집할 수 있습니다.
-
-
 
 ## 3 EC2 기본 메트릭
 
@@ -33,7 +29,6 @@
 	- **StatusCheckFailed_System**: 시스템 레벨 상태 확인 실패 여부
 - [StatusChecks](../StatusChecks/StatusChecks.md) 참고
 
-
 ## 4 기본 메트릭의 해상도와 측정 주기
 
 - EC2 기본 메트릭의 해상도와 측정 주기는 모니터링 유형에 따라 다릅니다:
@@ -46,8 +41,6 @@
 	- 해상도: 1분
 	- 비용: 추가 비용 발생
 
-
-
 **세부 모니터링을 활성화하는 방법**
 
 1. AWS Management Console 사용:
@@ -59,8 +52,6 @@
 	- 세부 모니터링을 활성화하면 더 빠른 대응이 가능하지만, 추가 비용이 발생합니다.
 	- 대규모 프로덕션 환경이나 빠른 스케일링이 필요한 경우에 유용합니다.
 
-
-
 ## 5 RAM 메트릭
 
 - 기본적으로 EC2 인스턴스의 RAM(메모리) 사용량은 CloudWatch에서 자동으로 수집되지 않습니다.
@@ -69,21 +60,15 @@
 	1. CloudWatch 에이전트 사용
 	2. 커스텀 메트릭 생성
 
-
-
 ## 6 CloudWatch 에이전트를 통한 RAM 메트릭 수집
 
 - CloudWatch 에이전트를 사용하면 RAM 사용량을 포함한 더 많은 시스템 레벨 메트릭을 수집할 수 있습니다.
-
-
 
 **CloudWatch 에이전트 설치 (Amazon Linux 2)**
 
 ```bash
 sudo yum install amazon-cloudwatch-agent
 ```
-
-
 
 **에이전트 구성 파일 예시**
 
@@ -102,8 +87,6 @@ sudo yum install amazon-cloudwatch-agent
 }
 ```
 
-
-
 **CloudWatch 에이전트 시작**
 
 ```bash
@@ -112,43 +95,37 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-c
 
 - 이 설정을 통해 RAM 사용량을 포함한 추가 메트릭을 CloudWatch에서 확인할 수 있습니다.
 
-
-
 ### 6.1 CloudWatch 에이전트로 수집 가능한 주요 추가 메트릭
 
 1. **메모리 (RAM) 관련 메트릭**
-    - mem_used_percent: 사용 중인 메모리 비율
-    - mem_used: 사용 중인 메모리 양
-    - mem_available: 사용 가능한 메모리 양
+	- mem_used_percent: 사용 중인 메모리 비율
+	- mem_used: 사용 중인 메모리 양
+	- mem_available: 사용 가능한 메모리 양
 2. **디스크 관련 메트릭**
-    - disk_used_percent: 디스크 사용 비율
-    - disk_free: 남은 디스크 공간
-    - disk_total: 전체 디스크 공간
-    - diskio_reads, diskio_writes: 디스크 I/O 읽기/쓰기 작업 수
+	- disk_used_percent: 디스크 사용 비율
+	- disk_free: 남은 디스크 공간
+	- disk_total: 전체 디스크 공간
+	- diskio_reads, diskio_writes: 디스크 I/O 읽기/쓰기 작업 수
 3. **네트워크 관련 상세 메트릭**
-    - net_bytes_sent, net_bytes_recv: 네트워크로 보내고 받은 바이트 수
-    - net_packets_sent, net_packets_recv: 네트워크로 보내고 받은 패킷 수
-    - net_drop_in, net_drop_out: 드롭된 인바운드/아웃바운드 패킷 수
+	- net_bytes_sent, net_bytes_recv: 네트워크로 보내고 받은 바이트 수
+	- net_packets_sent, net_packets_recv: 네트워크로 보내고 받은 패킷 수
+	- net_drop_in, net_drop_out: 드롭된 인바운드/아웃바운드 패킷 수
 4. **프로세스 관련 메트릭**
-    - processes_total: 총 프로세스 수
-    - processes_running: 실행 중인 프로세스 수
-    - processes_blocked: 블록된 프로세스 수
+	- processes_total: 총 프로세스 수
+	- processes_running: 실행 중인 프로세스 수
+	- processes_blocked: 블록된 프로세스 수
 5. **스왑 메모리 관련 메트릭**
-    - swap_used: 사용 중인 스왑 메모리 양
-    - swap_free: 사용 가능한 스왑 메모리 양
+	- swap_used: 사용 중인 스왑 메모리 양
+	- swap_free: 사용 가능한 스왑 메모리 양
 6. **파일 시스템 관련 메트릭**
-    - file_handles_max: 최대 파일 핸들 수
-    - file_handles_allocated: 할당된 파일 핸들 수
-
-
+	- file_handles_max: 최대 파일 핸들 수
+	- file_handles_allocated: 할당된 파일 핸들 수
 
 ## 7 커스텀 메트릭
 
 - EC2 인스턴스에서 기본 메트릭 외에 추가적인 데이터를 모니터링하고 싶다면 커스텀 메트릭을 사용할 수 있습니다.
 - 커스텀 메트릭을 통해 애플리케이션 특정 메트릭, 비즈니스 메트릭 등을 CloudWatch에 전송할 수 있습니다.
 - 커스텀 메트릭은 AWS CLI, AWS SDK, 또는 CloudWatch API를 통해 생성할 수 있습니다.
-
-
 
 **AWS CLI를 사용한 커스텀 메트릭 전송 예시**
 
@@ -159,18 +136,14 @@ aws cloudwatch put-metric-data --metric-name MyCustomMetric --namespace MyNamesp
 - 이 명령어는 'MyCustomMetric'이라는 이름의 커스텀 메트릭을 'MyNamespace' 네임스페이스에 전송합니다.
 - 값은 42이며, 특정 EC2 인스턴스 ID와 연결됩니다.
 
-
-
 ## 8 커스텀 메트릭의 해상도와 측정 주기
 
 - 커스텀 메트릭의 해상도와 측정 주기는 사용자가 직접 설정할 수 있습니다:
 	- **최소 해상도**: 1초
 	- **최대 해상도**: 1시간 (3600초)
-	- **권장 측정 주기**: 
+	- **권장 측정 주기**:
 		- 일반적으로 1분 또는 5분
 		- 필요에 따라 더 짧은 주기 (예: 10초) 설정 가능
-
-
 
 **1분 해상도의 커스텀 메트릭 전송**
 
@@ -181,8 +154,6 @@ aws cloudwatch put-metric-data --metric-name MyCustomMetric --namespace MyNamesp
 - `--storage-resolution 60`은 1분(60초) 해상도를 의미합니다.
 - 해상도를 높일수록 (주기를 짧게 할수록) 더 세밀한 모니터링이 가능하지만, 비용이 증가합니다.
 
-
-
 ## 9 메트릭 모니터링 및 경보 설정
 
 - CloudWatch를 통해 수집된 메트릭을 모니터링하고 경보를 설정할 수 있습니다:
@@ -190,8 +161,6 @@ aws cloudwatch put-metric-data --metric-name MyCustomMetric --namespace MyNamesp
 	2. 메트릭 선택 (예: CPUUtilization)
 	3. 임계값 설정 (예: 80% 이상일 때)
 	4. 알림 방법 설정 (예: SNS 주제로 이메일 전송)
-
-
 
 **AWS CLI를 사용한 경보 생성 예시**
 
@@ -201,8 +170,6 @@ aws cloudwatch put-metric-alarm --alarm-name cpu-mon --alarm-description "Alarm 
 
 - 이 명령어는 CPU 사용률이 70%를 초과할 때 경보를 발생시키는 설정을 생성합니다.
 
-
-
 ## 10 메트릭 데이터 보존
 
 - CloudWatch는 메트릭 데이터를 15개월 동안 보존합니다.
@@ -211,8 +178,6 @@ aws cloudwatch put-metric-alarm --alarm-name cpu-mon --alarm-description "Alarm 
 	- 60초 (1분): 15일
 	- 300초 (5분): 63일
 	- 3600초 (1시간): 455일 (15개월)
-
-
 
 ## 11 결론
 

@@ -268,6 +268,7 @@ Flux.range(1, 100)
 	- DROP: 처리하지 못하는 데이터는 무시
 	- LATEST: 가장 최신 데이터만 유지
 	- ERROR: 처리 용량 초과 시 오류 발생
+- [Backpressure 참고](../Backpressure/Backpressure.md)
 
 ## 6. Scheduler 소개
 

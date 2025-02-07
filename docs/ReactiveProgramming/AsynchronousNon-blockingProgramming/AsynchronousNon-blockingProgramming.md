@@ -51,6 +51,16 @@ hide_title: true
 	- FIN → ACK → FIN → ACK
 	- TIME_WAIT 상태로 안전한 종료
 
+### 2.2 TCP 비정상 종료
+
+- TCP 연결이 정상적인 4-way Handshake 과정을 거치지 않고 종료되는 경우를 비정상 종료라고 합니다.
+- 비정상 종료는 크게 두 가지 형태로 발생합니다
+	- RST 패킷을 통한 강제 종료: 연결 종료 시 상대방에게 RST 패킷을 전송하여 즉시 연결을 끊는 방식
+	- 묵시적 비정상 종료: 물리적 연결 단절이나 시스템 장애로 인해 아무런 종료 신호 없이 연결이 끊어지는 경우
+- 묵시적 비정상 종료를 감지하고 대응하기 위해 다음과 같은 방법을 사용합니다
+	- TCP Keep-Alive: TCP 프로토콜 수준에서 연결 상태를 주기적으로 확인
+	- Application Layer Heartbeat: 응용 프로그램 수준에서 주기적으로 상태 확인 메시지를 교환
+
 ## 2. OS 레벨의 진화: I/O 모델과 멀티플렉싱
 
 ### 2.1 I/O 모델의 발전
@@ -76,28 +86,37 @@ hide_title: true
 
 ### 2.2 Socket과 File Descriptor
 
-[OS Socket](../../ComputerScience/OS/Socket/Socket.md)에서 설명하는 것처럼:
-
-- 소켓은 네트워크 통신의 엔드포인트
-- 파일 디스크립터를 통한 일관된 인터페이스
-- "모든 것은 파일이다" 철학의 구현
-
-이러한 OS 레벨의 발전은 상위 계층에서 다음과 같은 가능성을 열었습니다:
-
-- 효율적인 리소스 활용
-- 확장 가능한 서버 구현
-- 이벤트 기반 프로그래밍 모델
+- [OS Socket](../../ComputerScience/OS/Socket/Socket.md)에서 설명하는 것처럼:
+	- 소켓은 네트워크 통신의 엔드포인트
+	- 파일 디스크립터를 통한 일관된 인터페이스
+	- "모든 것은 파일이다" 철학의 구현
+- 이러한 OS 레벨의 발전은 상위 계층에서 다음과 같은 가능성을 열었습니다:
+	- 효율적인 리소스 활용
+	- 확장 가능한 서버 구현
+	- 이벤트 기반 프로그래밍 모델
 
 ## 3. Java에서의 구현: IO에서 NIO로
 
 ### 3.1 전통적인 블로킹 I/O
 
-- [Java IO](../../Language/Java/IO/IO.md)의 특징
-	- 스트림 기반의 단방향 통신
-	- 직관적이지만 비효율적인 처리
-	- 스레드 당 하나의 소켓 처리
+- [Java IO를 황용한 TCP Socket Programming.](../../Language/Java/TCP-Socket-Programming/TCP-Socket-Programming.md)
+	- Java IO 패키지를 사용해 블로킹 TCP 서버/클라이언트를 구현합니다.
+	- 블로킹 서버의 한계를 설명합니다.
+	- 멀티 스레드 방식을 사용해 다중 접속 서버를 구현합니다.
 
-### 3.2 NIO의 혁신
+### 3.2 블로킹 I/O의 한계
+
+- [다중 접속 서버의 구현](../../ComputerScience/OS/MultipleConnections/MultipleConnections.md)
+- 블로킹 TCP 서버의 한계
+	- 다수의 클라이언트가 연결하는 경우에는 문제가 발생합니다.
+	- 처음 연결한 클라이언트가 연결을 종료하기 전까지는 다른 클라이언트의 연결은 listen 큐에 들어가 대기해야 합니다.
+	- 따라서 다수의 요청을 처리할 수 없다는 문제가 있습니다.
+- 이러한 문제를 해결하기 위해 다음과 같은 방법이 제안되었습니다
+	- 멀티 프로세싱: fork() 함수를 사용해 자식 프로세스를 생성하는 방식
+	- 멀티 스레딩: 스레드를 사용해 다수의 클라이언트 요청을 처리하는 방식
+	- I/O 멀티플렉싱: select() 함수를 사용해 다수의 소켓을 모니터링하고, 이벤트가 발생한 소켓을 처리하는 방식
+
+### 3.3 NIO의 혁신
 
 - [Java NIO](../../Language/Java/NIO/NIO.md)가 가져온 변화:
 - Channel과 Buffer
@@ -144,7 +163,7 @@ hide_title: true
 - Reactor 패턴은 Java NIO의 진화와 만나 Netty라는 강력한 프레임워크로 발전했습니다.
 - Netty는 Reactor 패턴의 개념을 실전적으로 구현하면서 여러 요소들을 추가했습니다.
 
-## 5 Netty: 고성능 네트워크 프레임워크
+## 5 고성능 네트워크 프레임워크: Netty
 
 - Reactor 패턴을 기반으로 한 고성능 이벤트 처리 비동기-논블로킹 네트워크 프레임워크
 - [Netty Introduction](../../Netty/Introduction/Introduction.md)에서 설명하는:
@@ -153,9 +172,9 @@ hide_title: true
 	- 높은 성능과 안정성
 - [EventLoop](../../Netty/EventLoop/EventLoop.md)의 핵심 역할
 	- EventLoop는 Reactor 패턴의 이벤트 루프를 구현
-  - 각 Channel은 전용 EventLoop에 할당
-	- 효율적인 스레드 관리
-	- 작업 스케줄링
+	- 각 Channel은 전용 EventLoop에 할당
+		- 효율적인 스레드 관리
+		- 작업 스케줄링
 - [Components](../../Netty/Components/Components.md)의 주요 구성
 	- EventLoop
 		- 이벤트 처리의 핵심
@@ -173,37 +192,41 @@ hide_title: true
 	- 비동기 스트림 처리 표준
 	- 배압(Backpressure) 메커니즘
 	- Publisher-Subscriber 모델
-- [Backpressure](../ReactiveStream/Backpressure/Backpressure.md)를 통한
-	- 데이터 흐름 제어
-	- 시스템 안정성 보장
-	- 리소스 효율적 사용
+- [Backpressure](../ReactiveStream/Backpressure/Backpressure.md)
+	- 기존 옵저버 패턴(Push 방식)의 한계에 대해서 설명합니다.
+	- Push 방식에서 Pull 방식으로의 전환을 통한 데이터 흐름 제어 대해서 설명합니다.
 
-## 7. 실전 구현: Project Reactor
+## 7. Reactive Streams의 구현: Project Reactor
+
+- [Project Reactor](../ProjectReactor/ProjectReactor/ProjectReactor.md)는 현대적인 애플리케이션이 필요로 하는 고성능, 비동기, 논블로킹 프로그래밍을 지원하는
+  Java 라이브러리입니다.
+- 리액티브 프로그래밍을 위한 다양한 기능을 제공하여, 더 효율적이고 탄력적인 시스템을 구축할 수 있게 해줍니다.
 
 ### 7.1 백프레셔 구현
 
-[Backpressure](../ProjectReactor/Backpressure/Backpressure.md)의 전략:
-
-- ERROR: 초과 시 오류
-- DROP: 초과 데이터 폐기
-- LATEST: 최신 데이터 유지
-- BUFFER: 버퍼링 처리
+- [Backpressure](../ProjectReactor/Backpressure/Backpressure.md)
+- Project Reactor에서의 백프레셔 구현 방식에 대해서 설명합니다.
+- Publisher와 Subscriber 간의 데이터 흐름과 흐름 제어의 필요성에 대해서 설명합니다.
+- 주요한 4가지 백프레셔 전략에 대해서 설명합니다.
+	- ERROR: 초과 시 오류
+	- DROP: 초과 데이터 폐기
+	- LATEST: 최신 데이터 유지
+	- BUFFER: 버퍼링 처리
 
 ### 7.2 효율적인 스케줄링
 
-[Scheduler](../ProjectReactor/Scheduler/Scheduler.md)를 통한:
-
-- 실행 컨텍스트 관리
-- 리소스 활용 최적화
-- 작업 처리 효율화
+- [Scheduler](../ProjectReactor/Scheduler/Scheduler.md)
+	- Project Reactor에서 제공하는 스케줄러의 종류에 대해서 설명합니다.
+	- 스케줄러를 사용하는 이유에 대해서 설명합니다.
+	- 각각의 스케줄러의 특성과 사용 목적에 대해서 설명합니다.
+	- 스케줄러 오퍼레이터를 사용하는 방법에 대해서 설명합니다.
 
 ## 8. 웹 애플리케이션으로의 통합: Spring WebFlux
 
-[SpringWebflux](../../Spring/SpringWebflux/SpringWebflux.md)는:
-
-- 비동기-논블로킹 웹 스택
-- Reactor 기반 구현
-- 높은 확장성 제공
+- [SpringWebflux](../../Spring/SpringWebflux/SpringWebflux.md)
+	- 비동기-논블로킹 웹 스택
+	- Reactor 기반 구현
+	- 높은 확장성 제공
 
 ## 9. 계층 간 통합의 의미
 
