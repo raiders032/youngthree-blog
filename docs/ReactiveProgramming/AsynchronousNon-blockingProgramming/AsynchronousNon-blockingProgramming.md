@@ -15,9 +15,9 @@ hide_title: true
 ### 1.1 학습 목표
 
 - 이 문서를 통해 다음을 이해할 수 있습니다
-- 비동기-논블로킹 프로그래밍의 기반이 되는 각 계층의 핵심 개념
-- 하위 계층의 기술이 상위 계층에서 어떻게 추상화되고 발전하는지
-- 네트워크 프로토콜부터 웹 애플리케이션까지 전체 스택의 유기적 관계
+  - 비동기-논블로킹 프로그래밍의 기반이 되는 각 계층의 핵심 개념
+  - 하위 계층의 기술이 상위 계층에서 어떻게 추상화되고 발전하는지
+  - 네트워크 프로토콜부터 웹 애플리케이션까지 전체 스택의 유기적 관계
 
 ### 1.2 왜 비동기-논블로킹인가?
 
@@ -79,8 +79,9 @@ hide_title: true
 	- 하나의 스레드로 여러 I/O 감시
 	- select/poll의 등장과 한계
 	- epoll을 통한 성능 개선
-4. 비동기 I/O
+4. [Asynchronous IO](../../ComputerScience/OS/AsynchronousIO/AsynchronousIO.md)
 	- 완전한 비동기 처리
+	- Linux의 io_uring 시스템 콜
 	- 커널이 I/O 완료 통지
 	- 가장 효율적인 리소스 활용
 
@@ -223,7 +224,7 @@ hide_title: true
 
 ## 8. 웹 애플리케이션으로의 통합: Spring WebFlux
 
-- [SpringWebflux](../../Spring/SpringWebflux/SpringWebflux.md)
+- [SpringWebflux](../../Spring/SpringWebflux/Introduction/Introduction.md)
 	- 비동기-논블로킹 웹 스택
 	- Reactor 기반 구현
 	- 높은 확장성 제공

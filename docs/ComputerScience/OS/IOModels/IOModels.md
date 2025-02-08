@@ -106,6 +106,14 @@ hide_title: true
 	- 데이터를 커널에서 유저 공간으로 복사
 	- 복사가 완료되면 프로세스가 데이터 처리
 
+### 3.2 주요 시스템 콜
+
+- select, poll, epoll, kqueue 등의 시스템 콜이 있습니다.
+- select와 poll은 O(n) 복잡도로 성능 이슈가 있습니다.
+- epoll은 O(1) 복잡도로 더 효율적입니다.
+- kqueue는 macOS와 FreeBSD에서 사용되는 시스템 콜입니다.
+- [자세한 내용은 IO Multifexing 참고](../IOMultifexing/IOMultifexing.md)
+
 ## 4. 비동기 I/O (Asynchronous I/O)
 
 ![async-io](images/img_3.png)
@@ -124,6 +132,24 @@ hide_title: true
 	- 모든 I/O 작업(준비+복사)이 완료되면
 	- 시그널 또는 콜백으로 프로세스에 통지
 	- 프로세스는 이미 복사된 데이터 즉시 사용 가능
+
+### 4.2 주요 시스템 콜
+
+- **POSIX AIO**
+	- aio_read(), aio_write() 등 제공
+	- 유저 스페이스 구현이 많음
+	- 디스크 I/O 성능 제한적
+	- 네트워크 I/O에는 거의 사용되지 않음
+- **Linux io_uring** (커널 5.1+)
+	- 최신 비동기 I/O 인터페이스
+	- 제로 카피 지원
+	- 공유 링 버퍼로 효율적 통신
+	- 다양한 I/O 작업 지원
+		- 읽기/쓰기
+		- 네트워크 연결
+		- 파일 시스템 작업
+	- 배치 처리 가능
+- [자세한 내용은 Asynchronous I/O 참고](../AsynchronousIO/AsynchronousIO.md)
 
 ## 5. 모델 별 주요 차이점
 
