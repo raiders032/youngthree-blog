@@ -36,6 +36,7 @@ sidebar_position: 1
 
 ### 🌱 [Spring Framework](Spring/index.md)
 
+- [Spring WebFlux](Spring/SpringWebflux/index.md)
 - [Spring Cloud](Spring/SpringCloud/index.md)
 - [Spring Batch](Spring/SpringBatch/index.md)
 
