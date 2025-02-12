@@ -1,8 +1,8 @@
 ---
 title: "Producer"
 description: "아파치 카프카의 프로듀서 개념과 동작 방식을 상세히 알아봅니다. 파티셔너, 배치 처리, 메시지 전송 방식부터 프로듀서 API 사용법과 주요 설정까지 실무에 필요한 내용을 총망라합니다."
-tags: ["KAFKA", "PRODUCER", "MESSAGE_QUEUE", "STREAMING", "BACKEND", "DISTRIBUTED_SYSTEMS"]
-keywords: ["카프카", "Kafka", "프로듀서", "Producer", "파티셔너", "Partitioner", "배치", "Batch", "메시지큐", "Message Queue", "스트리밍", "Streaming", "분산시스템", "메시징", "카프카 설정", "카프카 API"]
+tags: [ "KAFKA", "PRODUCER", "MESSAGE_QUEUE", "STREAMING", "BACKEND", "DISTRIBUTED_SYSTEMS" ]
+keywords: [ "카프카", "Kafka", "프로듀서", "Producer", "파티셔너", "Partitioner", "배치", "Batch", "메시지큐", "Message Queue", "스트리밍", "Streaming", "분산시스템", "메시징", "카프카 설정", "카프카 API" ]
 draft: false
 hide_title: true
 ---
@@ -19,8 +19,6 @@ hide_title: true
 
 - 레코드는 토픽, 파티션, 키, 밸류로 구성된다.
 - 레코드는 시리얼라이저, 파티셔너, 배치를 거치게된다.
-
-#### Producer의 동작 과정
 
 ![image-20210701110038776](./images/batch.png)
 
@@ -177,24 +175,24 @@ public class SimpleProducer {
 ```
 
 - `Properties configs = new Properties();`
-  - `KafkaProducer` 인스턴스를 생성하기 위한 프로듀서 옵션들을 key, value 값으로 선언한다.
+	- `KafkaProducer` 인스턴스를 생성하기 위한 프로듀서 옵션들을 key, value 값으로 선언한다.
 - `configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);`
-  - 전송하고자 하는 카프카 클러스터 서버의 host와 IP주소를 지정한다.
+	- 전송하고자 하는 카프카 클러스터 서버의 host와 IP주소를 지정한다.
 - `configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());`
-  - 메시키 키를 직렬화하기 위한 직렬화 클래스를 선언한다.
+	- 메시키 키를 직렬화하기 위한 직렬화 클래스를 선언한다.
 - `configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());`
-  - 메시지 값을 직렬화하기 위한 직렬화 클래스를 선언한다.
+	- 메시지 값을 직렬화하기 위한 직렬화 클래스를 선언한다.
 - `KafkaProducer<String, String> producer = new KafkaProducer<>(configs);`
-  - Properties를 `KafkaProducer` 의 생성 파라미터를 추가하여 인스턴스 생성
-  - `KafkaProducer` 인스턴스는 `ProducerRecord`를 전송할 때 사용된다.
+	- Properties를 `KafkaProducer` 의 생성 파라미터를 추가하여 인스턴스 생성
+	- `KafkaProducer` 인스턴스는 `ProducerRecord`를 전송할 때 사용된다.
 - `ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, messageValue);`
-  - 카프카 브로커로 데이터를 보내기위해 ProducerRecord를 생성한다.
-  - ProducerRecord의 생성자로 메시지 키, 메시지값, 토픽이름을 전달할 수 있다.
+	- 카프카 브로커로 데이터를 보내기위해 ProducerRecord를 생성한다.
+	- ProducerRecord의 생성자로 메시지 키, 메시지값, 토픽이름을 전달할 수 있다.
 - `producer.send(record);`
-  - 생성한 ProducerRecord를 전송한다.
-  - 1프로듀서에서 send()는 즉각적인 전송이 아니라 record들을 프로듀서 내부에 가지고 있다가 배치 형태로 묶어서 브로커에 전송한다.
+	- 생성한 ProducerRecord를 전송한다.
+	- 1프로듀서에서 send()는 즉각적인 전송이 아니라 record들을 프로듀서 내부에 가지고 있다가 배치 형태로 묶어서 브로커에 전송한다.
 - `producer.flush();`
-    - 프로듀서 내부 버퍼에 저장된 레코드 배치를 브로커로 전송한다.
+	- 프로듀서 내부 버퍼에 저장된 레코드 배치를 브로커로 전송한다.
 
 ### 5.2 브로커 정상 전송 여부 확인하기
 

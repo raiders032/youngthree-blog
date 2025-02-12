@@ -1,8 +1,8 @@
 ---
 title: "Kafka"
 description: "Apache Kafka의 핵심 개념과 주요 특징을 상세히 알아봅니다. 높은 처리량, 확장성, 고가용성 등 Kafka가 제공하는 장점들을 실제 사례와 함께 설명하고, 주요 구성 요소들의 역할을 명확히 이해할 수 있도록 돕습니다."
-tags: ["KAFKA", "MESSAGE_QUEUE", "DISTRIBUTED_SYSTEM", "BACKEND", "SYSTEM_DESIGN"]
-keywords: ["카프카", "apache kafka", "메시지큐", "message queue", "카프카 아키텍처", "kafka architecture", "카프카 구성요소", "이벤트 스트리밍", "event streaming", "분산시스템", "distributed system"]
+tags: [ "KAFKA", "MESSAGE_QUEUE", "DISTRIBUTED_SYSTEM", "BACKEND", "SYSTEM_DESIGN" ]
+keywords: [ "카프카", "apache kafka", "메시지큐", "message queue", "카프카 아키텍처", "kafka architecture", "카프카 구성요소", "이벤트 스트리밍", "event streaming", "분산시스템", "distributed system" ]
 draft: false
 hide_title: true
 ---
@@ -10,11 +10,13 @@ hide_title: true
 ## 1. Apache Kafka 개요
 
 ### 1.1 Kafka란?
+
 - Apache Kafka는 LinkedIn에서 개발한 오픈소스 이벤트 스트리밍 플랫폼입니다
 - 대용량 실시간 로그 처리에 특화된 분산 메시징 시스템으로 발전했습니다
 - 수평적 확장성과 고성능을 동시에 제공하는 것이 특징입니다
 
 ### 1.2 Kafka가 제공하는 핵심 기능
+
 - 이벤트 스트림의 실시간 읽기/쓰기를 지원합니다
 	- 외부 시스템과의 지속적인 데이터 import/export가 가능합니다
 	- 스트리밍 데이터를 실시간으로 처리할 수 있습니다
@@ -28,16 +30,18 @@ hide_title: true
 ## 2. Kafka의 주요 특징
 
 ### 2.1 높은 처리량과 낮은 지연시간
+
 - 카프카는 업계 최고 수준의 성능을 자랑합니다
 - 컨플루언트의 벤치마크 테스트 결과:
 
-|                      | Kafka    | Pulsar   | RabbitMQ (Mirrored) |
-|---------------------|----------|----------|-------------------|
-| Peak Throughput     | 605 MB/s | 305 MB/s | 38 MB/s          |
-| p99 Latency (ms)    | 5 ms     | 25 ms    | 1 ms*            |
-| 처리량 대비 지연시간   | 최상     | 중간     | 제한적           |
+|                  | Kafka    | Pulsar   | RabbitMQ (Mirrored) |
+|------------------|----------|----------|---------------------|
+| Peak Throughput  | 605 MB/s | 305 MB/s | 38 MB/s             |
+| p99 Latency (ms) | 5 ms     | 25 ms    | 1 ms*               |
+| 처리량 대비 지연시간      | 최상       | 중간       | 제한적                 |
 
 #### 고성능을 위한 핵심 기술
+
 - **페이지 캐시 활용**
 	- 운영체제의 페이지 캐시를 적극 활용해 디스크 I/O를 최소화합니다
 	- 미사용 메모리를 캐시로 활용해 읽기/쓰기 성능을 극대화합니다
@@ -54,6 +58,7 @@ hide_title: true
 		- zstd: 압축률과 속도의 균형
 
 ### 2.2 뛰어난 확장성
+
 - 수평적 확장이 용무한 분산 아키텍처를 제공합니다
 	- 브로커를 동적으로 추가/제거할 수 있습니다
 	- 무중단 확장이 가능한 구조를 가지고 있습니다
@@ -62,6 +67,7 @@ hide_title: true
 	- 파티션 단위로 복제본을 유지해 가용성을 보장합니다
 
 ### 2.3 고가용성 보장
+
 - 리플리케이션을 통한 데이터 복제를 지원합니다
 	- 모든 파티션은 설정된 수만큼 복제본을 유지합니다
 	- 브로커 장애 시 자동으로 복제본이 역할을 대체합니다
@@ -70,6 +76,7 @@ hide_title: true
 	- 안정적인 복제본만을 사용해 데이터 손실을 방지합니다
 
 ### 2.4 강력한 내구성
+
 - 메시지의 영속성을 보장하는 다양한 옵션을 제공합니다
 	- acks 설정을 통해 원하는 수준의 내구성을 선택할 수 있습니다
 	- 디스크에 안전하게 저장된 메시지는 지정된 보관 기간 동안 유지됩니다
@@ -79,6 +86,7 @@ hide_title: true
 	- 로그 세그먼트 기반의 안정적인 스토리지
 
 ### 2.5 유연한 개발 환경
+
 - 프로듀서와 컨슈머의 완벽한 분리를 지원합니다
 	- 각 컴포넌트가 독립적으로 동작할 수 있습니다
 	- 느슨한 결합을 통해 시스템 유연성을 확보합니다
@@ -89,6 +97,7 @@ hide_title: true
 ## 3. Kafka 핵심 구성 요소
 
 ### 3.1 브로커와 클러스터
+
 - **[Broker](../Broker/Broker.md)**
 	- Kafka 서버의 기본 단위입니다
 	- 메시지의 수신과 전달을 담당합니다
@@ -97,7 +106,9 @@ hide_title: true
 	- 여러 브로커의 집합입니다
 	- 부하 분산과 고가용성을 제공합니다
 	- [Zookeeper](../Zookeeper/Zookeeper.md)를 통해 클러스터를 관리합니다
+
 ### 3.2 메시징 컴포넌트
+
 - **[Producer](../Producer/Producer.md)**
 	- 메시지를 생산하고 브로커로 전송합니다
 	- 파티셔닝 전략을 통해 메시지를 분배합니다
@@ -108,6 +119,7 @@ hide_title: true
 	- 장애 시 자동으로 파티션을 재분배합니다
 
 ### 3.3 저장소 컴포넌트
+
 - **토픽**
 	- 메시지를 논리적으로 구분하는 단위입니다
 	- 고유한 이름으로 식별됩니다
@@ -122,10 +134,12 @@ hide_title: true
 	- 롤링 방식으로 관리되어 효율적인 스토리지 사용을 가능하게 합니다
 
 ### 3.4 메타데이터 관리
+
 - **[Zookeeper](../Zookeeper/Zookeeper.md)**
 	- 클러스터의 메타데이터를 관리합니다
 	- 브로커의 상태를 모니터링합니다
 	- 리더 선출과 같은 분산 조정을 담당합니다
 
 참고 문헌
+
 - [실전 카프카 개발부터 운영까지](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791189909345)
