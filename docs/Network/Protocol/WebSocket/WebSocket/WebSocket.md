@@ -1,25 +1,28 @@
 ---
 title: "WebSocket"
 description: "WebSocket 프로토콜의 동작 원리와 HTTP와의 차이점을 상세히 알아봅니다. 실제 구현 예제와 함께 WebSocket의 핵심 개념부터 고급 활용법까지 다루는 종합 가이드입니다."
-tags: ["WEBSOCKET_API", "RESTFUL_API", "API_GATEWAY", "BACKEND", "WEB"]
-keywords: ["웹소켓", "WebSocket", "실시간통신", "양방향통신", "풀듀플렉스", "full-duplex", "소켓통신", "Socket", "핸드쉐이크", "handshake", "HTTP", "TCP", "네트워크", "프로토콜", "Protocol"]
+tags: [ "WEBSOCKET_API", "RESTFUL_API", "API_GATEWAY", "BACKEND", "WEB" ]
+keywords: [ "웹소켓", "WebSocket", "실시간통신", "양방향통신", "풀듀플렉스", "full-duplex", "소켓통신", "Socket", "핸드쉐이크", "handshake", "HTTP", "TCP", "네트워크", "프로토콜", "Protocol" ]
 draft: false
 hide_title: true
 ---
 
 ## 1. WebSocket 프로토콜 개요
-- WebSocket은 웹에서 실시간 양방향 통신을 구현하기 위한 표준 프로토콜입니다. 
+
+- WebSocket은 웹에서 실시간 양방향 통신을 구현하기 위한 표준 프로토콜입니다.
 - [RFC 6455](https://tools.ietf.org/html/rfc6455)에 정의된 이 프로토콜은 현대 웹 애플리케이션의 실시간 기능 구현에 필수적인 요소가 되었습니다.
 
 ### 1.1 WebSocket의 핵심 특징
+
 - **전이중 통신(Full-Duplex Communication)**
-  - 단일 TCP 연결을 통해 클라이언트와 서버가 동시에 데이터를 주고받을 수 있습니다.
-  - 별도의 요청 없이도 서버가 클라이언트에게 데이터를 전송할 수 있습니다.
+	- 단일 TCP 연결을 통해 클라이언트와 서버가 동시에 데이터를 주고받을 수 있습니다.
+	- 별도의 요청 없이도 서버가 클라이언트에게 데이터를 전송할 수 있습니다.
 - **효율적인 프로토콜 설계**
-  - HTTP와 호환되도록 설계되어 기존 웹 인프라를 활용할 수 있습니다.
-  - 80(WS) 및 443(WSS) 포트를 사용하여 기존 방화벽 규칙과 호환됩니다.
+	- HTTP와 호환되도록 설계되어 기존 웹 인프라를 활용할 수 있습니다.
+	- 80(WS) 및 443(WSS) 포트를 사용하여 기존 방화벽 규칙과 호환됩니다.
 
 ### 1.2 활용 사례
+
 - **실시간 채팅 애플리케이션**
 - **라이브 스코어보드 및 주식 시세**
 - **실시간 협업 도구**
@@ -29,9 +32,11 @@ hide_title: true
 ## 2. WebSocket 연결 수립 과정
 
 ### 2.1 WebSocket Handshake
+
 - WebSocket 연결은 HTTP 업그레이드 요청으로 시작됩니다. 이 과정을 상세히 살펴보겠습니다.
 
 #### 2.1.1 클라이언트 요청
+
 ```http
 GET /chat HTTP/1.1
 Host: server.example.com
@@ -41,14 +46,16 @@ Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
 Sec-WebSocket-Version: 13
 Origin: http://example.com
 ```
+
 - `Upgrade: websocket`: 클라이언트가 웹소켓 프로토콜로 업그레이드하고자 함을 나타냅니다
 - `Connection: Upgrade`: 현재 연결을 다른 프로토콜로 업그레이드하려는 의도를 표시합니다
-- `Sec-WebSocket-Key`: 브라우저가 생성한 무작위 16바이트 값을 Base64로 인코딩한 키입니다. 
-  - 서버가 웹소켓 프로토콜을 지원하는지 확인하는 데 사용됩니다.
-  - 매 연결마다 새롭게 생성되어야 합니다.
+- `Sec-WebSocket-Key`: 브라우저가 생성한 무작위 16바이트 값을 Base64로 인코딩한 키입니다.
+	- 서버가 웹소켓 프로토콜을 지원하는지 확인하는 데 사용됩니다.
+	- 매 연결마다 새롭게 생성되어야 합니다.
 - `Sec-WebSocket-Version`: 클라이언트가 사용하는 웹소켓 프로토콜 버전을 나타냅니다. 일반적으로 "13"입니다
 
 #### 2.1.2 서버 응답
+
 ```http
 HTTP/1.1 101 Switching Protocols
 Upgrade: websocket
@@ -56,12 +63,14 @@ Connection: Upgrade
 Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
 Sec-WebSocket-Protocol: chat
 ```
+
 - `101 Switching Protocols`: 서버가 프로토콜 전환을 승인했음을 나타내는 상태 코드입니다
-- `Sec-WebSocket-Accept`: 클라이언트가 보낸 Sec-WebSocket-Key를 사용하여 생성된 값입니다. 
-  - 이 값은 클라이언트의 키에 특정 GUID 문자열을 추가하고 SHA-1 해시를 적용한 후 Base64로 인코딩하여 생성됩니다
+- `Sec-WebSocket-Accept`: 클라이언트가 보낸 Sec-WebSocket-Key를 사용하여 생성된 값입니다.
+	- 이 값은 클라이언트의 키에 특정 GUID 문자열을 추가하고 SHA-1 해시를 적용한 후 Base64로 인코딩하여 생성됩니다
 - `Sec-WebSocket-Protocol`: 클라이언트가 요청한 서브프로토콜 중 서버가 선택한 것을 나타냅니다
 
 #### 2.1.3 보안 키 생성 과정
+
 - **Sec-WebSocket-Key 생성**
 	- 클라이언트는 16바이트의 무작위 값을 생성합니다.
 	- 이 값을 Base64로 인코딩하여 Sec-WebSocket-Key 헤더의 값으로 전송합니다.
@@ -96,6 +105,7 @@ Sec-WebSocket-Protocol: chat
 ### 3.1 아키텍처 비교
 
 #### HTTP의 특징
+
 - **요청-응답 모델**
 	- 클라이언트의 요청이 있어야만 서버가 응답할 수 있습니다.
 	- 각 요청은 독립적이며 상태를 유지하지 않습니다.
@@ -104,6 +114,7 @@ Sec-WebSocket-Protocol: chat
 	- HTTP 메서드(GET, POST 등)로 리소스를 조작합니다.
 
 #### WebSocket의 특징
+
 - **이벤트 기반 모델**
 	- 연결이 수립된 후에는 양측 모두 자유롭게 메시지를 전송할 수 있습니다.
 	- 단일 연결을 통해 지속적인 통신이 가능합니다.
@@ -137,11 +148,12 @@ Sec-WebSocket-Protocol: chat
 ### 4.2 추가 보안 조치
 
 :::warning[주의사항]
+
 - 인증된 사용자의 연결만 허용
 - 메시지 크기 제한 설정
 - 연결 수 제한으로 DoS 공격 방지
 - 정기적인 연결 상태 확인(Ping-Pong)
-:::
+  :::
 
 ## 5. WebSocket 구현 시 모범 사례
 
@@ -150,7 +162,6 @@ Sec-WebSocket-Protocol: chat
 - **자동 재연결 메커니즘**
 	- 네트워크 불안정으로 인한 연결 끊김 대비
 	- 지수 백오프를 통한 재연결 시도
-
 - **Heartbeat 구현**
 	- 정기적인 Ping-Pong 메시지 교환
 	- 연결 상태 모니터링
@@ -160,16 +171,17 @@ Sec-WebSocket-Protocol: chat
 - **메시지 형식 표준화**
 	- JSON 등 구조화된 형식 사용
 	- 메시지 타입과 페이로드 구분
-
 - **에러 처리**
 	- 명확한 에러 메시지 정의
 	- 클라이언트에 적절한 에러 피드백 제공
 
 ## 6. 마치며
 
-WebSocket은 현대 웹 애플리케이션에서 실시간 기능을 구현하는 데 필수적인 기술입니다. HTTP의 한계를 극복하고 진정한 양방향 통신을 가능하게 함으로써, 더욱 풍부하고 인터랙티브한 웹 경험을 제공할 수 있게 되었습니다.
+- WebSocket은 현대 웹 애플리케이션에서 실시간 기능을 구현하는 데 필수적인 기술입니다.
+- HTTP의 한계를 극복하고 진정한 양방향 통신을 가능하게 함으로써, 더욱 풍부하고 인터랙티브한 웹 경험을 제공할 수 있게 되었습니다.
 
 :::tip[추가 학습 자원]
+
 - [WebSocket API (MDN)](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 - [RFC 6455 - WebSocket Protocol](https://tools.ietf.org/html/rfc6455)
 - [IETF WebSocket Protocol Registry](https://www.iana.org/assignments/websocket/websocket.xml)

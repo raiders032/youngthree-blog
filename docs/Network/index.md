@@ -11,7 +11,7 @@ title: "Network"
   - [TCP](Protocol/TCP/TCP.md)
   - [IP](Protocol/IP/IP.md)
   - [HTTP](HTTP/README.md)
-  - [Web Socket](Protocol/WebSocket/WebSocket.md)
+  - [Web Socket](Protocol/WebSocket/WebSocket/WebSocket.md)
   - [Ethernet](Protocol/Ethernet/Ethernet.md)
   - [ARP](Protocol/ARP/ARP.md)
   - [UDP](Protocol/UDP/UDP.md)
