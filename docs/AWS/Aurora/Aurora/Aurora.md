@@ -9,13 +9,14 @@
 ## 2 Replication
 
 - [레퍼런스](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Replication.html)
-- Aurora DB 클러스터는 여러 데이터베이스 인스턴스를 가질 수 있습니다. 
+- Aurora DB 클러스터는 여러 데이터베이스 인스턴스를 가질 수 있습니다.
 - 첫 번째 인스턴스는 쓰기 작업을 담당하는 **writer DB**이고, 두 번째 및 세 번째 인스턴스부터는 읽기 작업을 담당하는 **Aurora Replicas** 또는 **reader DB**입니다.
 - 새로운 인스턴스를 추가하면 Aurora는 자동으로 writer DB에서 reader DB로 데이터를 복제합니다.
 - 이 과정은 Aurora가 자동으로 처리하므로, 관리자가 별도로 설정할 필요가 없습니다.
 - Aurora Replicas는 클러스터 내의 읽기 요청을 처리하여, writer DB의 부하를 줄이고 전체 성능을 향상시킵니다.
 - 이러한 구조는 가용성을 높이는 데도 도움이 됩니다. 만약 writer DB가 장애가 발생하여 사용할 수 없게 되면, Aurora는 자동으로 reader DB 중 하나를 새로운 writer DB로 승격시킵니다.
-- Aurora DB 클러스터는 최대 15개의 Aurora Replicas를 가질 수 있으며, 이러한 인스턴스들은 여러 가용 영역(AZ)에 분산되어 배치될 수 있습니다. 이는 데이터베이스의 고가용성과 내결함성을 보장합니다.
+- Aurora DB 클러스터는 최대 15개의 Aurora Replicas를 가질 수 있으며, 이러한 인스턴스들은 여러 가용 영역(AZ)에 분산되어 배치될 수 있습니다. 이는 데이터베이스의 고가용성과 내결함성을
+  보장합니다.
 
 ### 2.1 동기화 지연(Lag)
 
@@ -68,9 +69,9 @@
 ![Pasted image 20240622162228.png](images/Pasted%20image%2020240622162228.png)
 
 - [레퍼런스](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html)
-- Amazon Aurora 글로벌 데이터베이스는 여러 AWS 리전에 걸쳐 분산되어 있어, 저지연 글로벌 읽기 성능을 제공하고 전체 AWS 리전에 영향을 미칠 수 있는 드문 장애로부터 빠르게 복구할 수 있습니다. 
-- Aurora 글로벌 데이터베이스는 하나의 리전에 기본 DB 클러스터를 가지며, 다른 리전에 최대 다섯 개의 보조 DB 클러스터를 가질 수 있습니다.. 
-	- 쓰기 작업은 기본 AWS 리전의 기본 DB 클러스터에 직접 수행됩니다. 
+- Amazon Aurora 글로벌 데이터베이스는 여러 AWS 리전에 걸쳐 분산되어 있어, 저지연 글로벌 읽기 성능을 제공하고 전체 AWS 리전에 영향을 미칠 수 있는 드문 장애로부터 빠르게 복구할 수 있습니다.
+- Aurora 글로벌 데이터베이스는 하나의 리전에 기본 DB 클러스터를 가지며, 다른 리전에 최대 다섯 개의 보조 DB 클러스터를 가질 수 있습니다..
+	- 쓰기 작업은 기본 AWS 리전의 기본 DB 클러스터에 직접 수행됩니다.
 - Aurora는 전용 인프라를 사용하여 데이터를 보조 AWS 리전으로 복제하며, 지연 시간은 일반적으로 1초 이내입니다.
 - Aurora 글로벌 데이터베이스는 복제를 위해 데이터베이스 엔진이 아닌 클러스터 스토리지 볼륨을 사용합니다
 
@@ -97,27 +98,25 @@
 - 이를 통해 클러스터의 로그 이벤트가 자동으로 CloudWatch Logs로 게시됩니다.
 - 게시된 로그 데이터는 CloudWatch Logs에서 분석할 수 있으며, 알람을 설정하고 메트릭을 확인할 수 있습니다.
 
-
-
 ### 7.1 Aurora PostgreSQL
 
 - PostgreSQL 로그를 CloudWatch Logs로 내보내려면 Aurora PostgreSQL DB 클러스터를 생성하거나 기존 클러스터를 수정하여 로그 내보내기 옵션을 활성화해야 합니다.
 - CloudWatch Logs에 내보내진 PostgreSQL 로그는 내구성이 높은 스토리지에 저장되며, 필요에 따라 로그 보관 기간을 설정할 수 있습니다.
 - 지원되는 PostgreSQL 버전:
-    - 14.3 이상
-    - 13.3 이상
-    - 12.8 이상
-    - 11.12 이상
+	- 14.3 이상
+	- 13.3 이상
+	- 12.8 이상
+	- 11.12 이상
 
 ### 7.2 Aurora MySQL
 
 - MySQL 로그를 CloudWatch Logs로 내보내려면 Aurora MySQL DB 클러스터를 생성하거나 기존 클러스터를 수정하여 로그 내보내기 옵션을 활성화해야 합니다.
 - CloudWatch Logs에 내보내진 MySQL 로그는 내구성이 높은 스토리지에 저장되며, 필요에 따라 로그 보관 기간을 설정할 수 있습니다.
 - 내보낼 수 있는 로그 유형:
-    - 일반 로그
-    - 느린 쿼리 로그
-    - 감사 로그
-    - 오류 로그
+	- 일반 로그
+	- 느린 쿼리 로그
+	- 감사 로그
+	- 오류 로그
 
 ## 8 Storage
 

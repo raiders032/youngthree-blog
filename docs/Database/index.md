@@ -40,3 +40,4 @@ title: "Database"
 ## 응용
 
 - [ORM](ORM/ORM.md)
+- [CDC(Change Data Capture)](CDC/CDC.md)
