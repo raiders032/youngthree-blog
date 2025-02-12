@@ -27,18 +27,18 @@ sidebar_position: 1
 	- [디자인 패턴](Design-Pattern/index.md)
 - [테스트 방법론](Test/index.md)
 
-### ⚡ [리액티브 프로그래밍](ReactiveProgramming/index.md)
-
-- [Reactive Streams](ReactiveProgramming/ReactiveStream/index.md)
-- [Project Reactor](ReactiveProgramming/ProjectReactor/index.md)
-- [Netty](Netty/index.md)
-- [Spring Webflux](ReactiveProgramming/SpringWebflux/SpringWebflux.md)
-
 ### 🌱 [Spring Framework](Spring/index.md)
 
 - [Spring WebFlux](Spring/SpringWebflux/index.md)
 - [Spring Cloud](Spring/SpringCloud/index.md)
 - [Spring Batch](Spring/SpringBatch/index.md)
+
+### ⚡ [Reactive Programming](ReactiveProgramming/index.md)
+
+- [Reactive Streams](ReactiveProgramming/ReactiveStream/index.md)
+- [Project Reactor](ReactiveProgramming/ProjectReactor/index.md)
+- [Netty](Netty/index.md)
+- [Spring Webflux](ReactiveProgramming/SpringWebflux/SpringWebflux.md)
 
 ### 🔄 Message Systems & NoSQL
 
