@@ -31,20 +31,23 @@ hide_title: true
 
 ## 2. WebSocket 연결 수립 과정
 
-### 2.1 WebSocket Handshake
+- WebSocket은 HTTP 프로토콜을 기반으로 연결을 수립합니다.
+- 이 과정을 통해 클라이언트와 서버가 WebSocket 프로토콜로 전환됩니다. 이를 WebSocket Handshake라고 합니다.
+- WebSocket 연결은 HTTP 업그레이드 요청으로 시작됩니다.
+- 이 과정을 상세히 살펴보겠습니다.
 
-- WebSocket 연결은 HTTP 업그레이드 요청으로 시작됩니다. 이 과정을 상세히 살펴보겠습니다.
+### 2.1 클라이언트 요청
 
-#### 2.1.1 클라이언트 요청
+- 웹소켓 연결을 위해서는 먼저 클라이언트가 HTTP 요청을 보내야 합니다.
+- 클라이언트는 다음과 같은 요청을 서버에 전송합니다
 
 ```http
 GET /chat HTTP/1.1
-Host: server.example.com
+Host: example.com:8000
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
 Sec-WebSocket-Version: 13
-Origin: http://example.com
 ```
 
 - `Upgrade: websocket`: 클라이언트가 웹소켓 프로토콜로 업그레이드하고자 함을 나타냅니다
@@ -52,29 +55,42 @@ Origin: http://example.com
 - `Sec-WebSocket-Key`: 브라우저가 생성한 무작위 16바이트 값을 Base64로 인코딩한 키입니다.
 	- 서버가 웹소켓 프로토콜을 지원하는지 확인하는 데 사용됩니다.
 	- 매 연결마다 새롭게 생성되어야 합니다.
-- `Sec-WebSocket-Version`: 클라이언트가 사용하는 웹소켓 프로토콜 버전을 나타냅니다. 일반적으로 "13"입니다
+- `Sec-WebSocket-Version`
+	- 클라이언트가 사용하는 웹소켓 프로토콜 버전을 나타냅니다. 일반적으로 "13"입니다
+	- 서버가 해당 버전의 WebSocket을 이해하지 못하는 경우, 이해하는 버전을 포함한 Sec-WebSocket-Version 헤더를 다시 보내야 합니다
+- 클라이언트는 여기서 확장기능이나 하위 프로토콜을 요청할 수 있습니다
+- 또한 User-Agent, Referer, Cookie 또는 인증 헤더와 같은 일반적인 헤더들이 있을 수 있습니다.
+	- 이러한 헤더들은 WebSocket과 직접적인 관련이 없으므로 원하는 대로 처리하면 됩니다.
 
-#### 2.1.2 서버 응답
+### 2.2 서버 응답
+
+- 서버가 핸드셰이크 요청을 받으면, 프로토콜이 HTTP에서 WebSocket으로 변경됨을 나타내는 특별한 응답을 보내야 합니다.
+- 서버는 다음과 같은 응답을 클라이언트에 전송합니다:
 
 ```http
 HTTP/1.1 101 Switching Protocols
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
-Sec-WebSocket-Protocol: chat
 ```
 
 - `101 Switching Protocols`: 서버가 프로토콜 전환을 승인했음을 나타내는 상태 코드입니다
-- `Sec-WebSocket-Accept`: 클라이언트가 보낸 Sec-WebSocket-Key를 사용하여 생성된 값입니다.
-	- 이 값은 클라이언트의 키에 특정 GUID 문자열을 추가하고 SHA-1 해시를 적용한 후 Base64로 인코딩하여 생성됩니다
 - `Sec-WebSocket-Protocol`: 클라이언트가 요청한 서브프로토콜 중 서버가 선택한 것을 나타냅니다
+- `Sec-WebSocket-Accept`: 클라이언트가 보낸 Sec-WebSocket-Key를 사용하여 생성된 값입니다.
+	- 자세한 과정은 아래에서 다루겠습니다.
 
-#### 2.1.3 보안 키 생성 과정
+### 2.3 보안 키 생성 과정
+
+- WebSocket 핸드쉐이크 과정에서 사용되는 보안 키 생성 과정을 살펴보겠습니다.
+- 이렇게 복잡해 보이는 과정은 서버가 WebSocket을 지원하는지 클라이언트가 명확히 알 수 있도록 하기 위해 존재합니다.
+- 이는 서버가 WebSocket 연결을 수락하지만 데이터를 HTTP 요청으로 해석하는 경우 보안 문제가 발생할 수 있기 때문에 중요합니다.
+
+#### 생성 과정
 
 - **Sec-WebSocket-Key 생성**
 	- 클라이언트는 16바이트의 무작위 값을 생성합니다.
 	- 이 값을 Base64로 인코딩하여 Sec-WebSocket-Key 헤더의 값으로 전송합니다.
-		- 예: dGhlIHNhbXBsZSBub25jZQ==
+		- 예: `dGhlIHNhbXBsZSBub25jZQ==`
 	- 이는 캐시된 응답을 방지하고 유효한 WebSocket 요청임을 확인하기 위한 것입니다.
 		- 매 요청마다 새로운 무작위 값을 사용하므로 중간 프록시 서버가 응답을 캐시할 수 없습니다.
 		- 무작위성을 통해 일반 HTTP 요청이 아닌 의도된 WebSocket 연결 요청임을 보장합니다.
@@ -82,12 +98,13 @@ Sec-WebSocket-Protocol: chat
 	- 서버는 다음 과정을 통해 응답 키를 생성합니다:
 	- 클라이언트가 보낸 Sec-WebSocket-Key에 고정된 GUID 문자열을 추가
 		- GUID(Globally Unique Identifier)는 WebSocket 프로토콜에서 고유하게 사용하는 식별자입니다.
-		- "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"라는 특정 값으로 고정되어 있습니다.
+		- `258EAFA5-E914-47DA-95CA-C5AB0DC85B11`라는 특정 값으로 고정되어 있습니다.
 	- 연결된 문자열의 SHA-1 해시를 계산
 	- 해시 값을 Base64로 인코딩
-	- 이 과정의 목적:
-		- 서버가 실제로 WebSocket 프로토콜을 이해하고 구현했는지 확인합니다.
-		- WebSocket을 지원하지 않는 서버는 이 복잡한 키 생성 과정을 구현하지 않았을 것입니다.
+	- 따라서 Key가 `dGhlIHNhbXBsZSBub25jZQ==`였다면, Sec-WebSocket-Accept 헤더의 값은 `s3pPLMBiTxaQ9kYGzzhZRbK+xOo=`가 됩니다
+		- 이 과정의 목적:
+			- 서버가 실제로 WebSocket 프로토콜을 이해하고 구현했는지 확인합니다.
+			- WebSocket을 지원하지 않는 서버는 이 복잡한 키 생성 과정을 구현하지 않았을 것입니다.
 - **클라이언트의 검증 과정**
 	- 클라이언트도 서버와 동일한 과정으로 예상되는 accept 값을 계산합니다:
 		1. 자신이 보낸 Sec-WebSocket-Key + GUID 문자열
