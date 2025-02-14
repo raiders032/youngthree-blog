@@ -34,8 +34,8 @@ title: "Database"
 
 ## 데이터베이스 유형
 
-- [NoSQL](NoSQL/NoSQL.md)
-  - [MongoDB](MongoDB/index.md)
+- [NoSQL](NoSQL/index.md)
+- [MongoDB](MongoDB/index.md)
 
 ## 응용
 
