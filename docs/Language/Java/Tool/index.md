@@ -1,5 +1,5 @@
 ---
-tilte: "Java Tool"
+tilte: "Java LoadTestingTool"
 ---
 
 ## Java Tool

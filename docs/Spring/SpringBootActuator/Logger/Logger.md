@@ -1,5 +1,5 @@
 ---
-title: "Spring Boot Actuator Loggers"
+title: "SpringBootActuator Loggers"
 description: "Spring Boot Actuator의 로깅 기능과 설정 방법을 상세히 알아봅니다. 런타임에서의 로그 레벨 조정과 OpenTelemetry 통합 등 실제 예제와 함께 설명합니다."
 tags: [ "SPRING_BOOT", "ACTUATOR", "LOGGING", "OPENTELEMETRY", "BACKEND", "JAVA" ]
 keywords: [ "스프링부트", "액추에이터", "로거", "로깅", "spring boot", "actuator", "logger", "logging", "오픈텔레메트리", "opentelemetry", "모니터링", "로그레벨" ]

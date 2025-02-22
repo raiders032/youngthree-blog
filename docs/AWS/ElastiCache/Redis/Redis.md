@@ -20,7 +20,7 @@
 
 ## 5 Creation method 선택
 
-![[Pasted image 20240731114824.png]]
+![Pasted image 20240731114824.png](images/Pasted%20image%2020240731114824.png)
 
 - 먼저 Creation method 선택합니다. 아래와 같은 방법이 제공됩니다.
 	- **Easy create**: AWS에서 권장하는 최적의 설정을 사용하여 클러스터를 빠르게 생성합니다.
@@ -40,13 +40,13 @@
 
 ## 7 Cluster info 설정
 
-![[Pasted image 20240731114918.png]]
+![Pasted image 20240731114918.png](images/Pasted%20image%2020240731114918.png)
 
 - 클러스터의 이름을 지정합니다.
 
 ## 8 Location 설정
 
-![[Pasted image 20240731114942.png]]
+![Pasted image 20240731114942.png](images/Pasted%20image%2020240731114942.png)
 
 - Location 설정
 	- AWS Cloud: ElastiCache 인스턴스를 AWS 클라우드에서 호스팅하는 옵션입니다. 기본적으로 이 옵션이 선택되어 있으며, AWS의 인프라를 사용하여 안정적이고 확장 가능한 환경을 제공합니다.
@@ -60,7 +60,7 @@
 
 ## 9 Cluster 설정
 
-![[Pasted image 20240731115324.png]]
+![Pasted image 20240731115324.png](images/Pasted%20image%2020240731115324.png)
 
 **Cluster Settings 설정**
 

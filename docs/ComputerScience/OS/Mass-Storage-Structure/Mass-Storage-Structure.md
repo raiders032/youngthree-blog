@@ -1,130 +1,148 @@
-## 1 Magnetic Disks(자기 디스크)
+---
+title: "Mass Storage Structure"
+description: "컴퓨터 시스템의 주요 저장 장치인 자기 디스크(HDD)와 SSD의 구조와 동작 원리를 상세히 알아봅니다. 각 저장 장치의 특징과 성능 차이, 실제 시스템에서의 활용 방안을 설명합니다."
+tags: [ "COMPUTER_ARCHITECTURE", "STORAGE", "HDD", "SSD", "SYSTEM_DESIGN", "HARDWARE" ]
+keywords: [ "저장장치", "하드디스크", "HDD", "자기디스크", "magnetic disk", "SSD", "solid state drive", "플래터", "platter", "트랙", "track", "섹터", "sector", "실린더", "cylinder", "디스크 구조", "storage device", "컴퓨터 구조", "computer architecture" ]
+draft: false
+hide_title: true
+---
 
+## 1. 자기 디스크(Magnetic Disks)의 이해
 
+- 자기 디스크는 오랫동안 컴퓨터 시스템의 주요 저장 장치로 사용되어 왔습니다.
+- SSD가 점차 보편화되고 있지만, 여전히 많은 시스템에서 대용량 저장 장치로 자기 디스크를 활용하고 있습니다.
 
-### 1.1 Disk 구조
+### 1.1 자기 디스크의 물리적 구조
 
-![자기 디스크](./images/1.png)
+![자기 디스크의 기본 구조](./images/1.png)
 
+- 자기 디스크는 여러 개의 구성 요소가 정교하게 조합된 기계식 저장 장치입니다.
+- 각 구성 요소들은 다음과 같은 역할을 수행합니다.
 
+#### 1.1.1 플래터(Platter)
 
-#### 1.1.1 Platter
+- 자기 물질로 코팅된 원판 형태의 저장 매체입니다
+- 하나의 디스크에 여러 개의 플래터가 쌓여있는 구조입니다
+- 각 플래터의 양면에 데이터를 저장할 수 있으며, 면마다 별도의 읽기/쓰기 헤드가 있습니다
 
-* 디스크는 자기 물질로 만들어진 여러 **플래터**로 이루어짐
-* 각 플래터 마다 2 개의 **read-write 헤드**가 있다
-* 각 플래터는 **트랙**과 **섹터**로 구분됨
+#### 1.1.2 트랙(Track)과 섹터(Sector)
 
+![img.png](images/img.png)
 
+하드디스크의 데이터 저장 구조는 다음과 같습니다:
 
-#### 1.1.2 Track
+- 트랙(Track)
+	- 플래터 위의 동심원 형태로 구성된 데이터 저장 영역입니다
+	- 그림에서 빨간 동심원들이 각각의 트랙을 나타냅니다
+	- 빨간색으로 강조된 동심원이 하나의 완전한 트랙 예시입니다
+- 섹터(Sector)의 구조
+	- 디스크 섹터(Disk Sector, 보라색 부분)
+		- 플래터를 중심에서 부채꼴 모양으로 나눈 영역입니다
+		- 이는 디스크의 물리적 구조를 나타냅니다
+	- 트랙 섹터(Track Sector) 또는 블록(Block)
+		- 트랙(빨간색)과 디스크 섹터(보라색)가 교차하는 영역입니다
+		- 실제 데이터가 저장되는 공간입니다
+		- 일반적으로 512바이트 크기를 가집니다
+- 클러스터(Cluster, 초록색 부분)
+	- 여러 개의 블록(트랙 섹터)을 묶은 논리적 저장 단위입니다
+	- 파일 시스템이 데이터를 관리하는 최소 단위입니다
+	- 그림에서 초록색으로 표시된 영역이 하나의 클러스터 예시입니다
 
-![img](./images/2.png)
+### 1.1.3 블록과 바이트의 주소 체계
 
-* 정보는 디스크 표면 상의 동심원(트랙)을 따라 저장됨
-* 위 그림에서 A가 Track
+- 블록(Block)은 디스크의 기본 저장 단위로, 트랙과 섹터의 교차점에 위치합니다
+- 디스크에서 데이터의 위치는 계층적 주소 체계로 표현됩니다:
 
+#### 블록 주소
 
+- 블록은 물리적 위치를 나타내는 주소를 가집니다
+- [트랙 번호, 섹터 번호]의 형태로 표현됩니다
+- 이를 통해 디스크 상의 정확한 블록 위치를 찾을 수 있습니다
 
-#### 1.1.3 Cylinder
+#### 바이트 주소
 
-* 여러 플래터에서 같은 지름을 갖는 트랙들을 **실린더**라고 부른다
-* 한 파일을 같은 실린더에 저장하면 헤드를 움직이지 않고 데이터를 읽을 수 있어 효율적임
+- 각 블록은 일반적으로 512바이트로 구성됩니다
+- 블록 내의 특정 바이트 위치는 오프셋(offset)으로 표현합니다
+- 따라서 디스크 상의 특정 바이트는 [트랙 번호, 섹터 번호, 오프셋]으로 정확한 위치를 지정할 수 있습니다
 
+:::info 주소 체계의 예시
+예를 들어, 트랙 5, 섹터 3의 블록에서 20번째 바이트를 가리키고 싶다면:
 
+- 블록 주소: [5, 3]
+- 바이트 주소: [5, 3, 20]
+  :::
 
-#### 1.1.3 Sector
+### 1.2 디스크 접근 메커니즘
 
-![img](./images/2.png)
+자기 디스크의 데이터 접근 시간은 다음 세 가지 요소로 구성됩니다:
 
-* 블록은 한 개 이상의 섹터들로 이루어짐
-* 일반적으로 512 bytes 크기
-* 위 그림에서 
-  * B: Geometrical sector
-  * C: Sector
-  * D: Cluster
+- 탐색 시간(Seek Time): 읽기/쓰기 헤드를 원하는 트랙으로 이동하는 시간
+- 회전 지연(Rotational Latency): 원하는 섹터가 헤드 아래로 올 때까지 기다리는 시간
+- 전송 시간(Transfer Time): 실제 데이터를 읽거나 쓰는 시간
 
+:::info 성능에 영향을 미치는 주요 요소
+탐색 시간(Seek Time)이 전체 접근 시간의 대부분을 차지하며, 이는 자기 디스크의 성능을 결정하는 가장 중요한 요소입니다.
+:::
 
+### 1.3 순차 I/O와 랜덤 I/O
 
-#### 1.1.4 read-write head
+데이터베이스 시스템의 성능은 디스크 I/O 패턴에 크게 영향을 받습니다.
 
-* 암 끝에 달린 head
+#### 순차 I/O
 
+- 디스크의 연속된 영역을 순차적으로 읽거나 쓰는 방식
+- 헤드 이동이 최소화되어 효율적인 데이터 접근 가능
+- 대용량 파일 처리에 적합
 
+#### 랜덤 I/O
 
-#### 1.1.5 arm
+- 디스크의 여러 위치를 불규칙하게 접근하는 방식
+- 잦은 헤드 이동으로 인한 성능 저하 발생
+- 데이터베이스의 일반적인 작업 패턴
 
-* 원하는 트랙 위에 read-write head를 놓기위해 움직인다
+:::warning 성능 고려사항
+같은 양의 데이터를 처리하더라도, 랜덤 I/O는 순차 I/O에 비해 현저히 낮은 성능을 보입니다. 데이터베이스 설계 시 이러한 특성을 고려해야 합니다.
+:::
 
+## 2. SSD(Solid State Drive)의 특징
 
+SSD는 기존 자기 디스크의 한계를 극복하기 위해 개발된 저장 장치입니다. 플래시 메모리를 기반으로 하여 다음과 같은 특징을 가집니다:
 
-### 1.1 디스크 읽기 방식
+### 2.1 SSD의 장점
 
-* 최근 자기 디스크 원판에 의존하는 하드 디스크보다 SSD 드라이브가 많이 활용되고 있지만 여전히 데이터 저장 매체로 컴퓨터에서 가장 느린 하드 디스크를 사용하고 있다
-* 데이터베이스의 성능 튜닝은 어떻게 디스크 I/O를 줄이느냐가 관건
+- 기계적 부품이 없어 물리적 내구성이 우수
+- 데이터 접근 시 지연 시간(Latency)이 매우 짧음
+- 전력 소비가 적어 에너지 효율적
+- 랜덤 I/O 성능이 자기 디스크보다 월등히 우수
 
-> `디스크에서 임의의 블록을 읽어오거나 기록하는데 걸리는 시간 = SEEK + ROTATION, TRANSFER`
->
-> * SEEK 시간: 암 끝에 달린 헤드를 원하는 트랙 위치로 옮기는 시간
-> * ROTATION 시간: 트랙을 찾았으면 원하는 섹터가 올 때까지 회전 지연 시간이 걸린다
-> * TRANSFER 시간: 데이터의 총 길이 만큼 플래터가 회전하면서 데이터를 읽고 쓰는 시간
-> * SEEK 타임이 가장 오래걸리기 때문에 자기 디스크에 성능은 여기서 결정된다
+### 2.2 SSD의 제한사항
 
+- 용량당 가격이 자기 디스크보다 높음
+- 쓰기 횟수에 제한이 있어 수명이 상대적으로 짧음
+- 대용량 모델의 경우 가격이 매우 높음
 
+:::tip 최적의 사용 사례
+SSD는 다음과 같은 경우에 특히 효과적입니다:
 
-### 1.2 순차 I/O와 랜덤 I/O
+- 데이터베이스의 메타데이터 저장
+- 빈번한 랜덤 I/O가 발생하는 시스템
+- 응답 시간이 중요한 애플리케이션
+  :::
 
-**순차 I/O**
+## 3. 저장 장치 선택 가이드
 
-* 디스크의 헤더를 움직이지 않고 한 번에 많은 데이터를 읽는 방식을 순차 I/O라고 한다
-* 순차 I/O의 경우 SSD가 하드 디스크보다 조금 빠르거나 비슷한 성능을 보이기도 한다
+시스템 설계 시 다음 요소들을 고려하여 적절한 저장 장치를 선택해야 합니다:
 
+- 워크로드 특성 (순차/랜덤 I/O 비율)
+- 필요한 저장 용량
+- 성능 요구사항
+- 비용 제약
+- 전력 소비량
+- 신뢰성 요구사항
 
+:::info 하이브리드 접근 방식
+많은 시스템에서 SSD와 자기 디스크를 함께 사용하여 각 장치의 장점을 활용하고 있습니다:
 
-**랜덤 I/O**
-
-* 랜덤 I/O는 디스크 드라이브의 플래터를 돌려서 읽어야할 데이터가 저장된 위치로 헤더를 옮긴 다음 데이터를 읽는 것을 의미한다
-* SSD의 장점은 하드 디스크와 비교하여 랜덤 I/O가 훨신 빠르다는 것
-
-
-
-**순차 I/O와 랜덤 I/O 비교**
-
-* 데이터베이스 서버에서 순차 I/O 작업의 비중이 낮고 랜덤 I/O를 통해 작은 데이터를 읽고 쓰는 작업이 대부분
-* 따라서 SSD가 DBMS용 스토리지에 최적이다 
-* 예시
-  * 순차 I/O는 3개의 페이지를 디스크에 기록하기 위해 1번 시스템 콜을 요청하지만 랜덤 I/O는 3개의 페이지를 디스크에 기록하기 위해 3번의 시스템 콜 요청을 한다
-  * 순차 I/O 디스크 헤드를 한번 움직이고 랜덤 I/O는 헤드를 3번 움직이니 순차 I/O가 약 3배 빠르다고 볼 수 있다
-
-
-
-## 2 SSD(Solid State Disks)
-
-* 컴퓨터에서 CPU나 메모리 같은 주요 장치는 대부분 전자식 장치지만 하드 디스크 드라이브는 기계식 장치다
-* SSD는 기존 하드 디스크 드라이브에서 저장용 플래터를 제거하고 그 대신 플래시 메모리를 장착하고 있다
-* 플래터를 기계적으로 회전시킬 필요가 없으므로 아주 빨리 데이터를 읽고 쓸 수 있다
-* 플래시 메모리는 전원이 공급되지 않아도 데이터가 삭제되지 않는다
-
-
-
-### 2.1 순차 I/O와 랜덤 I/O
-
-* 디스크 원판을 가지지 않는 SSD는 순차 I/O와 랜덤 I/O의 차이가 없을 것 같지만 실제로 그렇지 않다.
-* 랜덤 I/O는 여전히 순차 I/O보다 Throughput이 떨어진다.
-
-
-
-> Sometimes old technologies are used in new ways as economics change or the technologies evolve. An example is the growing importance of **solid-state disks**, or **SSD****s**. Simply described, an SSD is nonvolatile memory that is used like a hard drive. There are many variations of this technology, from DRAM with a battery to allow it to maintain its state in a power failure through flash-memory technologies like single-level cell (SLC) and multilevel cell (MLC) chips.
->
-> SSDs have the same characteristics as traditional hard disks but can be more reliable because they have no moving parts and faster because they have no seek time or latency. In addition, they consume less power. However, they are more expensive per megabyte than traditional hard disks, have less capacity than the larger hard disks, and may have shorter life spans than hard disks, so their uses are somewhat limited. One use for SSDs is in storage arrays, where they hold file-system metadata that require high performance. SSDs are also used in some laptop computers to make them smaller, faster, and more energy-efficient.
->
-> Because SSDs can be much faster than magnetic disk drives, standard bus interfaces can cause a major limit on throughput. Some SSDs are designed to connect directly to the system bus (PCI, for example). SSDs are changing other traditional aspects of computer design as well. Some systems use them as a direct replacement for disk drives, while others use them as a new cache tier, moving data between magnetic disks, SSDs, and memory to optimize performance.
->
-> In the remainder of this chapter, some sections pertain to SSDs, while others do not. For example, because SSDs have no disk head, disk-scheduling algorithms largely do not apply. Throughput and formatting, however, do apply.
-
-
-
-## 3 Magnetic Tapes
-
-
-
-## 4 Disk Structure
+- SSD: 운영체제, 자주 접근하는 데이터, 성능이 중요한 애플리케이션
+- 자기 디스크: 대용량 데이터 저장, 아카이브, 백업
+  :::

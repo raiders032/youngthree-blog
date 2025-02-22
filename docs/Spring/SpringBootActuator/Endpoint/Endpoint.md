@@ -1,5 +1,5 @@
 ---
-title: "Spring Boot Actuator Endpoints 완벽 가이드"
+title: "SpringBootActuator Endpoints 완벽 가이드"
 description: "Spring Boot Actuator의 핵심 기능인 엔드포인트들의 특징과 활용 방법을 알아봅니다. 운영 환경에서 애플리케이션 모니터링과 관리에 필수적인 엔드포인트들을 자세히 설명합니다."
 tags: [ "SPRING_BOOT", "ACTUATOR", "MONITORING", "BACKEND", "JAVA", "WEB" ]
 keywords: [ "스프링부트", "액추에이터", "엔드포인트", "모니터링", "spring boot", "actuator", "endpoints", "monitoring", "운영", "관리", "매트릭스", "로깅" ]

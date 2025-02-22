@@ -9,6 +9,7 @@ title: "Spring"
 - [Transaction Propagation](TransactionPropagation/TransactionPropagation.md)
 - [Profiles](SpringProfiles/SpringProfiles.md)
 - [Spring Retry](SpringRetry/SpringRetry.md)
+- [Spring Boot Actuator](SpringBootActuator/index.md)
 
 ### Spring WebFlux
 

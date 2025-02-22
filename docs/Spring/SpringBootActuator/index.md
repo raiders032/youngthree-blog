@@ -1,5 +1,5 @@
 ---
-title: "Spring Boot Actuator"
+title: "SpringBootActuator"
 description: "Spring Boot Actuator의 주요 기능과 활용 방법을 상세히 알아봅니다. 운영 환경에서 필수적인 모니터링과 관리 기능들을 실제 예제와 함께 설명합니다."
 tags: [ "SPRING_BOOT", "ACTUATOR", "MONITORING", "BACKEND", "JAVA" ]
 keywords: [ "스프링부트", "액추에이터", "spring boot", "actuator", "모니터링", "운영", "관리", "엔드포인트", "매트릭스", "로깅" ]

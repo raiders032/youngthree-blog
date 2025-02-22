@@ -30,6 +30,14 @@ $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 sdk version
 ```
 
+### 2.1 SDKMAN 업데이트
+
+```bash
+$ sdk selfupdate
+```
+
+- SDKMAN을 최신 버전으로 업데이트합니다.
+
 ## 3 특정 Java 설치
 
 ### 3.1 Java 버전 목록 조회
@@ -108,6 +116,7 @@ $ sdk use java 8.0.252-open
 ```bash
 $ sdk default java java 17.0.10-amzn
 ```
+
 - 시스템 전체에 적용됩니다.
 - 영구적입니다. 터미널을 닫아도 설정이 유지됩니다.
 - 특정 Java 버전을 기본값으로 설정

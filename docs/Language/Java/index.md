@@ -52,7 +52,7 @@ title: "Java"
 - [Thread Pool](Thread-Pool/Thread-Pool.md)
 	- ExecutorService, Executors, Runnable, Callable, Future
 - [ThreadLocal](ThreadLocal/ThreadLocal.md)
-- [Concurrent](Concurrent/Concurrent.md)
+- [Concurrent](Concurrent/Future/Future)
 - [VirtualThread](VirtualThread/index.md)
 
 ### 입출력과 네트워킹

@@ -2,7 +2,7 @@
 title: "Implementing Binary Plugins"
 description: "Gradle 바이너리 플러그인을 개발하는 방법을 상세히 설명합니다. 플러그인 기본 구조부터 확장 기능 구현까지 실제 예제와 함께 알아봅니다."
 tags: [ "GRADLE", "PLUGIN", "BUILD_TOOL", "JAVA", "KOTLIN", "BACKEND" ]
-keywords: [ "그래들", "Gradle", "플러그인", "Plugin", "바이너리 플러그인", "Binary Plugin", "빌드 도구", "Build Tool", "자바", "코틀린" ]
+keywords: [ "그래들", "Gradle", "플러그인", "Plugin", "바이너리 플러그인", "Binary Plugin", "빌드 도구", "Build LoadTestingTool", "자바", "코틀린" ]
 draft: false
 hide_title: true
 ---

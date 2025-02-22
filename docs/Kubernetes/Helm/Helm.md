@@ -5,13 +5,9 @@
 - 헬름 차트는 자체적인 템플릿 문법을 사용하므로 가변적인 인자를 배포할 때 적용해 다양한 배포 환경에 맞추거나 원하는 조건을 적용할 수 있다
 - 쿠버네티스와 헬름의 관계는 레드헷 계열 리눅스와 Yum의 관계라고 할 수 있다.
 
-
-
 **패키지란?**
 
 - 패키지란 실행 파일뿐만 아니라 실행 환경에 필요한 의존성 파일과 환경 정보들의 묶음이다.
-
-
 
 **Helm이 필요한 이유**
 
@@ -19,14 +15,10 @@
 - 그러나 시스템이 대규모로 바뀌면서 비슷한 매니페스트를 대량으로 만들어야 하므로 재사용이나 일괄 변경 작업이 어려워 졌다
 - 그래서 필요한 것이 매니페스트 범용화라는 개념이다.
 
-
-
 ### 1.1 Helm의 작동 원리
 
 - Helm은 쿠버네티스에 패키지를 손쉽게 배포할 수 있도록 패키지를 관리하는 쿠버네티스 전용 패키지 매니저다.
 - 패키지 매니저란 외부에 있는 저장소에서 패키지 정보를 받아와 패키지를 안정적으로 관리하는 도구다.
-
-
 
 **패키지 매니저의 기능**
 
@@ -35,24 +27,17 @@
 - 패키지 의존성 관리: 패키지를 설치할 때 의존하는 소프트웨어를 같이 설치하고 삭제할 때 같이 삭제한다.
 - 패키지 보안 관리: 디지털 인증서와 패키지에 고유하게 발행되는 체크섬으로 패키지의 소프트웨어 의존성이나 변조를 검사할 수 있다.
 
-
-
 **저장소**
 
 - Helm의 기본 저장소는 `artifacthub.io`로 다른 패키지 매니저처럼 외부에 있다.
 - https://artifacthub.io/
 
-
-
 ## 2 Chart
 
 - 차트는 디렉터리 내부의 파일들의 모음으로 구성된다.
-- 디렉터리 이름이 차트의 이름이된다. 
-
-
+- 디렉터리 이름이 차트의 이름이된다.
 
 **디렉토리의 구조**
-
 
 ```
 wordpress/
@@ -72,15 +57,11 @@ wordpress/
 - 필수적으로 필요한 파일은 Chart.yaml, values.yaml, templates/이 있다.
 - 따라서 차트를 생성한다면 위 파일은 필수적으로 생성해야 한다.
 
-
-
 ### 2.1 Chart.yaml
 
 - 해당 차트에 대한 메타 정보를 가지고 있다.
 - 헬름의 버전, 차트의 이름, 차트의 버전 등을 가지고 있다.
 - Chart.yaml 작성 방법은 https://helm.sh/docs/topics/charts/#the-chartyaml-file 이곳을 참조하자
-
-
 
 **Chart.yaml 예시**
 
@@ -117,14 +98,10 @@ annotations:
   example: A list of annotations keyed by name (optional).
 ```
 
-
-
 ### 2.2 templates/
 
 - 쿠버네티스 리소스를 위한 매니페스트를 이곳에 위치시킨다.
 - [Built-in Objects 레퍼런스](https://helm.sh/docs/chart_template_guide/builtin_objects/)
-
-
 
 **Built-in Objects Release**
 
@@ -132,24 +109,20 @@ annotations:
 - `Release.Namespace`: The namespace to be released into (if the manifest doesn’t override)
 - `Release.IsUpgrade`: This is set to `true` if the current operation is an upgrade or rollback.
 - `Release.IsInstall`: This is set to `true` if the current operation is an install.
-- `Release.Revision`: The revision number for this release. On install, this is 1, and it is incremented with each upgrade and rollback.
+- `Release.Revision`: The revision number for this release. On install, this is 1, and it is incremented with each
+  upgrade and rollback.
 - `Release.Service`: The service that is rendering the present template. On Helm, this is always `Helm`
-
-
 
 **Built-in Objects Values**
 
-- `Values`: Values passed into the template from the `values.yaml` file and from user-supplied files. By default, `Values` is empty.
-
-
+- `Values`: Values passed into the template from the `values.yaml` file and from user-supplied files. By default,
+  `Values` is empty.
 
 **Built-in Objects Chart**
 
-- `Chart`: The contents of the `Chart.yaml` file. 
-- Any data in `Chart.yaml` will be accessible here. 
+- `Chart`: The contents of the `Chart.yaml` file.
+- Any data in `Chart.yaml` will be accessible here.
 - For example `{{ .Chart.Name }}-{{ .Chart.Version }}` will print out the `mychart-0.1.0`.
-
-
 
 ### 2.3 values.yaml
 
@@ -158,8 +131,6 @@ annotations:
 - `helm install` 또는 `helm upgrade`를 통해 값을 주입해서 사용할 수 있다.
 - 따라서 같은 차트에 값을 변경해 재사용할 수 있다.
 - [레퍼런스](https://helm.sh/docs/chart_template_guide/values_files/)
-
-
 
 **values.yaml**
 
@@ -175,38 +146,31 @@ favoriteDrink: coffee
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-configmap
+  name: { { .Release.Name } }-configmap
 data:
   myvalue: "Hello World"
-  drink: {{ .Values.favoriteDrink }}
+  drink: { { .Values.favoriteDrink } }
 ```
 
 - values.yaml의 정의된 기본 값은 helm install 명령어에서 --set 옵션으로 오버라이딩할 수 있다.
 	- helm install solid-vulture ./mychart --dry-run --debug --set favoriteDrink=slurm
-
-
 
 **values.yaml 파일 미리보기**
 
 - 커스텀한 값을 설정하기 위해서는 차트의 `values.yaml`를 미리 알아야 한다.
 - `helm show values [CHART]` 명령어로 차트의 `values.yaml`을 볼 수 있다.
 
-
-
 ## 3 Installing Helm
 
 - [레퍼런스](https://helm.sh/docs/intro/install/)
 
-
-
 ### 3.1 From the Binary Releases
 
 1. Download your [desired version](https://github.com/helm/helm/releases)
-   - 예시) `curl -sL https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz`
+	- 예시) `curl -sL https://get.helm.sh/helm-v3.0.0-linux-amd64.tar.gz`
 2. Unpack it (`tar -zxvf helm-v3.0.0-linux-amd64.tar.gz`)
-3. Find the `helm` binary in the unpacked directory, and move it to its desired destination (`mv linux-amd64/helm /usr/local/bin/helm`)
-
-
+3. Find the `helm` binary in the unpacked directory, and move it to its desired destination (
+   `mv linux-amd64/helm /usr/local/bin/helm`)
 
 ### 3.2  From Script
 
@@ -217,8 +181,6 @@ $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scr
 $ chmod 700 get_helm.sh
 $ ./get_helm.sh
 ```
-
-
 
 ### 3.3 From Apt (Debian/Ubuntu)
 
@@ -233,8 +195,6 @@ sudo apt-get update
 
 sudo apt-get install helm
 ```
-
-
 
 ## 4 헬름 저장소
 
@@ -255,8 +215,6 @@ $ helm repo add jenkins https://charts.jenkins.io
 $ helm repo add harbor https://helm.goharbor.io
 ```
 
-
-
 **등록된 저장소 조회**
 
 ```bash
@@ -267,15 +225,11 @@ bitnami	https://charts.bitnami.com/bitnami
 harbor 	https://helm.goharbor.io
 ```
 
-
-
 **헬름 저장소 업데이트**
 
 ```bash
 helm repo update
 ```
-
-
 
 pull# 5 Helm Commands
 
@@ -292,13 +246,10 @@ $ helm install [RELEASE_NAME] jenkins/jenkins [flags]
 - `jenkins/jenkins`
 	- jenkins 리포지토리에 jenkins 차트를 의미한다.
 
-
-
 #### 5.1.1 --set
 
 - 파리미터가 적은 경우 다음과 같이 `--set` 옵션을 사용한다.
 - `--values`와 -`-set`으로 같은 키를 가지는 파라미터를 정의하면 `-set`으로 정의한 파라미터가 우선순위가 더 높다.
-
 
 **예시**
 
@@ -310,12 +261,10 @@ $ helm install sample-wordpress bitnami/wordpress --version 10.9.1 \
 --set persistence.size=5Gi
 ```
 
-
 #### 5.1.2 --values
 
 - 파라미터가 많은 경우 일일이  `--set` 옵션을 사용해서 파라미터를 명시하는 것은 불편한다.
 - 이런 경우 별도의 파일을 만들어 파라미터를 명시하고 `--values` 옵션을 사용해 해당 파일을 넘겨주면 편하다.
-
 
 **values.yaml**
 
@@ -342,23 +291,17 @@ $ helm install sample-wordpress bitnami/wordpress \
 
 - 차트의 버전을 명시한다. `--version` 옵션을 사용하지 않으면 latest 버전이 사용된다.
 
-
-
 ### 5.2 helm uninstall
 
 ```bash
 $ helm uninstall [RELEASE_NAME]
 ```
 
-
-
 ### 5.3 helm upgrade
 
 ```bash
 $ helm upgrade [RELEASE_NAME] jenkins/jenkins [flags]
 ```
-
-
 
 ### 5.4 helm pull
 
@@ -370,19 +313,13 @@ $ helm pull [chart URL | repo/chartname] [...] [flags]
 - 리포지토리에서 차트를 로컬 디렉토리에 다운로드 받는다.
 - [options](https://helm.sh/docs/helm/helm_pull/#options)
 
-
-
 ## 6 차트 찾기
 
 - [레퍼런스](https://helm.sh/docs/intro/using_helm/#helm-search-finding-charts)
 
-
-
 ### 6.1 helm search hub
 
 - [Artifact Hub](https://artifacthub.io/)에서 차트를 찾는다.
-
-
 
 **예시**
 
@@ -395,14 +332,10 @@ https://artifacthub.io/packages/helm/bitnami-ak...	15.2.13      	6.1.0          
 https://artifacthub.io/packages/helm/bitnami/wo...	15.4.1       	6.2.0              	WordPress is the world's most popular blogging ...
 ```
 
-
-
 ### 6.2 helm search repo
 
 - 로컬에 추가한 리포지토리 내에서 차트를 찾는다.
 - 로컬에서 찾기 때문에 네트워크 연결이 필요하지 않다.
-
-
 
 **예시**
 

@@ -1,5 +1,5 @@
 ---
-title: "운영체제의 입출력 기초: AsynchronousNon-blockingProgramming, File Descriptor, Blocking I/O"
+title: "Socket"
 description: "운영체제 수준에서의 입출력 구조와 핵심 개념들을 다룹니다. AsynchronousNon-blockingProgramming, File Descriptor, Blocking I/O의 동작 방식과 특징을 설명합니다."
 tags: [ "OPERATING_SYSTEM", "IO", "SOCKET", "FILE_DESCRIPTOR", "BLOCKING_IO" ]
 keywords: [ "소켓", "파일디스크립터", "블로킹IO", "운영체제", "시스템프로그래밍" ]
