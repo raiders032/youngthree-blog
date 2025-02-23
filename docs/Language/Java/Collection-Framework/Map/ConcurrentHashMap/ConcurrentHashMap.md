@@ -1,25 +1,27 @@
 ---
 title: "ConcurrentHashMap"
 description: "Java의 ConcurrentHashMap에 대해 기본 개념부터 내부 동작 원리까지 상세히 알아봅니다. HashMap의 기본 구조를 바탕으로 동시성 처리 방식을 이해하고, 실제 활용 사례를 통해 효과적인 사용법을 학습합니다."
-tags: ["CONCURRENTHASHMAP", "JAVA_COLLECTIONS", "MULTITHREADING", "DATA_STRUCTURE", "JAVA", "BACKEND"]
-keywords: ["ConcurrentHashMap", "컨커런트해시맵", "동시성", "멀티스레드", "자바", "해시맵", "hashmap", "동기화", "락", "버킷", "해시"]
+tags: [ "CONCURRENTHASHMAP", "JAVA_COLLECTIONS", "MULTITHREADING", "DATA_STRUCTURE", "JAVA", "BACKEND" ]
+keywords: [ "ConcurrentHashMap", "컨커런트해시맵", "동시성", "멀티스레드", "자바", "해시맵", "hashmap", "동기화", "락", "버킷", "해시" ]
 draft: false
 hide_title: true
 ---
 
 ## 1. HashMap의 기본 구조 이해하기
+
 - ConcurrentHashMap을 이해하기 위해서는 먼저 HashMap의 기본 구조를 이해해야 합니다.
 - HashMap은 키-값 쌍을 저장하는 자료구조로, 해시 함수를 사용해 키를 버킷에 매핑합니다.
 
 ### 1.1 HashMap의 내부 구조
+
 - HashMap은 내부적으로 다음과 같은 구조를 가집니다
 
 1. **배열 (버킷 배열)**
-   - 데이터를 저장하는 여러 개의 버킷(bucket)으로 구성된 배열
-   - 각 버킷은 실제 데이터를 저장하는 공간
+	- 데이터를 저장하는 여러 개의 버킷(bucket)으로 구성된 배열
+	- 각 버킷은 실제 데이터를 저장하는 공간
 2. **해시 함수**
-   - 키(key)를 특정 버킷에 매핑하는 함수
-   - 같은 키는 항상 같은 버킷으로 매핑됨
+	- 키(key)를 특정 버킷에 매핑하는 함수
+	- 같은 키는 항상 같은 버킷으로 매핑됨
 
 :::info
 버킷(Bucket)은 데이터를 저장하는 '상자'라고 생각하면 됩니다.
@@ -41,6 +43,7 @@ map.put("apple", "red");
 ## 2. ConcurrentHashMap의 동시성 처리
 
 ### 2.1 일반 HashMap의 문제점
+
 - 여러 스레드가 동시에 HashMap을 사용할 때 발생할 수 있는 문제
 
 ```java
@@ -51,9 +54,11 @@ Thread 2: map.put("banana", "yellow");
 ```
 
 ### 2.2 ConcurrentHashMap의 해결 방식
+
 - Java 8의 ConcurrentHashMap은 버킷 단위로 락(lock)을 걸어 동시성 문제를 해결합니다:
 
 **버킷별 독립적인 락**
+
  ```java
  ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
  
@@ -63,6 +68,7 @@ Thread 2: map.put("banana", "yellow");
  ```
 
 **세밀한 동기화**
+
  ```java
  // 내부 동작 방식 (의사 코드)
  V put(K key, V value) {
@@ -78,6 +84,7 @@ Thread 2: map.put("banana", "yellow");
  ```
 
 ### 2.3 데이터 구조
+
 - 각 버킷의 데이터는 노드(Node)라는 형태로 저장됩니다:
 
 ```java
@@ -98,6 +105,7 @@ volatile 키워드는 멀티스레드 환경에서 변수의 가시성(visibilit
 ## 3. ConcurrentHashMap의 주요 특징
 
 ### 3.1 락 없는 읽기 작업
+
 - 읽기 작업은 락을 사용하지 않아 매우 빠릅니다
 
 ```java
@@ -106,6 +114,7 @@ String value = map.get("apple");
 ```
 
 ### 3.2 버킷별 독립적인 락
+
 - 서로 다른 버킷의 작업은 동시에 처리 가능
 
 ```java
@@ -178,7 +187,8 @@ int approximateSize = map.size();  // 정확한 값이 아닐 수 있음
 ```
 
 ## 6. 마치며
+
 - ConcurrentHashMap은 다음과 같은 상황에서 최적의 선택입니다:
-  - 여러 스레드가 동시에 맵에 접근하는 경우
-  - 읽기 작업이 쓰기 작업보다 많은 경우
-  - 높은 동시성이 요구되는 경우
+	- 여러 스레드가 동시에 맵에 접근하는 경우
+	- 읽기 작업이 쓰기 작업보다 많은 경우
+	- 높은 동시성이 요구되는 경우

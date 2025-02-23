@@ -466,7 +466,7 @@ public void increment() {
 
 - [참고](https://docs.oracle.com/javase/tutorial/essential/concurrency/memconsist.html)
 
-### 10.3 Synchronized Methods
+### 10.3 Synchronized Methods 
 
 - Java는 동기화 메소드와 동기화 statements 두 가지 기본 동기화 방식을 제공한다.
 - 메소드를 동기화하려면 메소드 선언에 synchronized 키워드를 추가한다.
