@@ -68,6 +68,83 @@ HttpHandler handler = WebHttpHandlerBuilder.applicationContext(context).build();
 
 이렇게 구성된 HttpHandler는 서버 어댑터와 함께 사용할 준비가 완료됩니다.
 
+### 2.3 ServerWebExchange 이해하기
+
+- ServerWebExchange는 Spring WebFlux에서 웹 요청-응답 교환을 나타내는 인터페이스입니다. 
+  - 쉽게 말해 "HTTP 요청/응답과 관련된 모든 정보를 담고 있는 컨테이너"입니다.
+- Spring MVC의 ServletRequest/ServletResponse와 유사한 역할을 하지만, 리액티브 스택에 맞게 설계되었습니다.
+
+#### 주요 특징과 역할
+
+- **요청-응답 컨텍스트**
+	- HTTP 요청과 응답에 대한 접근을 제공합니다
+	- 요청 처리에 필요한 추가 컨텍스트 정보를 포함합니다
+	- 세션 관리, 요청 속성, 경로 변수 등을 처리합니다
+- **불변성 보장**
+	- 모든 mutating 메서드는 새로운 ServerWebExchange 인스턴스를 반환합니다
+	- 이는 리액티브 프로그래밍의 불변성 원칙을 따릅니다
+	- 여러 스레드에서 안전하게 접근할 수 있습니다
+
+#### 주요 메서드와 기능
+
+```java
+public interface ServerWebExchange {
+    // 요청 관련
+    ServerHttpRequest getRequest();
+    
+    // 응답 관련
+    ServerHttpResponse getResponse();
+    
+    // 세션 관리
+    Mono<WebSession> getSession();
+    
+    // 요청 속성 관리
+    Map<String, Object> getAttributes();
+    
+    // 경로 변수 접근
+    Map<String, String> getPathVariables();
+    
+    // 폼 데이터 접근
+    Mono<MultiValueMap<String, String>> getFormData();
+    
+    // 멀티파트 데이터 접근
+    Mono<MultiValueMap<String, Part>> getMultipartData();
+}
+```
+
+#### 실제 사용 예시
+
+```java
+@RestController
+public class UserController {
+    @GetMapping("/users/{id}")
+    public Mono<User> getUser(ServerWebExchange exchange) {
+        // 경로 변수 접근
+        String userId = exchange.getPathVariables().get("id");
+        
+        // 요청 헤더 접근
+        String authorization = exchange.getRequest()
+            .getHeaders()
+            .getFirst("Authorization");
+            
+        // 요청 속성 설정
+        exchange.getAttributes().put("user-id", userId);
+        
+        // 비즈니스 로직 수행
+        return userService.findById(userId);
+    }
+}
+```
+
+:::tip[ServerWebExchange vs ServletRequest/Response]
+Spring MVC의 ServletRequest/Response와 비교했을 때 ServerWebExchange의 주요 차이점:
+
+- 리액티브 스트림 지원: 비동기-논블로킹 처리 가능
+- 불변성 보장: 모든 수정 작업이 새 인스턴스 생성
+- 통합된 컨텍스트: 요청/응답 관련 정보를 하나의 객체로 관리
+- 함수형 스타일: 명령형이 아닌 선언적 프로그래밍 지원
+  :::
+
 ## 3. 특수 빈 타입
 
 - DispatcherHandler는 요청을 처리하고 적절한 응답을 만들기 위해 특별한 빈들에게 작업을 위임합니다.
@@ -80,6 +157,16 @@ HttpHandler handler = WebHttpHandlerBuilder.applicationContext(context).build();
 ### 3.1 HandlerMapping
 
 - HandlerMapping은 요청을 적절한 핸들러에 매핑하는 역할을 합니다.
+
+#### 3.1 HandlerMapping 인터페이스
+
+```java
+public interface HandlerMapping {
+    Mono<Object> getHandler(ServerWebExchange exchange);
+}
+```
+
+- `getHandler()`: 파리미터로 입력 받은 ServerWebExchange에 매칭되는 핸들러를 반환합니다.
 - 주요 구현체로는:
 	- RequestMappingHandlerMapping: @RequestMapping 어노테이션이 붙은 메서드용
 	- RouterFunctionMapping: 함수형 엔드포인트 라우트용
@@ -89,6 +176,23 @@ HttpHandler handler = WebHttpHandlerBuilder.applicationContext(context).build();
 
 - DispatcherHandler가 매핑된 핸들러를 실제로 호출할 수 있도록 도와주는 역할을 합니다.
 - 예를 들어, 어노테이션이 붙은 컨트롤러를 호출하기 위해서는 해당 어노테이션들을 분석해야 하는데, HandlerAdapter가 이러한 세부사항을 DispatcherHandler로부터 숨깁니다.
+
+#### 3.2 HandlerAdapter 인터페이스
+
+```java
+public interface HandlerAdapter {
+    boolean supports(Object handler);
+
+    Mono<HandlerResult> handle(ServerWebExchange exchange, Object handler);
+}
+```
+
+- `supports()`: 핸들러가 해당 어댑터에 의해 처리될 수 있는지 여부를 반환합니다.
+- `handle()`: 핸들러를 실행하고 결과를 HandlerResult로 래핑합니다.
+- 주요 구현체로는:
+	- RequestMappingHandlerAdapter: @RequestMapping 어노테이션이 붙은 메서드용
+	- RouterFunctionAdapter: 함수형 엔드포인트 라우트용
+	- SimpleHandlerAdapter: WebHandler 인스턴스의 명시적 등록용
 
 ### 3.3 HandlerResultHandler
 
