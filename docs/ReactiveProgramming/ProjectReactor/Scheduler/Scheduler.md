@@ -209,6 +209,7 @@ Subscribe: boundedElastic-1
 ### 3.2 publishOn 연산자
 
 - `publishOn`은 선언된 지점 이후의 연산자들의 실행 컨텍스트를 변경합니다.
+	- 즉 publishOn을 기준으로 다운 스트림의 실행 스레드가 변경됩니다.
 - 데이터 스트림의 중간에서 스레드를 전환할 때 사용됩니다.
 
 #### publishOn의 주요 특징
@@ -259,15 +260,17 @@ Third map: parallel-1
 
 #### parallel()의 주요 특징
 
-- 스트림을 병렬 처리가 가능한 ParallelFlux로 변환
-- 기본적으로 CPU 코어 수만큼의 병렬 처리 레일 생성
-- 실제 병렬 처리를 위해서는 runOn()과 함께 사용해야 함
+![img.png](img.png)
+
+- 스트림을 병렬 처리가 가능한 ParallelFlux로 변환합니다.
+- 원본 Flux를 CPU 코어 수에 맞게 데이터를 '레일'로 나누어 라운드-로빈 방식으로 준비합니다.
+- 실제로 병렬 작업을 수행하려면 이후에 ParallelFlux.runOn(Scheduler)를 호출해야 합니다
 
 #### runOn()의 주요 특징
 
-- ParallelFlux의 각 레일에 대한 스케줄러 지정
-- parallel() 이후에만 사용 가능
-- 병렬 처리의 실제 실행 컨텍스트 결정
+- ParallelFlux의 각 레일에 대한 스케줄러 지정합니다.
+- parallel() 이후에만 사용 가능합니다.
+- 병렬 처리의 실제 실행 컨텍스트 결정합니다.
 
 #### parallel과 runOn 상세 예제
 

@@ -146,7 +146,8 @@ Flux.range(1, 100)
 - 데이터 유실을 허용하지 않는 중요한 비즈니스 로직에서 사용합니다.
 - 시스템의 과부하 상태를 즉시 감지하고 대응해야 하는 경우에 적합
 - 디버깅과 테스트 단계에서 Backpressure 관련 문제를 발견하는데 유용합니다.
-- ERROR 전략을 사용하더라도 Project Reactor는 기본적으로 작은 크기(256개)의 버퍼를 제공합니다.
+- publishOn()과 같은 스케줄러 연산자를 사용할 때 Project Reactor는 기본적으로 작은 크기(256개)의 버퍼를 제공합니다.
+	- 이는 backpressure 전략과는 독립적으로 적용됩니다.
 
 #### 5.1.1 ERROR 전략 동작 방식
 
@@ -157,18 +158,49 @@ Flux.range(1, 100)
 - OverflowException을 발생시키며 하위 스트림으로 onError 시그널을 전달합니다.
 - 동시에 업스트림으로 구독 취소(cancel) 시그널을 보냅니다
 
+##### 예시
+
+```java
+
+Flux
+	.interval(Duration.ofMillis(1))
+	.onBackpressureError()
+	.doOnNext(data -> log.info("doonNext: {}", data))
+	.publishOn(Schedulers.parallel())
+	.subscribe(data -> {
+			try {
+				Thread.sleep(5L);
+			} catch (InterruptedException e) {}
+			log.info("onNext: {}", data);
+		},
+		error -> log.error("onError: {}", error.getMessage());
+```
+
+- interval 연산자로 1ms 간격으로 데이터를 발행합니다.
+- subscribe 메서드로 데이터를 소비하며, onNext에서 5ms 시간이 걸리도록 시뮬레이션 합니다.
+
 ### 5.2 DROP 전략
 
 #### 5.2.1 `onBackpressureDrop()`
 
+- onBackpressureDrop()은 다운스트림의 처리 속도가 느릴 때 초과된 데이터를 버리는 백프레셔 전략입니다.
+- 이 전략은 실시간 데이터 처리와 같이 최신 데이터가 더 중요하고, 처리되지 못한 중간 데이터를 버려도 되는 경우에 적합합니다.
+
+##### 동작 방식
+
 ![img_2.png](img_2.png)
 
-- onBackpressureDrop()을 사용해서 DROP 전략을 적용할 수 있습니다.
-- 업스트림에서 발행된 데이터 중 다운스트림의 request 수를 초과하는 데이터는 DROP됩니다.
-- request(2)가 발생하면 녹색과 노란색 데이터만 다운스트림으로 전달되고 주황색은 DROP됩니다.
-- 이후 request(2)가 다시 발생하면 분홍색 데이터만 전달되고 마지막 데이터는 complete 됩니다.
+- 업스트림에 대해 무제한(unbounded) 데이터 요청
+- 업스트림은 제한 없이 자유롭게 데이터를 생성/방출
+- 다운스트림의 처리:
+	- 다운스트림이 요청한 개수(request(n))만큼만 데이터를 처리
+	- 다운스트림의 처리 능력을 초과한 데이터는 버림(drop)
+- 예시
+	- 다운스트림이 request(2)를 보냈다면
+	- 처음 2개의 데이터는 다운스트림으로 전달
+	- 그 이후 들어오는 데이터는 다운스트림의 추가 요청이 있을 때까지 모두 버림
 
-### 5.2.2 `onBackpressureDrop(Consumer<? super T> onDropped)`
+#### 5.2.2 `onBackpressureDrop(Consumer<? super T> onDropped)`
 
 ![img_3.png](img_3.png)
 
@@ -185,18 +217,18 @@ Flux.range(1, 100)
 ![img_5.png](img_5.png)
 
 - 상단 타임라인:
-  - 4개의 데이터(초록, 노랑, 주황, 분홍)가 순차적으로 발생
-  - 마지막에 완료 신호(|)
+	- 4개의 데이터(초록, 노랑, 주황, 분홍)가 순차적으로 발생
+	- 마지막에 완료 신호(|)
 - 중간 버퍼:
-  - onBackpressureLatest 버퍼가 있음
-  - 다운스트림의 요청(request) 속도가 느릴 때 가장 최신 데이터만 유지
-  - 이전 데이터는 버림
+	- onBackpressureLatest 버퍼가 있음
+	- 다운스트림의 요청(request) 속도가 느릴 때 가장 최신 데이터만 유지
+	- 이전 데이터는 버림
 - 하단 타임라인(결과):
-  - request(2)로 처음 2개 데이터(초록, 노랑) 처리
-  - 그동안 들어온 데이터 중 최신 데이터(분홍)만 유지
-  - 다시 request(2)가 오면 유지했던 분홍 데이터 전달
-  - 완료 신호(|) 전달
-- 즉, 다운스트림이 처리하지 못한 데이터들 중 가장 최신 데이터만 보관하고 나머지는 버리는 방식입니다. 
+	- request(2)로 처음 2개 데이터(초록, 노랑) 처리
+	- 그동안 들어온 데이터 중 최신 데이터(분홍)만 유지
+	- 다시 request(2)가 오면 유지했던 분홍 데이터 전달
+	- 완료 신호(|) 전달
+- 즉, 다운스트림이 처리하지 못한 데이터들 중 가장 최신 데이터만 보관하고 나머지는 버리는 방식입니다.
 - 이는 실시간 데이터 처리에서 최신 정보만 필요한 경우 유용합니다.
 
 ### 5.4 BUFFER 전략
@@ -208,25 +240,61 @@ Flux.range(1, 100)
 ![img_6.png](img_6.png)
 
 - 업스트림 요청
-  - `request(unbounded)`로 업스트림에 무제한 데이터 요청 
+	- `request(unbounded)`로 업스트림에 무제한 데이터 요청합니다.
+	- 따라서 업스트림은 제한 없이 데이터를 생성/방출합니다.
 - 데이터 흐름
-  - 다운스트림 `request(2)`: 초록, 노랑 데이터 처리
-  - 추가 데이터(주황, 분홍)는 다운스트림 처리 속도 부족으로 버퍼에 저장
-  - 다운스트림 `request(1)`: 버퍼의 주황 데이터 전달
-  - 다운스트림 `request(1)`: 버퍼의 분홍 데이터 전달
+	- 다운스트림 `request(2)`: 초록, 노랑 데이터 처리
+	- 추가 데이터(주황, 분홍)는 다운스트림 처리 속도 부족으로 버퍼에 저장
+	- 다운스트림 `request(1)`: 버퍼의 주황 데이터 전달
+	- 다운스트림 `request(1)`: 버퍼의 분홍 데이터 전달
 - 특징
-  - 업스트림으로부터 받은 데이터를 버퍼링
-  - 다운스트림 처리 준비될 때까지 데이터 보관
-  - 취소/에러 시 버퍼 데이터 폐기
-  - 에러는 버퍼 소진까지 지연
-  - 기본 버퍼 크기는 256개
+	- 업스트림으로부터 받은 데이터를 버퍼링
+	- 버퍼링은 FIFO(First-In-First-Out) 방식으로 동작합니다.
+	- 다운스트림 처리 준비될 때까지 데이터 보관하며 저장된 데이터를 순서대로 전달합니다.
+	- 취소/에러 시 버퍼 데이터 폐기
+	- 에러는 버퍼 소진까지 지연
+	- 기본 버퍼 크기는 256개
 
 #### 5.4.2 `onBackpressureBuffer(int maxSize)`
 
 ![img_7.png](img_7.png)
 
+- 업스트림 요청
+	- `request(unbounded)`로 업스트림에 무제한 데이터 요청
+	- 업스트림은 제한 없이 데이터를 생성/방출
+- 데이터 흐름
+	- 다운스트림 `request(2)`: 초록, 노랑 데이터 처리
+	- 추가 데이터는 버퍼에 저장 (maxSize까지만 저장 가능)
+	- 다운스트림이 요청할 때마다 버퍼의 데이터를 순서대로 전달
+- 버퍼 오버플로우 상황
+	- 버퍼가 maxSize를 초과하면 오버플로우 발생
+	- 오버플로우 발생 시 즉시 업스트림을 취소(cancel)
+	- 오버플로우 에러 발생 (하지만 에러는 지연됨)
+- 에러 처리
+	- 오버플로우 에러는 지연됨
+	- 지연된 동안 구독자는 버퍼의 데이터를 계속 요청 가능
+	- 취소나 에러 발생 시 버퍼에 남은 데이터는 폐기
+- 특징
+	- 제한된 크기의 버퍼 사용으로 메모리 사용량 예측 가능
+	- FIFO(First-In-First-Out) 방식으로 동작
+	- maxSize를 초과하는 데이터는 즉시 거부되고 오버플로우 에러 발생
 
+#### 5.4.3 BufferOverflowStrategy
 
+- `onBackpressureBuffer(int maxSize, BufferOverflowStrategy bufferOverflowStrategy)`를 사용하여 버퍼가 가득 찼을 때의 동작을 제어할 수 있습니다. 
+- BufferOverflowStrategy는 다음과 같은 세 가지 전략을 제공합니다:
+- BufferOverflowStrategy.ERROR
+  - 버퍼가 가득 찼을 때 IllegalStateException을 발생시킵니다
+  - 엄격한 버퍼 제한이 필요한 경우에 적합합니다
+  - 버퍼 오버플로우를 즉시 감지하고 대응해야 하는 시나리오에서 유용합니다
+- BufferOverflowStrategy.DROP_LATEST
+  - 버퍼가 가득 찼을 때 새로 들어오는 데이터를 무시합니다
+  - 최신 데이터보다 기존 데이터의 처리가 더 중요한 경우에 사용합니다
+  - 예시: 센서 데이터 수집 시 처리 속도가 수집 속도를 따라가지 못할 때
+- BufferOverflowStrategy.DROP_OLDEST
+  - 버퍼가 가득 찼을 때 가장 오래된 데이터를 제거하고 새 데이터를 버퍼 끝에 추가합니다
+  - 최신 데이터가 더 중요한 실시간 처리 시나리오에 적합합니다
+  - 예시: 실시간 모니터링 시스템, 주식 시세 처리 등
 
 ## 6. 실제 사용 사례
 

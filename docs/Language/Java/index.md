@@ -47,7 +47,7 @@ title: "Java"
 - [this](This/This.md)
 
 ### 동시성 프로그래밍
-- [Multi Thread](Multi-Thread/Multi-Thread.md)
+- [Thread](Thread/Thread.md)
 	- Process, Thread, Runnable, Lock, synchronized
 - [Thread Pool](Thread-Pool/Thread-Pool.md)
 	- ExecutorService, Executors, Runnable, Callable, Future
