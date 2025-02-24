@@ -1,14 +1,14 @@
 ## 1 Observer
 
-* Observer 패턴이란 한 객체의 상태가 바뀌면 그 객체의 의존하는 다른 객체에게 연락이 가고 자동으로 내용이 갱신되는 방식으로 일대다 의존성을 정의하는 것
-* 신문 구독 메커니즘만 제대로 이해하면 옵저버 패턴을 쉽게 이해할 수 있다
-* 신문사를 `Subject`, 구독자를 `Observer`로 부른다는 것만 외우자
+- Observer 패턴이란 한 객체의 상태가 바뀌면 그 객체의 의존하는 다른 객체에게 연락이 가고 자동으로 내용이 갱신되는 방식으로 일대다 의존성을 정의하는 것
+- 신문 구독 메커니즘만 제대로 이해하면 옵저버 패턴을 쉽게 이해할 수 있습니다.
+  - 신문사를 `Subject`, 구독자를 `Observer`로 부른다는 것만 기억하면 됩니다.
 
 ### 1.1 Observer 패턴 동작과정
 
-1. `Observer`가 `Subject`를 구독한다.
-2. `Subject`는 데이터를 관리하며 이 데이터가 변경될 때마다 이 소식을 `Observer `에게 알린다.
-3. 더 이상 `Subject`의 관심이 없는 `Observer`는 구독을 해지한다.
+1. `Observer`가 `Subject`를 구독합니다.
+2. `Subject`는 데이터를 관리하며 이 데이터가 변경될 때마다 이 소식을 `Observer `에게 알립니다.
+3. 더 이상 `Subject`의 관심이 없는 `Observer`는 구독을 해지합니다.
 
 ## 2 Observer의 구조
 
@@ -16,20 +16,20 @@
 
 ### 2.1 Subject 인터페이스
 
-* `registerObserver` : `Subject`의 구독자에 `Observer`를 추가하는 메서드
-* `unregisterObserver` : `Subject`의 구독자에서 `Observer`를 삭제하는 메서드
-* `notifyObservers` : 데이터 변경 사항을 `Observer`에게 알려주는 메서드
-	* `Subject`를 구독한 모든 `Observer`의 update 메서드를 호출데 변경된 데이터를 전달한다.
+- `registerObserver` : `Subject`의 구독자에 `Observer`를 추가하는 메서드
+- `unregisterObserver` : `Subject`의 구독자에서 `Observer`를 삭제하는 메서드
+- `notifyObservers` : 데이터 변경 사항을 `Observer`에게 알려주는 메서드
+	- `Subject`를 구독한 모든 `Observer`의 update 메서드를 호출데 변경된 데이터를 전달합니다.
 
 ### 2.2 Observer 인터페이스
 
-* `update` : 구독한 `Subject`의 데이터 변경 소식을 전달받기 위한 메서드
+- `update` : 구독한 `Subject`의 데이터 변경 소식을 전달받기 위한 메서드
 
 ## 3 Observer 패턴의 장점
 
 - 객체 사이의 결합을 느슨하게 만든다.
 - `Subject`는 `Observer`가 특정 인터페이스를 구현한다는 사실만 알고있다.
-- 즉 `Subject`는 추상화에 의존하기 때문에 새로운 Observer 인터페이스 구현체를 추가하여도  `Subject`를 수정할 필요가 없다.
+- 즉 `Subject`는 추상화에 의존하기 때문에 새로운 Observer 인터페이스 구현체를 추가하여도 `Subject`를 수정할 필요가 없다.
 
 ## 4 Observer 패턴 예시
 

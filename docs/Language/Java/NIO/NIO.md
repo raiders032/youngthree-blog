@@ -479,8 +479,10 @@ public class PlainNioServer {
     public void serve(int port) throws IOException {
         // ServerSocketChannel 열기
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
+        
         // 비동기 모드로 설정 
         serverChannel.configureBlocking(false);
+        
         // 로컬 포트에 바인딩
         ServerSocket ssocket = serverChannel.socket();
         InetSocketAddress address = new InetSocketAddress(port);
