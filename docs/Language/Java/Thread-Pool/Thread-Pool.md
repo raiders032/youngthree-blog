@@ -12,25 +12,30 @@ hide_title: true
 ### 1.1 스레드 풀이란?
 
 - 스레드 풀은 다음과 같은 특징을 가진 스레드 관리 메커니즘입니다
-	- 미리 정해진 개수의 작업 처리 스레드를 생성하고 유지하는 기법입니다.
-	- 작업 큐(Queue)를 통해 작업을 스레드에 분배합니다.
-	- 작업 처리가 끝난 스레드는 다시 작업 큐에서 새로운 작업을 가져와 처리합니다.
+- 미리 정해진 개수의 작업 처리 스레드를 생성하고 유지하는 기법입니다.
+- 작업 큐(Queue)를 통해 작업을 스레드에 분배합니다.
+- 작업 처리가 끝난 스레드는 다시 작업 큐에서 새로운 작업을 가져와 처리합니다.
 
-:::info
-스레드 풀의 주요 이점:
+### 1.2 스레드 풀의 장점
 
 - 스레드 생성/폐기 비용 감소
+	- 각 스레드는 자신만의 스택을 가지고 있어 생성/폐기에 비용이 많이 듭니다.
+	- 스레드 생성 작업은 운영체제 커널 수준에서 이루어지며 시스템 콜을 통해 처리합니다. 따라서 CPU와 메모리 리소스가 소모됩니다.
+	- 참고로 스레드 하나는 보통 1MB 이상의 메모리를 사용한다.
 - 시스템 자원의 효율적 관리
+	- 서버의 CPU, 메모리 자원은 한정되어 있기 때문에, 스레드는 무한하게 만들 수 없습니다.
+	- 이런 문제를 해결하려면 우리 시스템이 버틸 수 있는, 최대 스레드의 수 까지만 스레드를 생성할 수 있게 관리해야 합니다.
 - 작업 요청에 대한 응답 시간 단축
-  :::
 
 ### 1.2 Executor 인터페이스
 
 - Executor는 자바의 동시성 프로그래밍에서 가장 기본이 되는 인터페이스입니다.
+- 실무에서는 스레드를 직접 하나하나 생성해서 사용하는 일이 드물다.
+- 대신에 지금부터 설명할 ExecutorService를 주로 사용하는데, 이 기술을 사용하면 매우 편리하게 멀티스레드 프로그래밍을 할 수 있습니다.
 - 주요 특징
-  - 작업 제출과 작업 실행을 분리
-  - 단순한 하나의 메서드만 제공
-  - 작업의 실행 방식을 추상화
+	- 작업 제출과 작업 실행을 분리
+	- 단순한 하나의 메서드만 제공
+	- 작업의 실행 방식을 추상화
 
 **인터페이스**
 
@@ -91,8 +96,15 @@ ExecutorService singlePool = Executors.newSingleThreadExecutor();
 
 ## 2. Thread Pool 생성과 관리
 
-- Executors로 ExecutorService의 구현 객체 만들기
-- Executors의 다양한 정적 메소드로 ExecutorService의 구현 객체를 만들 수 있는데 이것이 바로 스레드 풀이다
+- Executors로 ExecutorService의 구현 객체를 만들 수 있습니다.
+- Executors의 다양한 정적 메소드로 ExecutorService의 구현 객체를 만들 수 있는데 이것이 바로 스레드 풀입니다.
+- ExecutorService의 기본 구현체로 ThreadPoolExecutor가 있습니다.
+	- `ThreadPoolExecutor` 를 사용하면 스레드 풀에 사용되는 숫자와 블로킹 큐등 다양한 속성을 조절할 수 있습니다.
+	- `corePoolSize` : 스레드 풀에서 관리되는 기본 스레드의 수
+	- `maximumPoolSize` : 스레드 풀에서 관리되는 최대 스레드 수
+	- `keepAliveTime` , `TimeUnit unit` : 기본 스레드 수를 초과해서 만들어진 스레드가 생존할 수 있는 대기 시간, 이 시간 동안 처리할 작업이 없다면 초과 스레드는 제거된다.
+	- `BlockingQueue workQueue` : 작업을 보관할 블로킹 큐
+- Executors의 정적 메서드는 기본 구현체인 ThreadPoolExecutor의 설정을 대신하여 ThreadPoolExecutor를 생성합니다.
 
 **Executors의 정적 메소드**
 
@@ -103,34 +115,42 @@ ExecutorService singlePool = Executors.newSingleThreadExecutor();
 
 ### 2.1 newCachedThreadPool
 
-- 초기 스레드 개수와 코어 스레드 개수가 0이고 스레드 개수보다 작업 개수가 많으면 새 스레드를 생성시켜 작업을 처리한다.
-- 이론적으로 int의 최대값만큼 스레드가 추가되지만 운영체제 성능에 따라 다르다
-- 1개 이상의 스레드가 추가되었을 경우 60초 동안 추가된 스레드가 아무 작업을 하지 않으면 추가된 스레드를 종료하고 풀에서 제거한다.
-
 ```java
+// Executors의 정적 메서드를 사용
 ExecutorService executorService = Executors.newCachedThreadPool();
+
+// ThreadPoolExecutor를 직접 직접 사용 
+new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
 ```
+
+- 기본 스레드를 사용하지 않고, 60초 생존 주기를 가진 초과 스레드만 사용합니다.
+- 큐에 작업을 저장하지 않습니다.
+	- 대신에 생산자의 요청을 스레드 풀의 소비자 스레드가 직접 받아서 바로 처리합니다.
+	- 모든 요청이 대기하지 않고 스레드가 바로바로 처리한다. 따라서 빠른 처리가 가능합니다.
+	- 쉽게 이야기해서 중간에 버퍼를 두지 않는 스레드간 직거래라고 생각하면 됩니다.
+- 캐시 스레드 풀 전략은 매우 빠르고, 유연한 전략이다.
+- 이 전략은 기본 스레드도 없고, 대기 큐에 작업도 쌓이지 않습니다.
+- 대신에 작업 요청이 오면 초과 스레드로 작업을 바로바 로 처리한다. 따라서 빠른 처리가 가능합니다. 
+- 초과 스레드의 수도 제한이 없기 때문에 CPU, 메모리 자원만 허용한다면 시스템의 자원을 최대로 사용할 수 있습니다.
+- 추가로 초과 스레드는 60초간 생존하기 때문에 작업 수에 맞추어 적절한 수의 스레드가 재사용된다.
+- 이런 특징 때문에 요청이 갑자기 증가하면 스레드도 갑자기 증가하고, 요청이 줄어들면 스레드도 점점 줄어듭니다.
+- 이 전략은 작업의 요청 수에 따라서 스레드도 증가하고 감소하므로, 매우 유연한 전략입니다.
+- 캐시 스레드 풀 전략은 서버의 자원을 최대한 사용하지만, 서버가 감당할 수 있는 임계점을 넘는 순간 시스템이 다운될 수 있다.
 
 ### 2.2 newFixedThreadPool
 
-- 초기 스레드 개수는 0개이다
-- 코어 스레드 수는 nThreads이다
-- 스레드 개수보다 작업 개수가 많으면 새 스레드를 생성시키고 작업을 처리한다
-- 최대 스레드 개수는 nThreads이다
-- 이 스레드 풀은 스레드가 작업을 처리하지 않고 놀고 있더라도 스레드 개수가 줄지 않는다
-
-```java
-public static ExecutorService newFixedThreadPool(int nThreads){
-  ...
-}
-```
-
 ```java
 // CPU 코어의 수만큼 최대 스레드를 사용하는 스레드 풀을 생성하는 예제
-Executors.newFixedThreadPool(
-  Runtime.getRuntime().availableProcessors()
-);
+Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+// ThreadPoolExecutor를 직접 사용
+new ThreadPoolExecutor(1, 1,0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>())
 ```
+
+- 스레드 풀에 `nThreads` 만큼의 기본 스레드를 생성합니다. 초과 스레드는 생성하지 않습니다.
+- 스레드 수가 고정되어 있기 때문에 CPU, 메모리 리소스가 어느정도 예측 가능한 안정적인 방식입니다.
+
+### 2.3 newSingleThreadExecutor
 
 ## 3 Thread Pool 종료
 
@@ -138,29 +158,31 @@ Executors.newFixedThreadPool(
 	- 그래서 main() 메소드가 실행이 끝나도 애플리케이션 프로세스는 종료되지 않는다
 - 애플리케이션을 종료하려면 스레드풀을 종료시켜 스레드들이 종료 상태가 되도록 처리해야한다.
 
-*- ExecutorService 인터페이스*-
+### 3.1 ExecutorService의 종료
 
-| 리턴 타입            | 메소드                                           | 설명                                                                                                           |
-|------------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `void`           | shutdown()                                    | 현재 처리 중인 작업뿐만 아니라 작업 큐에 대기하고 있는 모든 작업을 처리한 뒤에 스레드풀을 종료                                                       |
-| `List<Runnable>` | shutdownNow()                                 | 현재 작업 처리중인 스레드를 interrupt해서 작업 중지를 시도하고 스레드플 종료시킨다. 작업 큐에 있던 미처리된 작업을 반환한다.                                  |
-| `boolean`        | awaitTermination(long timeout, TimeUnit unit) | shutdown() 메소드 호출 이후, 모든 작업 처리를 timeout 시간 내 완료하면 true를 반환하고, 완료하지 못하면 작업 처리중인 스레드를 interrupt하고 false를 리턴한다. |
-
-```java
-// 남아있는 작업 마무리하고 스레드풀 종료
-executorService.shutdown();
-
-// 스레드풀 강제 종료
-List<Runnable> runnables = executorService.shutdownNow();
-```
+- ExecutorService` 에는 종료와 관련된 다양한 메서드가 존재합니다.
+- void shutdown()
+	- 새로운 작업을 받지 않고, 이미 제출된 작업을 모두 완료한 후에 종료합니다.
+	- 이 상태에서 작업을 넣으면 java.util.concurrent.RejectedExecutionException가 발생합니다.
+	- 논 블로킹 메서드입니다.
+	- 이 메서드를 호출한 스레드는 대기하지 않고 즉시 다음 코드를 호출합니다.
+	- 이미 들어온 모든 작업을 다 처리하고 서비스를 우아하게 종료(graceful shutdown)하는 것을 권장합니다.
+- `List<Runnable> shutdownNow()`
+	- 새로운 작업을 받지 않습니다.
+	- 실행 중인 작업을 중단하고, 대기 중인 작업을 반환하며 즉시 종료합니다.
+	- 실행 중인 작업을 중단하기 위해 인터럽트를 발생시킨다.
+	- 논 블로킹 메서드입니다.
+- close()
+	- close() 는 자바 19부터 지원하는 서비즈 종료 메서드이다. 이 메서드는 shutdown() 과 같다고 생각하면 됩니다.
+	- 더 정확히는 `shutdown()` 을 호출하고, 하루를 기다려도 작업이 완료되지 않으면 `shutdownNow()` 를 호출합니다.
 
 ## 4 작업 처리
 
 ### 4.1 작업 생성
 
-- 하나의 작업은 Runnable 또는 Callable 구현 클래스로 표현된다.
-	- 차이는 반환값이 없으면 Runnable 있으면 Callable
-- 스레드풀의 스레드는 작업 큐에서 Runnable 또는 Callable 객체를 가져와 run() 또는 call() 메소드를 실행한다.
+- 하나의 작업은 Runnable 또는 Callable 구현 클래스로 표현합니다.
+	- 차이는 반환값이 없으면 Runnable 있으면 Callable입니다.
+- 스레드풀의 스레드는 작업 큐에서 Runnable 또는 Callable 객체를 가져와 run() 또는 call() 메소드를 실행합니다.
 
 ```java
 @FunctionalInterface
@@ -180,7 +202,7 @@ public interface Callable<V> {
 
 - 작업 처리 요청이란 ExecutorService의 작업 큐에 Runnable 또는 Callable 객체를 넣은 행위를 말한다.
 
-*- ExecutorService 인터페이스*-
+#### ExecutorService 인터페이스
 
 | 리턴 타입       | 메소드                               | 설명                                                      |
 |-------------|-----------------------------------|---------------------------------------------------------|
@@ -189,16 +211,16 @@ public interface Callable<V> {
 | `Future<?>` | `submit(Runnable task)`           | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
 | `Future<T>` | `submit(Runnable task, T result)` | Runnable 또는 Callable을 작업 큐에 저장 리턴된 Future를 통해 작업 결과를 얻음 |
 
-- execute()는 작업 처리중 예외 발생하면 스레드 종료되고 스레드 풀에서 제거된다.
+- execute()는 작업 처리중 예외 발생하면 스레드 종료되고 스레드 풀에서 제거됩니다.
 - submit()은 작업 처리중 예외가 발생하더라도 스레드 종료되지 않고 다음 작업을 위해 재사용된다.
-	- 가급적 스레드 생성 오버헤드를 줄이기 위해 submit()을 사용하자
+	- 가급적 스레드 생성 오버헤드를 줄이기 위해 submit()을 사용하는 것이 좋습니다.
 
 ## 5 블로킹 방식의 작업 완료 통보(Future)
 
-- ExecutorService의 submit() 메소드는 Runnable 또는 Callable를 작업 큐에 넣고 즉시 Future 객체를 리턴한다.
-- Future 객체는 작업 결과가 아니라 작업이 완료될 때까지 기다렸다가 최종 결과를 얻는데 사용된다.
-- 작업을 처리하는 스레드가 작업을 완료하기 전까지 get() 메소드가 블로킹되어 다른 코드를 실행할 수 없다
-	- 따라서 get() 메소드를 호출하는 스레드는 새로운 스레드가 되어야한다.
+- ExecutorService의 submit() 메소드는 Runnable 또는 Callable를 작업 큐에 넣고 즉시 Future 객체를 리턴합니다.
+- Future 객체는 작업 결과가 아니라 작업이 완료될 때까지 기다렸다가 최종 결과를 얻는데 사용됩니다.
+- 작업을 처리하는 스레드가 작업을 완료하기 전까지 get() 메소드가 블로킹되어 다른 코드를 실행할 수 없습니다.
+	- 따라서 get() 메소드를 호출하는 스레드는 새로운 스레드가 되어야합니다.
 
 ```java
 ExecutorService executorService = Executors.newCachedThreadPool();
@@ -207,7 +229,7 @@ Future<String> future = executorService.submit(() -> "result");
 executorService.submit(() -> future.get());
 ```
 
-*- Future 인터페이스*-
+#### Future 인터페이스
 
 | 리턴 타입   | 메소드                                 | 설명                                                                      |
 |---------|-------------------------------------|-------------------------------------------------------------------------|

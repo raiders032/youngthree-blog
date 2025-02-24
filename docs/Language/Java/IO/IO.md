@@ -1,11 +1,13 @@
 ## 1 IO
 
 - 프로그램은 데이터를 외부에서 읽고 다시 외부로 출력하는 작업이 빈번히 일어난다.
-- 자바에서는 데이터는 스트림을 통해 입출력되므로 스트림의 특징을 잘 이해해야 한다.
-	- 스트림은 단일 방향으로 연속적으로 흘러가는 것을 의미한다.
-	- 스트림의 특성이 단방향이므로 하나의 스트림으로 입력과 출력을 모두 할 수 없다.
-	- 따라서 네트워크상의 다른 프로그램과 데이터를 교환하기 위해서는 양쪽 모두 입력 스트림과 출력 스트림이 따로 필요하다.
-- 자바에서 기본적인 데이터 입출력은 `java.io` 패키지에서 제공한다.
+- 자바에서는 데이터는 스트림을 통해 입출력되므로 스트림의 특징을 잘 이해해야 합니다.
+	- 자바 프로세스가 가지고 있는 데이터를 밖으로 보내려면 출력 스트림을 사용하면 됩니다.
+	- 반대로 외부 데이터를 자바 프로세스 안으로 가져오려면 입력 스트림을 사용하면 됩니다.
+	- 스트림은 단일 방향으로 연속적으로 흘러가는 것을 의미합니다.
+	- 스트림의 특성이 단방향이므로 하나의 스트림으로 입력과 출력을 모두 할 수 없습니다.
+	- 따라서 네트워크상의 다른 프로그램과 데이터를 교환하기 위해서는 양쪽 모두 입력 스트림과 출력 스트림이 따로 필요합니다.
+- 자바에서 기본적인 데이터 입출력은 `java.io` 패키지에서 제공합니다.
 
 ## 2 스트림
 
@@ -31,7 +33,7 @@
 **주요 메서드**
 
 ```java
-public abstract int read() throws IOException
+public abstract int read() throws IOException
 ```
 
 - `read()` 메서드는 입력 스트림으로부터 1바이트를 읽고 4 바이트 int 타입으로 리턴한다.
@@ -141,9 +143,9 @@ public boolean createNewFile() throws IOException
 ### 3.2 FileInputStream
 
 - [레퍼런스](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/FileInputStream.html)
-- FileInputStream 클래스는 파일로부터 바이트 단위로 읽어들일 때 사용하는 바이트 기반 입력 스트립이다.
-- 바이트 기반이기 때문에 그림, 오디오, 비디오, 텍스트 등 모든 종류의 파일을 읽을 수 있다.
-- FileInputStream은 InputStream의 하위 클래스이기 때문에 사용 방법이 InputStream과 동일 하다.
+- FileInputStream 클래스는 파일로부터 바이트 단위로 읽어들일 때 사용하는 바이트 기반 입력 스트림입니다.
+- 바이트 기반이기 때문에 그림, 오디오, 비디오, 텍스트 등 모든 종류의 파일을 읽을 수 있습니다.
+- FileInputStream은 InputStream의 하위 클래스이기 때문에 사용 방법이 InputStream과 동일합니다.
 
 **FileInputStream 생성자**
 
@@ -161,6 +163,9 @@ public FileInputStream(String name) throws FileNotFoundException
 
 ### 3.3 FileOutputStream
 
+- 파일에 데이터를 출력하는 스트림입니다.
+- 파일이 없으면 파일을 자동으로 만들고, 데이터를 해당 파일에 저장합니다.
+- 폴더를 만들지는 않기 때문에 폴더는 미리 만들어두어야 합니다.
 - [레퍼런스](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/FileOutputStream.html)
 
 **생성자**

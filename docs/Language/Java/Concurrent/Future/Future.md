@@ -1,64 +1,178 @@
-## 1 Future
+---
+title: "Future"
+description: "Java의 Future 인터페이스의 개념부터 실제 활용, 장단점까지 상세히 알아봅니다. Future를 사용한 비동기 프로그래밍의 모든 것을 실제 예제와 함께 설명합니다."
+tags: ["JAVA", "ASYNC", "CONCURRENT", "BACKEND"]
+keywords: ["자바", "퓨처", "Future", "비동기", "동시성", "concurrent", "async", "병렬처리", "parallel processing", "스레드", "thread"]
+draft: false
+hide_title: true
+---
 
-- Java 5부터 미래의 어느 시점에 결과를 얻는 모델에 활용할 수 있도록 Future 인터페이스를 제공하고 있다
-- Future는 비동기 계산의 결과를 표현할 수 있다
-- Future 객체는 작업 결과가 아니라 작업이 완료될 때까지 기다렸다가 최종 결과를 얻는데 사용된다.
-- ExecutorService의 submit() 메소드는 Runnable 또는 Callable를 작업 큐에 넣고 즉시 Future 객체를 리턴한다.
+## 1. Future 소개
 
+- Java 5부터 비동기 작업의 결과를 다루기 위해 Future 인터페이스를 제공합니다.
+- Future는 비동기적으로 실행되는 작업의 미래 결과값을 표현합니다.
+- ExecutorService의 submit() 메소드를 통해 작업을 제출하면 즉시 Future 객체를 반환받습니다.
 
-
-### 1.1 Future 인터페이스
-
-| 리턴 타입 | 메소드                              | 설명                                                         |
-| --------- | ----------------------------------- | ------------------------------------------------------------ |
-| V         | get()                               | 작업이 완료될 때까지 블로킹되어있다가 처리 결과 V를 리턴     |
-| V         | get(long timeout, TimeUnit unit)    | timeout 시간 전에 작업이 완료되면 결과 V를 리턴하지만, 작업이 완료되지 않으면 TImeoutException을 발생시킴 |
-| boolean   | cancel(boolean mayInterruptRunning) | 작업 처리가 진행 중일 경우 취소시킴                          |
-| boolean   | isCancelled()                       | 작업이 취소되었는지 여부                                     |
-| boolean   | isDone()                            | 작업이 처리가 완료되었는지 여부                              |
-
-
-
-### 1.2 Future의 단순 활용
-
-**활용 예시**
+### 1.1 Future 인터페이스의 주요 메서드
 
 ```java
-@Test
-void useSimpleFuture() {
-  // 스레드 풀에 태스크를 제출하기 위해 ExecutorService를 생성한다.
-  ExecutorService executorService = Executors.newCachedThreadPool();
-
-  // 시간이 오래 걸리는 작업을 다른 스레드에서 비동기적으로 실행한다.
-  Future<Double> future = executorService.submit(() -> doSomeLongComputation());
-
-  // 비동기 작업을 수행하는 동안 다른 작업을 수행한다.
-  doSomeThingElse();
-
-  try {
-    // 비동기 작업의 결과를 가져온다. 결과가 준비되어 있지 않으면 호출 스레드가 블록되며 최대 1초까지만 기다린다.
-    Double result = future.get(1, TimeUnit.SECONDS);
-  } catch (ExecutionException e) {
-    // 계산 중 예외 발생
-    e.printStackTrace();
-  } catch (InterruptedException e) {
-    // 현재 스레드에서 대기 중 인터럽트 발생
-    e.printStackTrace();
-  } catch (TimeoutException e) {
-    // Future가 완료되기 전에 타임아웃 발생
-    e.printStackTrace();
-  }
+public interface Future<V> {
+    V get() throws InterruptedException, ExecutionException;
+    V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException;
+    boolean cancel(boolean mayInterruptIfRunning);
+    boolean isCancelled();
+    boolean isDone();
 }
 ```
 
+## 2. Future의 결과 얻기와 예외 처리
 
+### 2.1 get() 메서드
 
-### 1.3 Future의 한계
+- get()은 결과가 준비될 때까지 블로킹됩니다.
+- 두 가지 버전이 있습니다:
+  - get(): 결과가 준비될 때까지 무한정 대기
+  - get(long timeout, TimeUnit unit): 지정된 시간만큼만 대기
 
-- Future 인터페이스는 비동기 계산이 끝났는지 확인할 수 있는 isDone 메서드, 계산이 끝나길 기다리는 메서드, 결과를 회수하는 메서드를 제공하지만 이 메서드로 간결한 동시 실행 코드를 구현하기 충분하지 않다
-- Future를 사용하면 여러 Future의 결과가 있을 때 이들의 의존성을 표현하는 것이 어렵다.
-- Future를 사용하면 아래와 같은 기능을 작성하는 것이 어렵다.
-  - 두 개의 비동기 계산 결과를 하나로 합친다.
-  - Future 집합이 실행하는 모든 태스크의 완료를 기다린다.
-  - Future 집합에서 가장 빨리 완료되는 태스크를 기다렸다가 결과를 얻는다.
-  - Future 완료 동작에 반응한다. 즉 결과를 기다리면서 블록되지 않고 결과가 준비되었다는 알림을 받은 다음에 Future의 결과로 원하는 추가 동작을 한다.
+```java
+Future<String> future = executorService.submit(task);
+
+try {
+    // 최대 2초간 결과를 기다림
+    String result = future.get(2, TimeUnit.SECONDS);
+} catch (TimeoutException e) {
+    // 2초 안에 결과를 받지 못한 경우
+    future.cancel(true); // 작업 취소
+} catch (ExecutionException e) {
+    // 작업 실행 중 예외 발생
+} catch (InterruptedException e) {
+    // 현재 스레드가 인터럽트된 경우
+    Thread.currentThread().interrupt();
+}
+```
+
+### 2.2 작업 취소
+
+```java
+Future<String> future = executorService.submit(task);
+
+// 작업 취소 시도
+boolean cancelled = future.cancel(true);
+if (cancelled) {
+    // 취소 성공
+} else {
+    // 이미 완료되었거나 취소할 수 없는 상태
+}
+
+// 취소 여부 확인
+if (future.isCancelled()) {
+    // 작업이 취소된 상태
+}
+```
+
+## 3. Future의 효율적인 활용
+
+### 3.1 병렬 처리의 장점
+
+```java
+// 비효율적인 방식: 순차적 실행
+for (Task task : tasks) {
+    Future<Result> future = executor.submit(task);
+    Result result = future.get(); // 매번 블로킹
+} // 총 실행시간 = 각 작업 시간의 합
+
+// 효율적인 방식: 병렬 실행
+List<Future<Result>> futures = new ArrayList<>();
+for (Task task : tasks) {
+    futures.add(executor.submit(task));
+}
+
+for (Future<Result> future : futures) {
+    Result result = future.get(); // 모든 작업이 병렬로 실행됨
+} // 총 실행시간 ≈ 가장 오래 걸리는 작업 시간
+```
+
+:::tip
+10초가 걸리는 작업 10개가 있다면:
+- 순차 실행: 10초 × 10 = 100초
+- 병렬 실행: ≈ 10초 (충분한 스레드가 있다고 가정)
+  :::
+
+### 3.2 주의사항
+
+:::warning
+작업 제출과 동시에 get()을 호출하면 병렬 처리의 이점을 살릴 수 없습니다:
+
+```java
+// 비효율적인 방식
+for (Task task : tasks) {
+    Future<Result> future = executor.submit(task);
+    Result result = future.get(); // 즉시 블로킹되어 순차 실행과 동일
+}
+```
+:::
+
+## 4. Future의 내부 동작 흐름
+
+Future를 통한 비동기 작업의 실행 과정을 상세히 살펴보겠습니다.
+
+### 4.1 Future 생성 및 작업 제출
+
+1. 클라이언트가 Callable 구현체(예: MyCallable)를 ExecutorService.submit()에 전달합니다.
+2. submit() 호출 시 Future 객체가 생성됩니다.
+  - Future는 인터페이스이며, 실제로는 FutureTask 구현체가 생성됩니다.
+  - FutureTask는 전달받은 Callable 작업을 내부에 보관합니다.
+3. 생성된 FutureTask는 ExecutorService의 작업 큐에 저장됩니다.
+
+```java
+ExecutorService executorService = Executors.newSingleThreadExecutor();
+Future<String> future = executorService.submit(new MyCallable()); // FutureTask 생성
+```
+
+### 4.2 작업 실행
+
+1. ExecutorService의 스레드가 큐에서 FutureTask를 가져옵니다.
+2. 스레드는 FutureTask의 run() 메서드를 실행합니다.
+3. run() 메서드 내에서 Callable의 call() 메서드가 호출됩니다.
+4. 작업 결과는 FutureTask 내부에 저장됩니다.
+
+:::info
+FutureTask는 작업의 상태(미완료, 완료, 취소됨, 예외발생)를 관리하며,
+이 상태에 따라 get() 메서드의 동작이 결정됩니다.
+:::
+
+### 4.3 결과 조회 과정
+
+1. 클라이언트가 future.get()을 호출합니다.
+2. FutureTask는 작업 완료 여부를 확인합니다:
+  - 작업이 완료된 경우: 즉시 결과를 반환
+  - 작업이 진행 중인 경우:
+    - 호출 스레드는 RUNNABLE에서 WAITING 상태로 전환
+    - 작업이 완료될 때까지 대기
+3. 작업이 완료되면:
+  - FutureTask는 대기 중인 스레드를 깨움
+  - 스레드는 WAITING에서 RUNNABLE 상태로 전환
+  - 결과가 반환됨
+
+```java
+try {
+    String result = future.get(); // 작업이 완료될 때까지 대기
+} catch (InterruptedException | ExecutionException e) {
+    // 예외 처리
+}
+```
+
+## 5. Future의 한계
+
+- 여러 Future 간의 의존성 표현이 어렵습니다.
+- 다음과 같은 작업이 복잡합니다:
+  - 두 비동기 계산 결과 조합
+  - 여러 Future 중 하나만 완료되면 되는 경우
+  - Future 완료 시 콜백 실행
+- 이러한 한계를 극복하기 위해 CompletableFuture가 도입되었습니다.
+
+:::info
+Future의 한계를 극복하기 위한 대안:
+- CompletableFuture (Java 8+)
+- 리액티브 프로그래밍 (RxJava, Project Reactor)
+  :::
