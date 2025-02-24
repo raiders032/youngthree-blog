@@ -14,6 +14,8 @@ title: "자료구조"
 ## 트리
 
 - [트리(Tree)](Tree/Tree.md)
+- [B-Tree](B-Tree/B-Tree.md)
+- [B+Tree](B%2BTree/B%2BTree.md)
 - [힙(Heap)](Heap/Heap.md)
 - [트라이(Trie)](Trie/Trie.md)
 

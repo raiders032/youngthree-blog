@@ -20,6 +20,7 @@ hide_title: true
 ## 2. Channel - 네트워크 통신의 기본 단위
 
 - Channel은 네트워크 소켓을 추상화한 인터페이스입니다.
+  - 여기서 Channel은 Java NIO의 java.nio.channels.Channel과는 다른, Netty가 자체적으로 정의한 io.netty.channel.Channel 인터페이스입니다.
 - 기본적인 I/O 작업(bind, connect, read, write)을 제공하며, Java의 기본 Socket 작업을 훨씬 단순화시켜줍니다.
 	- Socket: 로우 레벨 네트워킹 기본 클래스
 - Netty의 Channel 인터페이스는 Socket을 직접 다루는 복잡성을 크게 줄여주는 API를 제공합니다.

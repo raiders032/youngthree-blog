@@ -100,6 +100,7 @@ hide_title: true
 
 ### 3.1 전통적인 블로킹 I/O
 
+- [Java IO](../../Language/Java/IO/IO.md) 패키지는 전통적인 블로킹 I/O를 구현하는데 사용됩니다.
 - [Java IO를 황용한 TCP Socket Programming.](../../Language/Java/TCP-Socket-Programming/TCP-Socket-Programming.md)
 	- Java IO 패키지를 사용해 블로킹 TCP 서버/클라이언트를 구현합니다.
 	- 블로킹 서버의 한계를 설명합니다.
