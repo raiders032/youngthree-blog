@@ -27,7 +27,7 @@ hide_title: true
 	- 이런 문제를 해결하려면 우리 시스템이 버틸 수 있는, 최대 스레드의 수 까지만 스레드를 생성할 수 있게 관리해야 합니다.
 - 작업 요청에 대한 응답 시간 단축
 
-### 1.2 Executor 인터페이스
+## 2 Executor 인터페이스
 
 - Executor는 자바의 동시성 프로그래밍에서 가장 기본이 되는 인터페이스입니다.
 - 실무에서는 스레드를 직접 하나하나 생성해서 사용하는 일이 드물다.
@@ -45,13 +45,13 @@ public interface Executor {
 }
 ```
 
-- 단순히 하나의 메서드를 제공하는 인터페이스
+- 단순히 하나의 메서드를 제공하는 인터페이스입니다.
 - 결과 값을 반환하지 않는 작업을 처리할 때 사용합니다.(fire-and-forget)
-	- 반면에 ExecutorService 인터페이스에는 반환 값을 처리할 수 있는 submit 메서드가 있습니다.
+- 반면에 ExecutorService 인터페이스에는 반환 값을 처리할 수 있는 submit 메서드가 있습니다.
 
-### 1.3 ExecutorService 인터페이스
+## 3 ExecutorService 인터페이스
 
-- ExecutorService는 Executor를 상속하며, 더 다양한 기능을 제공합니다
+- ExecutorService는 Executor를 상속하며, 더 다양한 기능을 제공합니다.
 	- 작업 생명주기 관리
 	- 비동기 작업 결과 조회
 	- 스레드 풀 종료 기능
@@ -70,7 +70,33 @@ public interface ExecutorService extends Executor {
 }
 ```
 
-### 1.4 Executors 유틸리티 클래스
+### 3.1 ThreadPoolExecutor
+
+- ThreadPoolExecutor는 ExecutorService 인터페이스를 구현한 클래스입니다.
+
+```java
+ThreadPoolExecutor(int corePoolSize,
+                  int maximumPoolSize,
+                  long keepAliveTime,
+                  TimeUnit unit,
+                  BlockingQueue<Runnable> workQueue)
+```
+
+- 위는 ThreadPoolExecutor의 생성자입니다.
+- `corePoolSize`: 스레드 풀의 기본 크기
+- `maximumPoolSize`: 스레드 풀의 최대 크기
+- `keepAliveTime`: 스레드 풀의 기본 크기를 초과해서 만들어진 스레드가 생존할 수 있는 대기 시간입니다. 이 시간동안 처리할 작업이 없다면 초과 스레드는 제거됩니다.
+- `unit`: keepAliveTime의 단위
+- `workQueue`: 작업을 보관할 블로킹 큐
+
+```java
+new ThreadPoolExecutor(2,2,0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+```
+
+- 위 코드는 스레드 풀의 기본 크기와 최대 크기가 2로 설정되어 있습니다.
+- 스레드 풀의 기본 크기와 최대 크기가 같기 때문에 스레드 풀의 크기가 고정되어 있습니다.
+
+## 4 Executors 유틸리티 클래스
 
 - Executors는 다양한 ExecutorService 구현체를 생성하는 팩토리 메서드를 제공합니다.
 
@@ -94,16 +120,11 @@ ExecutorService singlePool = Executors.newSingleThreadExecutor();
   를 고려해야 합니다.
   :::
 
-## 2. Thread Pool 생성과 관리
+### 4.1 Thread Pool 생성과 관리
 
 - Executors로 ExecutorService의 구현 객체를 만들 수 있습니다.
 - Executors의 다양한 정적 메소드로 ExecutorService의 구현 객체를 만들 수 있는데 이것이 바로 스레드 풀입니다.
-- ExecutorService의 기본 구현체로 ThreadPoolExecutor가 있습니다.
-	- `ThreadPoolExecutor` 를 사용하면 스레드 풀에 사용되는 숫자와 블로킹 큐등 다양한 속성을 조절할 수 있습니다.
-	- `corePoolSize` : 스레드 풀에서 관리되는 기본 스레드의 수
-	- `maximumPoolSize` : 스레드 풀에서 관리되는 최대 스레드 수
-	- `keepAliveTime` , `TimeUnit unit` : 기본 스레드 수를 초과해서 만들어진 스레드가 생존할 수 있는 대기 시간, 이 시간 동안 처리할 작업이 없다면 초과 스레드는 제거된다.
-	- `BlockingQueue workQueue` : 작업을 보관할 블로킹 큐
+- ExecutorService의 기본 구현체로 앞서 설명한 ThreadPoolExecutor가 있습니다.
 - Executors의 정적 메서드는 기본 구현체인 ThreadPoolExecutor의 설정을 대신하여 ThreadPoolExecutor를 생성합니다.
 
 **Executors의 정적 메소드**
@@ -113,7 +134,7 @@ ExecutorService singlePool = Executors.newSingleThreadExecutor();
 | newCachedThreadPool | 0        | 0        | Integer.MAX_VALUE |
 | newFixedThreadPool  | 0        | nThreads | nThreads          |
 
-### 2.1 newCachedThreadPool
+### 4.2 newCachedThreadPool
 
 ```java
 // Executors의 정적 메서드를 사용
@@ -130,14 +151,14 @@ new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS,new Synchrono
 	- 쉽게 이야기해서 중간에 버퍼를 두지 않는 스레드간 직거래라고 생각하면 됩니다.
 - 캐시 스레드 풀 전략은 매우 빠르고, 유연한 전략이다.
 - 이 전략은 기본 스레드도 없고, 대기 큐에 작업도 쌓이지 않습니다.
-- 대신에 작업 요청이 오면 초과 스레드로 작업을 바로바 로 처리한다. 따라서 빠른 처리가 가능합니다. 
+- 대신에 작업 요청이 오면 초과 스레드로 작업을 바로바로 처리합니다. 따라서 빠른 처리가 가능합니다.
 - 초과 스레드의 수도 제한이 없기 때문에 CPU, 메모리 자원만 허용한다면 시스템의 자원을 최대로 사용할 수 있습니다.
 - 추가로 초과 스레드는 60초간 생존하기 때문에 작업 수에 맞추어 적절한 수의 스레드가 재사용된다.
 - 이런 특징 때문에 요청이 갑자기 증가하면 스레드도 갑자기 증가하고, 요청이 줄어들면 스레드도 점점 줄어듭니다.
 - 이 전략은 작업의 요청 수에 따라서 스레드도 증가하고 감소하므로, 매우 유연한 전략입니다.
-- 캐시 스레드 풀 전략은 서버의 자원을 최대한 사용하지만, 서버가 감당할 수 있는 임계점을 넘는 순간 시스템이 다운될 수 있다.
+- 캐시 스레드 풀 전략은 서버의 자원을 최대한 사용하지만, 서버가 감당할 수 있는 임계점을 넘는 순간 시스템이 다운될 수 있습니다.
 
-### 2.2 newFixedThreadPool
+### 4.3 newFixedThreadPool
 
 ```java
 // CPU 코어의 수만큼 최대 스레드를 사용하는 스레드 풀을 생성하는 예제
@@ -150,15 +171,25 @@ new ThreadPoolExecutor(1, 1,0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<R
 - 스레드 풀에 `nThreads` 만큼의 기본 스레드를 생성합니다. 초과 스레드는 생성하지 않습니다.
 - 스레드 수가 고정되어 있기 때문에 CPU, 메모리 리소스가 어느정도 예측 가능한 안정적인 방식입니다.
 
-### 2.3 newSingleThreadExecutor
+### 4.5 newSingleThreadExecutor
 
-## 3 Thread Pool 종료
+- 무제한 큐에서 작업을 수행하는 단일 작업자 스레드를 사용하는 Executor를 생성합니다.
+- 작업은 순차적으로 실행되는 것이 보장되며, 한 번에 최대 하나의 작업만 활성화됩니다.
+- 기능적으로 동일한 newFixedThreadPool(1)과 달리, 반환된 executor는 추가 스레드를 사용하도록 재구성할 수 없음이 보장됩니다.
+- 만약 작업 처리 중 스레드가 예외로 인해 비정상 종료되면, 시스템은 자동으로 새로운 스레드를 생성하여 나머지 작업을 계속 처리합니다.
+- 이 메소드는 다음과 같은 상황에서 유용합니다:
+  - 작업들이 반드시 순서대로 실행되어야 할 때
+  - 작업들이 공유 자원에 안전하게 접근해야 할 때 (스레드 안전성 보장)
+  - 간단한 백그라운드 작업 처리가 필요할 때
+	- 이벤트 처리 시스템에서 이벤트를 순차적으로 처리해야 할 때
 
-- 스레드 풀의 스레드는 기본적으로 데몬 스레드가 아니기 때문에 main 스레드가 종료되더라도 작업을 처리하기 위해 계속 실행 상태로 남아있다.
-	- 그래서 main() 메소드가 실행이 끝나도 애플리케이션 프로세스는 종료되지 않는다
-- 애플리케이션을 종료하려면 스레드풀을 종료시켜 스레드들이 종료 상태가 되도록 처리해야한다.
+## 5 Thread Pool 종료
 
-### 3.1 ExecutorService의 종료
+- 스레드 풀의 스레드는 기본적으로 데몬 스레드가 아니기 때문에 main 스레드가 종료되더라도 작업을 처리하기 위해 계속 실행 상태로 남아있습니다.
+	- 그래서 main() 메소드가 실행이 끝나도 애플리케이션 프로세스는 종료되지 않습니다.
+- 애플리케이션을 종료하려면 스레드풀을 종료시켜 스레드들이 종료 상태가 되도록 처리해야합니다.
+
+### 5.1 ExecutorService의 종료
 
 - ExecutorService` 에는 종료와 관련된 다양한 메서드가 존재합니다.
 - void shutdown()
@@ -176,9 +207,9 @@ new ThreadPoolExecutor(1, 1,0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<R
 	- close() 는 자바 19부터 지원하는 서비즈 종료 메서드이다. 이 메서드는 shutdown() 과 같다고 생각하면 됩니다.
 	- 더 정확히는 `shutdown()` 을 호출하고, 하루를 기다려도 작업이 완료되지 않으면 `shutdownNow()` 를 호출합니다.
 
-## 4 작업 처리
+## 6 작업 처리
 
-### 4.1 작업 생성
+### 6.1 작업 생성
 
 - 하나의 작업은 Runnable 또는 Callable 구현 클래스로 표현합니다.
 	- 차이는 반환값이 없으면 Runnable 있으면 Callable입니다.
@@ -198,7 +229,7 @@ public interface Callable<V> {
 }
 ```
 
-### 4.2 작업 처리 요청
+### 6.2 작업 처리 요청
 
 - 작업 처리 요청이란 ExecutorService의 작업 큐에 Runnable 또는 Callable 객체를 넣은 행위를 말한다.
 
@@ -215,7 +246,7 @@ public interface Callable<V> {
 - submit()은 작업 처리중 예외가 발생하더라도 스레드 종료되지 않고 다음 작업을 위해 재사용된다.
 	- 가급적 스레드 생성 오버헤드를 줄이기 위해 submit()을 사용하는 것이 좋습니다.
 
-## 5 블로킹 방식의 작업 완료 통보(Future)
+## 7 블로킹 방식의 작업 완료 통보(Future)
 
 - ExecutorService의 submit() 메소드는 Runnable 또는 Callable를 작업 큐에 넣고 즉시 Future 객체를 리턴합니다.
 - Future 객체는 작업 결과가 아니라 작업이 완료될 때까지 기다렸다가 최종 결과를 얻는데 사용됩니다.
@@ -229,7 +260,7 @@ Future<String> future = executorService.submit(() -> "result");
 executorService.submit(() -> future.get());
 ```
 
-#### Future 인터페이스
+#### 7.1 Future 인터페이스
 
 | 리턴 타입   | 메소드                                 | 설명                                                                      |
 |---------|-------------------------------------|-------------------------------------------------------------------------|
@@ -239,7 +270,7 @@ executorService.submit(() -> future.get());
 | boolean | isCancelled()                       | 작업이 취소되었는지 여부                                                           |
 | boolean | isDone()                            | 작업이 처리가 완료되었는지 여부                                                       |
 
-### 5.1 반환값이 없는 작업 완료 통보
+### 7.2 반환값이 없는 작업 완료 통보
 
 - submit() 메소드의 아규먼트로 Runnable 객체를 전달할 수 있다.
 - Runnable은 결과 값이 없지만 submit()는 Future를 반환한다.
@@ -290,7 +321,7 @@ public class NoResultExample {
 }
 ```
 
-### 5.2 반환값이 있는 작업 완료 통보
+### 7.3 반환값이 있는 작업 완료 통보
 
 - 스레드가 작업 완료한 후에 처리 결과를 얻어야 된다면 작업 객체를 Callable로 생성하면 된다.
 
@@ -329,7 +360,7 @@ public class YesResultExample {
 }
 ```
 
-### 5.3 콜백 방식 작업 완료 통보
+### 7.4 콜백 방식 작업 완료 통보
 
 - 콜백이란 애플리케이션이 스레드에게 작업 처리를 요청한 후 스레드가 작업을 완료하면 특정 메소드를 자동 실행하는 기법을 말한다.
 	- 이때 자동 실행되는 메소드를 콜백 메소드라고 한다.

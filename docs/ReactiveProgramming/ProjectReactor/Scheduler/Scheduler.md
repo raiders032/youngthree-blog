@@ -108,22 +108,11 @@ Flux.just(4, 5, 6)
     .subscribe();
 ```
 
-### 2.3 Schedulers.newSingle()
-
-- `Schedulers.single()`과 달리 호출할 때마다 새로운 스레드를 생성합니다.
-- 각 호출마다 독립적인 스레드를 사용하므로, 작업 간 격리가 필요한 경우에 유용합니다.
-- 스레드 이름, 데몬 스레드 여부 등을 지정할 수 있습니다
-	- 첫 번째 파라미터로 스레드 이름을 지정할 수 있습니다.
-	- 두 번째 파라미터로 데몬 스레드 여부를 지정할 수 있습니다.
-	- 데몬 스레드란 백그라운드에서 실행되는 스레드로, 메인 스레드가 종료되면 함께 종료되는 특성을 가집니다.
-- 특정 작업에 대해 전용 스레드를 사용하고 싶을 때 활용합니다.
-- 작업이 완료된 후 스레드를 해제하고 싶을 때 유용합니다.
-- 매번 새로운 스레드를 생성하므로, 과도한 사용 시 리소스 낭비가 발생할 수 있습니다.
-
-### 2.4 Schedulers.parallel()
+### 2.3 Schedulers.parallel()
 
 - CPU 코어 수에 맞춰 고정된 수의 스레드를 생성합니다.
 - CPU 집약적인 작업이나 병렬 처리가 필요한 경우에 적합합니다.
+- `Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())`와 유사합니다.
 
 #### 사용 예시
 
@@ -135,7 +124,7 @@ Flux.range(1, 100)
     .subscribe();
 ```
 
-### 2.5 Schedulers.boundedElastic()
+### 2.4 Schedulers.boundedElastic()
 
 - ExcuterService 기반의 스레드 풀을 생성한 후 사용하는 스케줄러입니다.
 - 스레드를 사용하고 난 뒤에는 풀로 반납하여 재사용합니다.
@@ -155,6 +144,101 @@ Flux.range(1, 100)
     )
     .subscribe();
 ```
+
+### 2.5 Schedulers.fromExecutorService()
+
+- 사용자가 직접 생성한 ExecutorService를 사용하는 스케줄러입니다.
+- 직접 생성한 ExecutorService를 사용할 수 있지만 Reactor에서는 이 방식을 권장하지 않습니다.
+
+### 2.6 newBoundedElastic(), newParallel(), newSingle()
+
+- 이전에 살펴본 `boundedElastic()`, `parallel()`, `single()`은 Reactor에서 제공하는 기본 Scheduler 인스턴스를 사용합니다.
+	- 즉 여러 코드에서 호출해도 동일한 인스턴스를 사용합니다.
+- 필요하다면 newBoundedElastic(), newParallel(), newSingle()을 사용하여 새로운 인스턴스를 생성할 수 있습니다.
+
+#### 2.6.1 Schedulers.newBoundedElastic()
+
+- 새로운 boundedElastic 스케줄러 인스턴스를 생성합니다.
+- 아래 파라미터를 지정할 수 있습니다.
+	- threadCap: 최대 스레드 수를 지정합니다. 기본값은 CPU 코어 수의 10배입니다.
+	- queueCap: 큐의 최대 크기를 지정합니다. 기본값은 100,000입니다.
+	- name: 스레드 이름 접두사입니다. 기본값은 boundedElastic입니다.
+	- ttlSeconds: 유휴 스레드의 유효 시간을 지정합니다. 기본값은 60초입니다.
+
+#### 2.6.2 Schedulers.newParallel()
+
+- 새로운 parallel 스케줄러 인스턴스를 생성합니다.
+- 아래 파라미터를 지정할 수 있습니다.
+	- parallelism: 병렬 스레드 수를 지정합니다. 기본값은 CPU 코어 수입니다.
+	- name: 스레드 이름 접두사입니다. 기본값은 parallel입니다.
+	- daemon: 데몬 스레드 여부를 지정합니다. 기본값은 false입니다.
+
+#### 2.6.3 Schedulers.newSingle()
+
+- `Schedulers.single()`과 달리 호출할 때마다 새로운 스레드를 생성합니다.
+- 아래 파라미터를 지정할 수 있습니다.
+	- name: 스레드 이름을 지정합니다. 기본값은 single입니다.
+	- daemon: 데몬 스레드 여부를 지정합니다. 기본값은 false입니다.
+- 특정 작업에 대해 전용 스레드를 사용하고 싶을 때 활용합니다.
+- 작업이 완료된 후 스레드를 해제하고 싶을 때 유용합니다.
+- 매번 새로운 스레드를 생성하므로, 과도한 사용 시 리소스 낭비가 발생할 수 있습니다.
+- 각 호출마다 독립적인 스레드를 사용하므로, 작업 간 격리가 필요한 경우에 유용합니다.
+
+### 2.7 스케줄러 상황별 추천
+
+#### 2.7.1 I/O 바운드 작업
+
+- **추천**: `Schedulers.boundedElastic()` 또는 `Schedulers.newBoundedElastic()`
+- **적합한 상황**:
+	- 데이터베이스 쿼리 실행
+	- 파일 읽기/쓰기 작업
+	- 네트워크 요청(HTTP 호출, 외부 API 통신)
+	- 블로킹 레거시 API 호출
+- **설정 고려사항**:
+	- 매우 많은 수의 블로킹 작업을 처리할 경우 `newBoundedElastic()`으로 전용 풀 생성
+	- 긴 지연 시간이 예상되는 경우 큐 크기(`queueCap`) 조정 고려
+
+#### 2.7.2 CPU 바운드 작업
+
+- **추천**: `Schedulers.parallel()` 또는 `Schedulers.newParallel()`
+- **적합한 상황**:
+	- 복잡한 계산 작업
+	- 데이터 변환 및 처리
+	- 인메모리 정렬, 필터링
+	- 대용량 컬렉션 처리
+- **설정 고려사항**:
+	- 특별히 격리된 컴퓨팅 작업이 필요한 경우 `newParallel()`로 전용 풀 생성
+	- 코어 수보다 많은 병렬 처리가 필요한 경우 `parallelism` 파라미터 조정
+
+#### 2.7.3 순차적 처리 작업
+
+- **추천**: `Schedulers.single()` 또는 `Schedulers.newSingle()`
+- **적합한 상황**:
+	- 순서가 중요한 작업 처리
+	- 공유 상태 접근이 필요한 작업
+	- UI 업데이트(JavaFX, Swing)
+	- 이벤트 시퀀스 처리
+- **설정 고려사항**:
+	- 서로 간섭하지 않아야 하는 순차 처리 그룹이 여러 개 있을 경우 `newSingle()`로 분리
+	- 애플리케이션 종료 시 스레드도 종료되어야 하는 경우 `daemon=true` 설정
+
+#### 2.7.4 트랜잭션 또는 보안 컨텍스트 작업
+
+- **추천**: `Schedulers.newSingle()`
+- **적합한 상황**:
+	- 트랜잭션 컨텍스트 유지가 필요한 작업
+	- 보안 컨텍스트(인증 정보 등)가 필요한 작업
+	- ThreadLocal 값에 의존하는 작업
+- **설정 고려사항**:
+	- 컨텍스트별로 전용 스레드를 사용하기 위해 의미 있는 이름으로 스레드 생성
+
+#### 2.7.5 테스트 환경
+
+- **추천**: `Schedulers.immediate()`
+- **적합한 상황**:
+	- 단위 테스트
+	- 스레드 전환 없이 동기적 실행이 필요한 경우
+	- 비동기 코드의 디버깅
 
 ## 3. Scheduling Operators
 
