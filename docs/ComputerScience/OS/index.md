@@ -52,4 +52,6 @@ hide_title: true
 ### IO
 
 - [I/O Models](IOModels/IOModels.md)
-- [IO Multifexing](IOMultifexing/IOMultifexing.md)
+	- Blocking I/O, Non-blocking I/O, I/O Multiplexing, Asynchronous I/O
+- [I/O Multifexing](IOMultifexing/IOMultifexing.md)
+	- select, poll, epoll

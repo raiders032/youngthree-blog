@@ -24,7 +24,7 @@ hide_title: true
 	- Class.forName() 사용
 
 ### 2.1 Object.getClass()
-
+ 
 - Object 클래스의 getClass() 메서드를 이용하면 해당 클래스의 Class 객체를 얻을 수 있습니다.
 - getClass() 메서드는 해당 클래스의 객체가 있을 때 사용할 수 있습니다.
 	- 만약 객체를 생성하기 전에 Class 객체를 얻고 싶다면 Class의 static 메서드 forName을 이용하면 됩니다.

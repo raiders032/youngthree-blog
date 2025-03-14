@@ -70,8 +70,8 @@ HttpHandler handler = WebHttpHandlerBuilder.applicationContext(context).build();
 
 ### 2.3 ServerWebExchange 이해하기
 
-- ServerWebExchange는 Spring WebFlux에서 웹 요청-응답 교환을 나타내는 인터페이스입니다. 
-  - 쉽게 말해 "HTTP 요청/응답과 관련된 모든 정보를 담고 있는 컨테이너"입니다.
+- ServerWebExchange는 Spring WebFlux에서 웹 요청-응답 교환을 나타내는 인터페이스입니다.
+	- 쉽게 말해 "HTTP 요청/응답과 관련된 모든 정보를 담고 있는 컨테이너"입니다.
 - Spring MVC의 ServletRequest/ServletResponse와 유사한 역할을 하지만, 리액티브 스택에 맞게 설계되었습니다.
 
 #### 주요 특징과 역할
@@ -171,6 +171,186 @@ public interface HandlerMapping {
 	- RequestMappingHandlerMapping: @RequestMapping 어노테이션이 붙은 메서드용
 	- RouterFunctionMapping: 함수형 엔드포인트 라우트용
 	- SimpleUrlHandlerMapping: URI 패턴과 WebHandler 인스턴스의 명시적 등록용
+
+#### 3.2 HandlerMapping 구현체별 설정 예시
+
+##### RequestMappingHandlerMapping 설정 예시
+
+- RequestMappingHandlerMapping은 @RequestMapping 어노테이션을 사용한 컨트롤러 메서드를 등록하고 매핑합니다.
+
+```java
+@Configuration
+@EnableWebFlux
+public class WebFluxConfig {
+    
+    @Bean
+    public RequestMappingHandlerMapping requestMappingHandlerMapping() {
+        RequestMappingHandlerMapping mapping = new RequestMappingHandlerMapping();
+        mapping.setOrder(0);  // 우선순위 설정
+        mapping.setUseSuffixPatternMatch(false);  // 접미사 패턴 매칭 비활성화
+        mapping.setUseTrailingSlashMatch(true);   // 후행 슬래시 매칭 활성화
+        
+        // 커스텀 패스매처 설정 (옵션)
+        PathPatternParser patternParser = new PathPatternParser();
+        patternParser.setCaseSensitive(false);    // 대소문자 구분 비활성화
+        mapping.setPatternParser(patternParser);
+        
+        return mapping;
+    }
+}
+```
+
+```java
+@RestController
+@RequestMapping("/api")
+public class UserController {
+    
+    @GetMapping("/users/{id}")
+    public Mono<User> getUser(@PathVariable String id) {
+        return userService.findById(id);
+    }
+    
+    @PostMapping("/users")
+    public Mono<User> createUser(@RequestBody User user) {
+        return userService.save(user);
+    }
+}
+```
+
+##### RouterFunctionMapping 설정 예시
+
+- RouterFunctionMapping은 함수형 엔드포인트 방식으로 라우트를 정의합니다.
+
+```java
+@Configuration
+public class RoutesConfig {
+    
+    @Bean
+    public RouterFunctionMapping routerFunctionMapping() {
+        RouterFunctionMapping mapping = new RouterFunctionMapping();
+        mapping.setOrder(-1);  // RequestMappingHandlerMapping보다 높은 우선순위
+        return mapping;
+    }
+    
+    @Bean
+    public RouterFunction<ServerResponse> userRoutes(UserHandler userHandler) {
+        return route()
+            .GET("/api/users/{id}", userHandler::getUser)
+            .POST("/api/users", userHandler::createUser)
+            .build();
+    }
+}
+```
+
+```java
+@Component
+public class UserHandler {
+    
+    private final UserService userService;
+    
+    public UserHandler(UserService userService) {
+        this.userService = userService;
+    }
+    
+    public Mono<ServerResponse> getUser(ServerRequest request) {
+        String id = request.pathVariable("id");
+        return userService.findById(id)
+            .flatMap(user -> ServerResponse.ok().bodyValue(user))
+            .switchIfEmpty(ServerResponse.notFound().build());
+    }
+    
+    public Mono<ServerResponse> createUser(ServerRequest request) {
+        return request.bodyToMono(User.class)
+            .flatMap(userService::save)
+            .flatMap(savedUser -> 
+                ServerResponse.created(URI.create("/api/users/" + savedUser.getId()))
+                    .bodyValue(savedUser)
+            );
+    }
+}
+```
+
+##### SimpleUrlHandlerMapping 설정 예시
+
+- SimpleUrlHandlerMapping은 URL 패턴을 직접 WebHandler 인스턴스에 매핑합니다.
+- 기본적으로 HTTP 메서드를 구분하지 않습니다.
+
+```java
+@Configuration
+public class WebHandlerConfig {
+    
+    @Bean
+    public SimpleUrlHandlerMapping simpleUrlHandlerMapping() {
+        Map<String, Object> urlMap = new HashMap<>();
+        
+        // 특정 경로에 WebHandler 인스턴스 매핑
+        urlMap.put("/resources/**", resourceWebHandler());
+        urlMap.put("/ws/**", webSocketHandler());
+        urlMap.put("/metrics", metricsHandler());
+        
+        SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
+        mapping.setUrlMap(urlMap);
+        mapping.setOrder(10);  // 우선순위 설정 (값이 클수록 우선순위 낮음)
+        
+        return mapping;
+    }
+    
+    @Bean
+    public ResourceWebHandler resourceWebHandler() {
+        ResourceWebHandler handler = new ResourceWebHandler();
+        handler.setLocations(Arrays.asList(
+            new ClassPathResource("static/"),
+            new FileSystemResource("/path/to/resources/")
+        ));
+        return handler;
+    }
+    
+    @Bean
+    public WebSocketHandler webSocketHandler() {
+        // WebSocket 핸들러 구현체 반환
+        return new CustomWebSocketHandler();
+    }
+    
+    @Bean
+    public WebHandler metricsHandler() {
+        // 커스텀 WebHandler 구현체 반환
+        return new MetricsWebHandler();
+    }
+}
+```
+
+```java
+public class MetricsWebHandler implements WebHandler {
+    
+    @Override
+    public Mono<Void> handle(ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        
+        // 메트릭 데이터 생성
+        Map<String, Object> metrics = collectMetrics();
+        
+        // 응답 데이터 설정
+        DataBufferFactory bufferFactory = response.bufferFactory();
+        try {
+            byte[] bytes = new ObjectMapper().writeValueAsBytes(metrics);
+            DataBuffer buffer = bufferFactory.wrap(bytes);
+            return response.writeWith(Mono.just(buffer));
+        } catch (Exception e) {
+            return Mono.error(e);
+        }
+    }
+    
+    private Map<String, Object> collectMetrics() {
+        // 애플리케이션 메트릭 수집 로직
+        Map<String, Object> metrics = new HashMap<>();
+        metrics.put("memory", Runtime.getRuntime().totalMemory());
+        metrics.put("threads", Thread.activeCount());
+        metrics.put("uptime", ManagementFactory.getRuntimeMXBean().getUptime());
+        return metrics;
+    }
+}
+```
 
 ### 3.2 HandlerAdapter
 

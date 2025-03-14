@@ -1,8 +1,8 @@
 ---
 title: "I/O Multiplexing"
 description: "다중 입출력을 처리하기 위한 I/O 멀티플렉싱의 다양한 방식과 각각의 특징을 설명합니다. select, poll, epoll 함수들의 동작 원리와 활용 방법을 코드 예제와 함께 자세히 다룹니다."
-tags: ["SELECT", "POLL", "EPOLL", "MULTIPLEXING", "IO", "OPERATING_SYSTEM", "LINUX", "NETWORK_PROGRAMMING"]
-keywords: ["멀티플렉싱", "IO 멀티플렉싱", "셀렉트", "폴", "이폴", "시스템콜", "파일 디스크립터", "fd", "소켓 프로그래밍", "이벤트 기반", "논블로킹", "레벨 트리거", "에지 트리거", "서버 프로그래밍", "고성능", "동시성"]
+tags: [ "SELECT", "POLL", "EPOLL", "MULTIPLEXING", "IO", "OPERATING_SYSTEM", "LINUX", "NETWORK_PROGRAMMING" ]
+keywords: [ "멀티플렉싱", "IO 멀티플렉싱", "셀렉트", "폴", "이폴", "시스템콜", "파일 디스크립터", "fd", "소켓 프로그래밍", "이벤트 기반", "논블로킹", "레벨 트리거", "에지 트리거", "서버 프로그래밍", "고성능", "동시성" ]
 draft: false
 hide_title: true
 ---
@@ -254,6 +254,11 @@ while (1) {
 - 일부 UNIX 시스템은 poll을 지원하지 않아 이식성 제약있습니다.
 - select와 poll 모두 이벤트가 발생한 파일 디스크립터를 찾기 위해 전체 디스크립터 집합을 순회해야 하는 O(n) 검사가 필요합니다.
 
+#### ulimit
+
+- ulimit은 리눅스와 유닉스 계열 운영체제에서 프로세스가 사용할 수 있는 시스템 리소스의 제한을 설정하는 도구입니다.
+- [자세한 내용은 ulimit 참고](../../../Linux/Ulimit/Ulimit.md)
+
 ## 4. epoll 함수
 
 ### 4.1 개요
@@ -297,9 +302,24 @@ int epoll_ctl(int epfd, int op, int fd, struct epoll_event *_Nullable event);
 	- EPOLL_CTL_ADD: 새로운 파일 디스크립터를 감시 목록에 추가합니다.
 	- EPOLL_CTL_MOD: 이미 감시 중인 파일 디스크립터의 설정을 변경합니다.
 	- EPOLL_CTL_DEL: 파일 디스크립터를 감시 목록에서 제거합니다.
+- fd
+  - epoll 인스턴스에 추가할 파일 디스크립입니다.
+- event
+  - 파일 디스크립터의 이벤트 설정을 담은 epoll_event 구조체입니다.
 - 반환값
 	- 성공 시 0을 반환합니다.
 	- 실패 시 -1을 반환하고 errno에 오류 코드를 설정합니다.
+
+##### 예시
+
+```c
+struct epoll_event ev;
+ev.events = EPOLLIN | EPOLLOUT; // 읽기 및 쓰기 이벤트 모두 감시
+ev.data.fd = some_fd; // 이벤트 발생 시 식별을 위한 fd 저장
+
+// epoll 인스턴스에 파일 디스크립터 추가
+epoll_ctl(epoll_fd, EPOLL_CTL_ADD, some_fd, &ev);
+```
 
 #### 4.2.3 epoll_wait
 
@@ -367,11 +387,11 @@ int epoll_wait(int epfd, struct epoll_event events[.maxevents], int maxevents, i
 4. 파이프 읽기 측에서 1KB의 데이터만 읽습니다.
 5. 다시 `epoll_wait()`를 호출합니다.
 
-- **에지 트리거(ET) 모드**에서는 5단계의 `epoll_wait()` 호출이 대기 상태에 빠질 수 있습니다. 
-  - 이벤트는 상태 변화 시에만 생성되기 때문에, 2단계에서 데이터가 도착할 때 한 번만 이벤트가 발생하고 3단계에서 소비됩니다. 
-  - 4단계에서 버퍼의 일부 데이터만 읽었지만, 새로운 데이터가 도착하지 않았으므로 5단계에서는 이벤트가 발생하지 않습니다.
-- **레벨 트리거(LT) 모드**에서는 5단계의 `epoll_wait()` 호출이 즉시 반환됩니다. 
-  - 버퍼에 여전히 데이터가 남아있는 상태이기 때문입니다.
+- **에지 트리거(ET) 모드**에서는 5단계의 `epoll_wait()` 호출이 대기 상태에 빠질 수 있습니다.
+	- 이벤트는 상태 변화 시에만 생성되기 때문에, 2단계에서 데이터가 도착할 때 한 번만 이벤트가 발생하고 3단계에서 소비됩니다.
+	- 4단계에서 버퍼의 일부 데이터만 읽었지만, 새로운 데이터가 도착하지 않았으므로 5단계에서는 이벤트가 발생하지 않습니다.
+- **레벨 트리거(LT) 모드**에서는 5단계의 `epoll_wait()` 호출이 즉시 반환됩니다.
+	- 버퍼에 여전히 데이터가 남아있는 상태이기 때문입니다.
 
 #### 4.4.4 에지 트리거 사용 시 권장사항
 
