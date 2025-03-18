@@ -2,7 +2,7 @@
 title: "Spring Cloud Bus"
 description: "Spring Cloud Bus를 사용하여 분산 시스템의 구성 정보를 효과적으로 동기화하는 방법을 알아봅니다. AMQP와 Kafka를 활용한 메시지 브로커 설정부터 실제 구현 예제까지 상세히 다룹니다."
 tags: ["SPRING_CLOUD_BUS", "SPRING_CLOUD", "SPRING_BOOT", "MICROSERVICES", "RABBITMQ", "KAFKA", "BACKEND", "JAVA"]
-keywords: ["스프링 클라우드 버스", "spring cloud bus", "마이크로서비스", "microservices", "스프링 클라우드", "spring cloud", "설정 동기화", "configuration synchronization", "메시지 브로커", "message broker", "래빗엠큐", "rabbitmq", "카프카", "kafka"]
+keywords: ["스프링 클라우드 버스", "spring cloud bus", "마이크로서비스", "microservices", "스프링 클라우드", "spring cloud", "설정 동기화", "Configuration synchronization", "메시지 브로커", "message broker", "래빗엠큐", "rabbitmq", "카프카", "kafka"]
 draft: false
 hide_title: true
 ---

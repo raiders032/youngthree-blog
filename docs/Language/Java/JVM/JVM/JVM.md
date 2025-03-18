@@ -27,16 +27,16 @@
 ## 3 JVM의 구조
 
 - JVM은 크게 `Class Loader`,  `Runtime Data Area`, `Execution Engine` 로 구성되어 있습니다.
-	- [Class-Loader.md](../Class-Loader/Class-Loader.md)
-	- [Runtime-Data-Area.md](../Runtime-Data-Area/Runtime-Data-Area.md)
-	- [Execution-Engine.md](../Execution-Engine/Execution-Engine.md)
+	- [Class Loader](../Class-Loader/Class-Loader.md)
+	- [Runtime Data Area](../Runtime-Data-Area/Runtime-Data-Area.md)
+	- [Execution Engine](../Execution-Engine/Execution-Engine.md)
 
 ![jvm](./images/jvm.png)
 
 **Java bytecode(자바 바이트코드)**
 
 - 자바 컴파일러는 C/C++ 등의 컴파일러처럼 고수준 언어를 기계어, 즉 직접적인 CPU 명령으로 변환하는 것이 아니라, 개발자가 이해하는 자바 언어를 JVM이 이해하는 자바 바이트코드로 번역한다.
-- 자바 바이트코드(Java bytecode)는 자바 가상 머신이 실행하는 명령어의 형태이다. 
+- 자바 바이트코드(Java bytecode)는 자바 가상 머신이 실행하는 명령어의 형태이다.
 - 각각의 바이트코드는 1바이트로 구성되지만 몇 개의 파라미터가 사용되는 경우가 있어 총 몇 바이트로 구성되는 경우가 있다. 256개의 명령코드 모두가 사용되지는 않는다.
 - 자바 프로그래머가 자바 바이트코드를 꼭 인지하거나 이해할 필요는 없다. 하지만 IBM의 developerWorks journal에서 제안했듯이 "바이트코드를 이해하고 자바 컴파일러에 의해 바이트코드가 어떻게
 - 생성될 것인지를 이해하는 것은 C나 C++ 프로그래머가 어셈블리어를 이해하는 것과 같다" 라고 볼 수 있다.
@@ -83,7 +83,8 @@ for (int i = 2; i < 1000; i++) {
 
 **JAR**
 
-- JAR(Java Archive, 자바 아카이브)는 여러개의 자바 클래스 파일과, 클래스들이 이용하는 관련 리소스(텍스트, 그림 등) 및 메타데이터를 하나의 파일로 모아서 자바 플랫폼에 응용 소프트웨어나 라이브러리를 배포하기 위한 소프트웨어 패키지 파일 포맷이다. 
+- JAR(Java Archive, 자바 아카이브)는 여러개의 자바 클래스 파일과, 클래스들이 이용하는 관련 리소스(텍스트, 그림 등) 및 메타데이터를 하나의 파일로 모아서 자바 플랫폼에 응용 소프트웨어나
+  라이브러리를 배포하기 위한 소프트웨어 패키지 파일 포맷이다.
 - JAR 파일은 실제로 ZIP 파일 포맷으로 이루어진 압축 파일로서, 파일 확장자는 .jar이다.
 
 참조

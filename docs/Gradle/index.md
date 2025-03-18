@@ -10,5 +10,5 @@ title: "Gradle"
 
 ## Gradle Plugin
 
-- [Plugin](Plugin/Plugin/Plugin.md)
+- [Plugin](Plugin/Plugin/Pulgin/Plugin.md)
 - [Implementing Binary Plugins](Plugin/ImplementingBinaryPlugins/ImplementingBinaryPlugins.md)

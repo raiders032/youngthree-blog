@@ -2,7 +2,7 @@
 title: "Terraform Block"
 description: "Terraform의 핵심 설정 블록인 terraform 블록에 대해 상세히 알아봅니다. required_version, required_providers, backend 등 주요 설정 옵션부터 HCP Terraform 연동까지 실제 예제와 함께 설명합니다."
 tags: ["TERRAFORM", "INFRASTRUCTURE_AS_CODE", "DEVOPS", "CLOUD", "AUTOMATION"]
-keywords: ["테라폼", "terraform", "테라폼 블록", "terraform block", "HCP", "테라폼 설정", "terraform configuration", "IaC", "인프라스트럭처", "infrastructure", "데브옵스", "devops", "클라우드", "cloud"]
+keywords: ["테라폼", "terraform", "테라폼 블록", "terraform block", "HCP", "테라폼 설정", "terraform Configuration", "IaC", "인프라스트럭처", "infrastructure", "데브옵스", "devops", "클라우드", "cloud"]
 draft: false
 hide_title: true
 ---

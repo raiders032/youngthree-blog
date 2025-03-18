@@ -29,7 +29,7 @@ title: "Database"
 
 ## 성능 최적화
 
-- [인덱스(Index)](/docs/Database/Index/Index.md)
+- [인덱스(Index)](/docs/Database/Index/Index/Index.md)
 - [샤딩(Sharding)](Sharding/Sharding.md)
 
 ## 데이터베이스 유형

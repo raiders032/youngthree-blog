@@ -52,13 +52,13 @@ Configuration Recorder는 AWS Config를 처음 활성화할 때 자동으로 생
 
 ```bash
 # Configuration Recorder 생성
-aws configservice put-configuration-recorder \
-    --configuration-recorder name=default,roleARN=arn:aws:iam::123456789012:role/config-role \
+aws configservice put-Configuration-recorder \
+    --Configuration-recorder name=default,roleARN=arn:aws:iam::123456789012:role/config-role \
     --recording-group allSupported=true,includeGlobalResources=true
 
 # Configuration Recorder 시작
-aws configservice start-configuration-recorder \
-    --configuration-recorder-name default
+aws configservice start-Configuration-recorder \
+    --Configuration-recorder-name default
 ```
 
 ### 3.3 사용자 지정 설정
@@ -66,8 +66,8 @@ aws configservice start-configuration-recorder \
 - 특정 리소스 유형만 기록하도록 Configuration Recorder를 직접 구성할 수 있습니다:
 
 ```bash
-aws configservice put-configuration-recorder \
-    --configuration-recorder name=default,roleARN=arn:aws:iam::123456789012:role/config-role \
+aws configservice put-Configuration-recorder \
+    --Configuration-recorder name=default,roleARN=arn:aws:iam::123456789012:role/config-role \
     --recording-group resourceTypes=[AWS::EC2::Instance,AWS::EC2::SecurityGroup]
 ```
 
@@ -100,22 +100,22 @@ Configuration Recorder는 다음과 같은 경우에 변경을 감지합니다:
 
 ```bash
 # 상태 확인
-aws configservice describe-configuration-recorder-status
+aws configservice describe-Configuration-recorder-status
 
 # 설정 확인
-aws configservice describe-configuration-recorders
+aws configservice describe-Configuration-recorders
 ```
 
 ### 5.2 일시 중지 및 재시작
 
 ```bash
 # 기록 중지
-aws configservice stop-configuration-recorder \
-    --configuration-recorder-name default
+aws configservice stop-Configuration-recorder \
+    --Configuration-recorder-name default
 
 # 기록 시작
-aws configservice start-configuration-recorder \
-    --configuration-recorder-name default
+aws configservice start-Configuration-recorder \
+    --Configuration-recorder-name default
 ```
 
 ## 6. 모범 사례

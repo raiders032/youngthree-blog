@@ -1,8 +1,8 @@
 ---
-title: "Context"
+title: "CoroutineContext"
 description: "Project Reactor의 Context에 대해 상세히 알아봅니다. 기본 개념부터 실전 활용 패턴, 주의사항까지 실제 예제와 함께 설명합니다. 리액티브 프로그래밍에서 컨텍스트를 효과적으로 활용하고 싶은 개발자를 위한 실용적인 가이드입니다."
 tags: ["REACTOR", "REACTIVE_PROGRAMMING", "SPRING_WEBFLUX", "SPRING", "BACKEND", "JAVA"]
-keywords: ["프로젝트 리액터", "Project Reactor", "컨텍스트", "Context", "리액티브", "Reactive", "웹플럭스", "WebFlux", "스프링", "Spring", "백엔드", "Backend", "자바", "Java", "리액티브 스트림", "Reactive Streams", "컨텍스트 전파", "Context Propagation"]
+keywords: ["프로젝트 리액터", "Project Reactor", "컨텍스트", "CoroutineContext", "리액티브", "Reactive", "웹플럭스", "WebFlux", "스프링", "Spring", "백엔드", "Backend", "자바", "Java", "리액티브 스트림", "Reactive Streams", "컨텍스트 전파", "CoroutineContext Propagation"]
 draft: false
 hide_title: true
 ---

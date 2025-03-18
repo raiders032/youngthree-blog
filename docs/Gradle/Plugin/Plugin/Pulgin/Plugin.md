@@ -121,7 +121,7 @@ java {
 - 바이너리 플러그인은 독립적인 JAR 파일로 배포되는 플러그인입니다.
 - 바이너리 플러그인은 다른 프로젝트에서 사용이 가능합니다.
 	- 빌드 스크립트에서 `plugins { id 'org.example.greeting' }` 형태로 적용 가능합니다.
-- [바이너리 플러그인 구현법은 여기를 참고하세요](../ImplementingBinaryPlugins/ImplementingBinaryPlugins.md)
+- [바이너리 플러그인 구현법은 여기를 참고하세요](../../ImplementingBinaryPlugins/ImplementingBinaryPlugins.md)
 
 #### 플러그인 프로젝트 구조
 

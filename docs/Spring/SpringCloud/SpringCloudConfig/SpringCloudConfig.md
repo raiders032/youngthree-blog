@@ -2,7 +2,7 @@
 title: "Spring Cloud Config"
 description: "Spring Cloud Config의 기본 개념부터 실전 활용, Kubernetes ConfigMap과의 비교까지 상세히 알아봅니다. 설정 파일 관리와 동적 설정 변경을 위한 최적의 선택을 도와드립니다."
 tags: ["SPRING_CLOUD_CONFIG", "SPRING_CLOUD", "KUBERNETES", "CONFIGMAP", "SPRING", "DEVOPS", "BACKEND"]
-keywords: ["스프링 클라우드 컨피그", "spring cloud config", "컨피그맵", "configmap", "설정 관리", "configuration management", "스프링", "spring", "쿠버네티스", "kubernetes"]
+keywords: ["스프링 클라우드 컨피그", "spring cloud config", "컨피그맵", "configmap", "설정 관리", "Configuration management", "스프링", "spring", "쿠버네티스", "kubernetes"]
 draft: false
 hide_title: true
 ---

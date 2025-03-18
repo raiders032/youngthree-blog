@@ -18,7 +18,7 @@
 		- 그러나 자주 사용되는 상위 레벨 노드들은 메모리에 캐시되어 있을 가능성이 높아 실제 디스크 I/O는 더 적을 수 있다.
 - 최근에는 하드 디스크보다 SSD 드라이브가 많이 활용되고 있지만, 여전히 데이터 저장 매체는 컴퓨터에서 가장 느린 부분이다.
 - 따라서 데이터베이스의 성능 튜닝은 어떻게 디스크 I/O를 줄이느냐가 관건이다.
-- [Mass Storage Structure](../../ComputerScience/OS/Mass-Storage-Structure/Mass-Storage-Structure.md) 디스크의 구조 참고
+- [Mass Storage Structure](../../../ComputerScience/OS/Mass-Storage-Structure/Mass-Storage-Structure.md) 디스크의 구조 참고
 
 **주요 장치의 초당 처리 횟수**
 
@@ -122,7 +122,7 @@
 
 ### 3.2 Secondary Indexing
 
-![Secondary Index.png](images/Secondary%20Index.png)
+![Secondary Index.png](images/Secondary Index.png)
 
 - non-clustering Index라고도 한다
 - 인덱스의 탐색 키 값에 따라 **데이터 파일이 정렬되어 있는 않은 경우**를 말한다.
@@ -186,16 +186,18 @@
 
 ### 6.1 B-Tree
 
-- 가장 일반적으로 사용되는 인덱스 알고리즘
-- 칼럼의 값을 변형하지 않고 원래의 값을 이용해 인덱싱하는 알고리즘
+- 가장 일반적으로 사용되는 인덱스 알고리즘입니다.
+- B-Tree는 균형 트리로, 모든 리프 노드가 같은 깊이에 있습니다.
+- [B-Tree 참고](../../../ComputerScience/DataStructure/B-Tree/B-Tree.md)
 
 ### 6.2 B+Tree
 
-- B-Tree를 개선시킨 자료구조이다.
-- B-Tree의 모든 노드에 존재하는 Key마다 Record Pointer를 가지고 있다
-	- B+Tree는 리프 노드만 Key마다 Record Pointer를 가지고 있다
-- 리프노드들은 LinkedList로 연결되어 있다.
-- BTree의 리프노드들을 LinkedList로 연결하여 순차검색을 용이하게 하는 등 BTree를 인덱스에 맞게 최적화하였다
+- B-Tree를 개선시킨 자료구조입니다.
+- B-Tree의 모든 노드에 존재하는 Key마다 Record Pointer를 가지고 있습니다.
+	- B+Tree는 리프 노드만 Key마다 Record Pointer를 가지고 있습니다.
+- 리프노드들은 LinkedList로 연결되어 있습니다.
+- B-Tree의 리프노드들을 LinkedList로 연결하여 순차검색을 용이하게 하는 등 B-Tree를 인덱스에 맞게 최적화하였습니다.
+- [B+Tree 참고](../../../ComputerScience/DataStructure/B+Tree/B+Tree.md)
 
 ### 6.3 `B*Tree`
 

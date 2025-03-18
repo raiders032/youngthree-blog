@@ -442,7 +442,7 @@ nvme0n1     259:0    0 931.5G  0 disk
 2023-02-18 03:51:37.431765 D | exec: Running command: stdbuf -oL ceph-volume --log-path /tmp/ceph-log raw list --format json
 2023-02-18 03:51:37.819921 D | cephosd: {}
 2023-02-18 03:51:37.819948 I | cephosd: 0 ceph-volume raw osd devices configured on this node
-2023-02-18 03:51:37.819959 W | cephosd: skipping OSD configuration as no devices matched the storage settings for this node "af-k8s-worker-01"
+2023-02-18 03:51:37.819959 W | cephosd: skipping OSD Configuration as no devices matched the storage settings for this node "af-k8s-worker-01"
 ```
 
 

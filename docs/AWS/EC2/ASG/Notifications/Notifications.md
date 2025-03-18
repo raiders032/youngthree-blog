@@ -49,7 +49,7 @@ hide_title: true
 ### 3.3 AWS CLI를 통한 구성
 
 ```bash
-aws autoscaling put-notification-configuration \
+aws autoscaling put-notification-Configuration \
   --auto-scaling-group-name my-asg \
   --topic-arn arn \
   --notification-types \
@@ -109,7 +109,7 @@ aws:SourceArn과 aws:SourceAccount 조건 키는 암호화된 토픽에 대한 �
 - 더 이상 알림이 필요하지 않은 경우, 다음 명령어로 구성을 삭제할 수 있습니다:
 
 ```bash
-aws autoscaling delete-notification-configuration \
+aws autoscaling delete-notification-Configuration \
   --auto-scaling-group-name my-asg \
   --topic-arn arn
 ```

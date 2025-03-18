@@ -126,7 +126,7 @@ $ echo "0eksmd2sj3f8c6028aff475475a457d380053f9d01877d5hcc01a17b2a91161d action
 ##  Extract the installer  
 $ tar xzf ./actions-runner-linux-x64-2.317.0.tar.gz
 
-##  Create the runner and start the configuration experience  
+##  Create the runner and start the Configuration experience  
 $ ./config.sh --url https://github.com/Project --token ALQA7YXCS8A5SZVDJSZLA2EDAZPO2X2
 
 ##  서비스 설치
@@ -171,7 +171,7 @@ $ tar xzf ./actions-runner-osx-x64-2.317.0.tar.gz
 
 ```bash
 
-##  Create the runner and start the configuration experience
+##  Create the runner and start the Configuration experience
 $ ./config.sh --url https://github.com/ --token <TOKEN>  
 
 ##  Last step, run it!   

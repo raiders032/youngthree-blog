@@ -2,7 +2,7 @@
 title: "Profiles"
 description: "스프링 프로파일의 개념부터 실전 활용까지 상세히 알아봅니다. 개발, 테스트, 운영 환경별 설정 관리와 조건부 빈 등록 등 실무에서 필요한 모든 내용을 다룹니다."
 tags: [ "SPRING", "SPRING_BOOT", "CONFIGURATION", "JAVA", "BACKEND" ]
-keywords: [ "스프링 프로파일", "spring profiles", "프로파일", "profiles", "스프링", "spring", "환경설정", "configuration", "개발환경", "운영환경", "테스트환경", "조건부 빈", "환경변수" ]
+keywords: [ "스프링 프로파일", "spring profiles", "프로파일", "profiles", "스프링", "spring", "환경설정", "Configuration", "개발환경", "운영환경", "테스트환경", "조건부 빈", "환경변수" ]
 draft: false
 hide_title: true
 ---
