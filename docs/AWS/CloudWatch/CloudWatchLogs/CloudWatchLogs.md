@@ -39,7 +39,7 @@
 - **AWS Lambda**: 로그 이벤트가 발생할 때 Lambda 함수를 호출하여 실시간 처리를 수행할 수 있습니다.
 - **OpenSearch**: 로그 데이터를 OpenSearch로 전송하여 강력한 검색 및 분석 기능을 활용할 수 있습니다.
 
-# 3 로그 데이터 소스
+## 3 로그 데이터 소스
 
 - CloudWatch Logs의 주요 로그 데이터 소스는 다음과 같습니다.
 - **SDK**: AWS SDK를 사용하여 애플리케이션에서 직접 로그를 CloudWatch Logs로 전송할 수 있습니다.
