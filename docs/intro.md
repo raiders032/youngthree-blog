@@ -54,6 +54,7 @@ sidebar_position: 1
 
 ### 🏗 Infrastructure & Cloud
 
+- [리눅스 서버](Linux/index.md)
 - 컨테이너 & 오케스트레이션
 	- [Docker](Docker/index.md)
 	- [Kubernetes](Kubernetes/index.md)
