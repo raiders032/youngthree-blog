@@ -201,74 +201,7 @@ fun main(args: Array<String>){
 }
 ```
 
-## 8 확장 함수
-
-- 확장 함수란 어떤 클래스의 멤버 메서드인 것처럼 호출할 수 있지만 그 클래스 밖에 선언된 함수다.
-- 확장 함수는 마치 기존 클래스에 새로운 메서드를 추가하는 것과 같다.
-- 확장 함수를 만드려면 추가하려는 함수 이름 앞에 확장할 클래스의 이름을 덧붙인다.
-	- 여기서 클래스 이름을 수신 객체 타입(reveiver type)이라고 한다.
-	- `수신 객체 타입`: 확장이 정의될 클래스의 타입
-	- 확장 함수가 호출된는 대상이 되는 객체를 수신 객체(reveicer object)라고 한다.
-	- `수신 객체`: 그 클래스에 속한 인스턴스 객체
-- 수신 객체 타입으로 자바, 코틀린, 그루비 중 어떤 것으로 작성됐는가는 중요하지 않다.
-	- 자바 클래스로 컴파일할 수 있는 클래스는 원하는 대로 확장할 수 있다.
-- 내부적으로 확장 함수는 수식 객체를 첫 번째 인자로 받는 정적 메서드다.
-	- 확장 함수는 단지 정적 메서드 호출에 대한 문법적 편의다.
-- 어떤 클래스를 확장한 함수와 그 클래스 멤버 함수의 이름과 시그니처가 같으면 멤버 함수가 호출된다
-	- 멤버 함수의 우선순위가 더 높다.
-
-**예시**
-
-```kotlin
-package strings
-
-// String이 수식 객체 타입이고 this가 수신 객체이다.
-fun String.lastChar(): Char = this.get(this.length - 1)
-
-// 일반 메서드와 마찬가지로 this를 생략할 수 있다.
-fun String.lastChar(): Char = get(length - 1)
-
-// "Kotlin"이 수신 객체다.
-fun main() {
-    println("Kotlin".lastChar())
-}
-```
-
-```java
-// 자바로 변환된 정적 메서드
-public class StringExtensionsKt {
-    public static char lastChar(String receiver) {
-        return receiver.charAt(receiver.length() - 1);
-    }
-}
-```
-
-### 8.1 확장 함수와 캡슐화
-
-- `확장 함수는 캡슐화를 깨트리지 않는다!`
-- 클래스 안에서 정의한 메서드와 달리 확장 함수 안에서는 클래스 내부에서만 사용할 수 있는 private, protected 멤버를 사용할 수 없다.
-
-### 8.2 확장 함수 임포트
-
-- 확장 함수를 정의하고 자동으로 프로젝트 안의 모든 소스코드에서 해당 함수를 사용할 수 없다.
-- 다른 클래스나 함수와 마찬가지로 임포트가 필요하다.
-
-**예시**
-
-```kotlin
-import strings.lastChar
-val c = "Kotlin".lastChar
-```
-
-```kotlin
-import strings.lastChar as last
-val c = "Kotlin".last
-```
-
-- as 키워드를 사용하면 임포트한 클래스나 함수를 다른 이름으로 부를 수 있다.
-- 같은 이름을 가진 확장 함수를 한 파일에서 사용할 때 as를 사용해 다른 이름을 부여하자
-
-## 10 중위 호출
+## 8 중위 호출
 
 - [레퍼런스](https://kotlinlang.org/docs/functions.html#infix-notation)
 - 맵을 만들 때 아래와 같이 mapOf 함수를 이용한다.
@@ -312,7 +245,7 @@ infix fun Int.shl(x: Int): Int { ... }
 1.shl(2)
 ```
 
-## 11 로컬 함수
+## 9 로컬 함수
 
 - 코틀린에서는 함수에서 추출한 함수를 원 함수 내부에 중첩시킬 수 있다.
 - 중첩된 함수를 로컬 함수라고 한다.

@@ -13,6 +13,10 @@ title: "Spring"
 - [Spring Retry](SpringRetry/SpringRetry.md)
 - [Spring Boot Actuator](SpringBootActuator/index.md)
 
+### Spring MVC
+
+[Spring MVC Exception Handling](SpringMVCExceptionHandling/SpringMVCExceptionHandling.md)
+
 ### Spring WebFlux
 
 - [Introduction](SpringWebflux/Introduction/Introduction.md)
