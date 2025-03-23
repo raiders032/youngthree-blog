@@ -1,8 +1,9 @@
 ## 1 Isolation levels
 
 - 트랜잭션의 격리 수준(Isolation levels)이란 동시에 여러 트랜잭션이 처리될 때, 특정 트랜잭션이 다른 트랜잭션에서 변경하거나 조회하는 데이터를 볼 수 있도록 허용할지 말지를 결정하는 것이다.
-- 격리 수준에는 `READ UNCOMMITTED`,  `READ COMMITTED`, `REAPEATABLE READ`, `SERIALIZABLE`이 있습니다.
-	- 순서대로 뒤로 갈수록 격리 정도가 높아지며 동시에 동시성도 떨어집니다.
+- ANSI 표준은 트랜잭션의 격리 수준을 4단계로 나누어 정의했습니다.
+  - 격리 수준에는 `READ UNCOMMITTED`,  `READ COMMITTED`, `REAPEATABLE READ`, `SERIALIZABLE`이 있습니다.
+  - 순서대로 뒤로 갈수록 격리 정도가 높아지며 동시에 동시성도 떨어집니다.
 - `READ UNCOMMITTED`, `SERIALIZABLE`은 일반적으로 잘 사용되지 않습니다.
 - 실질적으로 `Serializable` 을 제외한 3가지 격리 수준의 성능 간에 큰 차이는 없습니다.
 - 일반적인 온라인 서비스 용도의 데이터베이스는 `READ COMMITTED`, `REAPEATABLE READ` 둘 중에서 하나를 선택합니다.

@@ -18,10 +18,15 @@ docs/WIP
 .env.test.local
 .env.production.local
 
+# private files
+/private
+
+# Goggle Drive
+docs/.tmp.drivedownload
+docs/.tmp.driveupload
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-/private
 
 .idea

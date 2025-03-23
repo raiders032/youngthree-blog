@@ -479,11 +479,12 @@ public class MemberRepositoryV1 {
 }
 ```
 
-- `DataSource`의 구현체를 `DriverManagerDataSource`에서 `HikariDataSource`로 변경하더라도 MemberRepositoryV1은 `DataSource` 인터페이스에만 의존하므로 애플리케이션 코드를 변경할 필요가 없습니다.
+- `DataSource`의 구현체를 `DriverManagerDataSource`에서 `HikariDataSource`로 변경하더라도 MemberRepositoryV1은 `DataSource` 인터페이스에만
+  의존하므로 애플리케이션 코드를 변경할 필요가 없습니다.
 
 ### 5.6 스프링에서 DataSource 설정과 의존성 주입
 
-- 실제 스프링 애플리케이션에서는 DataSource를 빈으로 등록하고 의존성 주입(DI)을 통해 사용합니다. 
+- 실제 스프링 애플리케이션에서는 DataSource를 빈으로 등록하고 의존성 주입(DI)을 통해 사용합니다.
 - 스프링의 DI를 활용하면 구현 기술을 변경할 때 애플리케이션 코드를 수정할 필요 없이 설정만 변경하면 됩니다.
 
 #### 5.6.1 JavaConfig 방식 설정

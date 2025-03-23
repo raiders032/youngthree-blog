@@ -12,7 +12,7 @@ keywords: [
   "required", "requires new", "nested",
   "물리적 트랜잭션", "논리적 트랜잭션",
   "스프링부트", "spring boot",
-  "@Transactional"
+  "@Transaction"
 ]
 draft: false
 hide_title: true

@@ -26,7 +26,8 @@ title: "Java"
 - [Java Bean](Java-Bean/Java-Bean.md)
 	- POJO
 - [JDBC](./Database/JDBC/JDBC.md)
-	- DriverManager
+	- DriverManager, Connection, Statement, PreparedStatement, ResultSet
+  - Connection Pool, DataSource
 - [JSP](JSP/JSP.md)
 - [JVM](JVM/README.md)
 	- Class Loader, Runtime Data Area, Execution Engine

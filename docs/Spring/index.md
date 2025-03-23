@@ -15,7 +15,6 @@ title: "Spring"
 - [Spring Boot Actuator](SpringBootActuator/index.md)
 - [AOP](AOP/AOP.md)
 - [JdbcTemplate](JdbcTemplate/JdbcTemplate.md)
-- [DataSource](DataSource/DataSource.md)
 
 ### Spring MVC
 

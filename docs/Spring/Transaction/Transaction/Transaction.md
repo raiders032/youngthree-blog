@@ -1,8 +1,8 @@
 ---
 title: "Spring Transaction"
-description: "Spring의 트랜잭션 관리 방식과 @Transactional 어노테이션의 사용법, 예외 처리 전략에 대해 간결하게 설명합니다. 실제 예시 코드와 함께 트랜잭션 롤백 동작을 이해하는 데 필요한 핵심 내용을 다룹니다."
+description: "Spring의 트랜잭션 관리 방식과 @Transaction 어노테이션의 사용법, 예외 처리 전략에 대해 간결하게 설명합니다. 실제 예시 코드와 함께 트랜잭션 롤백 동작을 이해하는 데 필요한 핵심 내용을 다룹니다."
 tags: ["SPRING", "TRANSACTION", "JAVA", "BACKEND"]
-keywords: ["스프링", "Spring", "트랜잭션", "Transaction", "@Transactional", "롤백", "rollback", "예외처리", "exception handling", "checked exception", "unchecked exception"]
+keywords: ["스프링", "Spring", "트랜잭션", "Transaction", "@Transaction", "롤백", "rollback", "예외처리", "exception handling", "checked exception", "unchecked exception"]
 draft: false
 hide_title: true
 ---
@@ -167,3 +167,5 @@ public class DocumentProcessingException extends Exception {
     }
 }
 ```
+
+## 참고
