@@ -227,7 +227,7 @@ public class Member {
 
 ##  5 임베디드 타입과 테이블 매핑
 
-<img src="images/table.png" alt="자바 ORM 표준 JPA 프로그래밍(11) - 값 타입" style="zoom:50%;" />
+![자바 ORM 표준 JPA 프로그래밍(11) - 값 타입](images/table.png)
 
 * 임베디드 타입을 엔티티의 값일 뿐이다
 * 따라서 값이 속한 엔티티의 테이블에 매핑한다
