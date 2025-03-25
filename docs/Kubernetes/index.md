@@ -13,11 +13,11 @@ title: "Kubernetes"
 * [Affinity](Affinity/Affinity.md)
   * Node Affinity, Pod Affinity
 * [Annotations](Annotations/Annotations.md)
-* [Ceph.md](ceph/ceph.md) 
+* [Ceph.md](ceph/ceph.md)
 * [CNI](CNI/CNI.md)
 * [ConfigMap](ConfigMap/ConfigMap.md)
 * [CRI](CRI/CRI.md)
-* [CronJob](CronJob/CronJob.md) 
+* [CronJob](CronJob/CronJob.md)
 * [DaemonSet](DaemonSet/DaemonSet.md)
 * [EFK](EFK/EFK.md)
 * [Ingress](Ingress/Ingress.md)
@@ -27,10 +27,10 @@ title: "Kubernetes"
   * Node Components: kubelet, kube-proxy, Container runtime
 * [Labels And Selectors](Labels-And-Selectors/Labels-And-Selectors.md)
   * nodeSelector
-* [Logging Architecture](Logging-Architecture/Logging-Architecture.md) 
-* [MetalLB](MetalLB/MetalLB.md) 
+* [Logging Architecture](Logging-Architecture/Logging-Architecture.md)
+* [MetalLB](MetalLB/MetalLB.md)
 * [Namespace](Namespace/Namespace.md)
-* [Persistent Volumes](Persistent-Volumes/Persistent-Volumes.md) 
+* [Persistent Volumes](Persistent-Volumes/Persistent-Volumes.md)
   * PersistentVolume, PersistentVolumeClaim
   * StorageClass, Dynamic Provisioning
 * [Pod](Pod/Pod.md)
@@ -51,11 +51,12 @@ title: "Kubernetes"
   * kube-proxy
 * [StatefulSet](StatefulSet/StatefulSet.md)
 * [Taints And Tolerations](Taints-And-Tolerations/Taints-And-Tolerations.md)
-* [Troubleshooting](Troubleshooting/README.md) 
+* [Troubleshooting](Troubleshooting/README.md)
 * [Volume](Volumes/Volumes.md)
   * emptyDir, hostPath
 
 참고
+
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
 * [쿠버네티스 인 액션](https://product.kyobobook.co.kr/detail/S000001804912)
 * [쿠버네티스 완벽 가이드](http://www.yes24.com/Product/Goods/102847901)

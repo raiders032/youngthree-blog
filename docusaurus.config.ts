@@ -107,6 +107,14 @@ const config: Config = {
                 },
             ],
         },
+        algolia: {
+            appId: 'SY4OB1RDU7',
+            apiKey: '72a9182ad487c6b58032ff5cb476a480',
+            indexName: 'youngthree',
+            contextualSearch: true,
+            searchPagePath: 'search',
+            insights: false,
+        },
         giscus: {
             repo: 'raiders032/youngthree-blog',
             repoId: 'R_kgDONREpvQ',

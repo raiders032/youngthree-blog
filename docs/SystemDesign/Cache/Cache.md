@@ -76,7 +76,7 @@ hide_title: true
 	- 데이터 불일치가 발생할 수 있습니다. (캐시와 데이터베이스 간)
 	- 캐시 서버 장애 시 아직 데이터베이스에 쓰이지 않은 데이터가 손실될 위험이 있습니다.
 
-### 2.5 적절한 캐시 전략 선택하기
+## 3 적절한 캐시 전략 선택하기
 
 - 각 캐시 전략에는 고유한 장단점이 있으며, 애플리케이션의 특정 요구에 따라 적합한 전략을 선택해야 합니다.
 - 아래는 각 캐시 전략의 특징과 장단점을 비교한 내용입니다.
@@ -102,25 +102,144 @@ hide_title: true
 		- **데이터 일관성 문제** : 데이터베이스와 캐시 간의 데이터 일관성 유지가 어렵고, 적절한 동기화 메커니즘이 필요합니다.
 		- **데이터 손실 위험** : 시스템 장애가 발생하면 데이터베이스에 기록되지 않은 캐시 데이터가 손실될 수 있습니다.
 
-## 3 유의사항
+### 3.1 강한 일관성이 필요한 경우
+
+#### 3.1.1 Write-Through 전략
+
+- 강한 일관성이 필요한 경우에는 Write-Through 전략을 사용하는 것이 좋습니다.
+- 이 전략은 데이터베이스와 캐시 간의 일관성을 보장하며, 데이터베이스에 직접 쓰기 작업을 수행합니다.
+- 따라서 모든 데이터 변경 작업이 DB와 캐시에 동시에 적용됩니다.
+- 모든 쓰기 작업에 오버헤드 발생, 트랜잭션 실패 시 캐시 불일치 가능성이 있습니다.
+
+```java
+@Service
+@Transactional
+public class StrongConsistencyService {
+    
+    @Autowired
+    private Repository repository;
+    
+    @Autowired
+    private CacheManager cacheManager;
+    
+    public Entity update(EntityDto dto) {
+        // 1. DB 업데이트
+        Entity updated = repository.save(convertToEntity(dto));
+        
+        // 2. 캐시 즉시 업데이트 (동일 트랜잭션 내)
+        cacheManager.getCache("entityCache").put(updated.getId(), updated);
+        
+        return updated;
+    }
+}
+```
+
+- update 메서드에서 DB를 업데이트한 후 캐시를 즉시 업데이트합니다.
+- 따라서 다음 findById 호출 시 캐시가 최신 데이터를 반환합니다.
+
+#### 3.1.2 캐시-어사이드(Cache-Aside) + 즉시 무효화 패턴
+
+- 캐시-어사이드(Cache-Aside) 패턴과 함께 데이터 변경 시 즉시 캐시를 무효화하는 전략입니다.
+- 이 방법은 데이터베이스에 쓰기 작업을 수행한 후 캐시를 무효화하여 다음 요청 시 캐시가 최신 데이터를 반환하도록 합니다.
+
+```java
+@Service
+public class CacheAsideWithInvalidationService {
+    
+    @Autowired
+    private Repository repository;
+    
+    @Autowired
+    private CacheManager cacheManager;
+    
+    @Cacheable(cacheManager = "cacheManager", value = "entityCache")
+    public Entity findById(Long id) {
+        // 캐시 미스 시 DB에서 로드
+        return repository.findById(id).orElse(null);
+    }
+    
+    @Transactional
+    public Entity update(EntityDto dto) {
+        // 1. DB 업데이트
+        Entity updated = repository.save(convertToEntity(dto));
+        
+        // 2. 캐시 즉시 무효화 (삭제)
+        cacheManager.getCache("entityCache").evict(updated.getId());
+        
+        return updated;
+    }
+}
+```
+
+- findById에서 캐시-어사이드(Cache-Aside) 패턴으로 캐시를 사용하고 있습니다.
+- update 메서드에서 DB를 업데이트한 후 캐시를 즉시 무효화합니다.
+- 따라서 다음 findById 호출 시 캐시가 비워져 DB에서 최신 데이터를 가져옵니다.
+
+#### 3.1.3 분산 이벤트 기반 캐시 무효화
+
+- 분산 시스템에서는 캐시 무효화 이벤트를 발생시켜 여러 인스턴스에서 캐시를 동기화할 수 있습니다.
+- 분산 환경에서 모든 인스턴스 간 캐시 일관성 보장합니다.
+- 하지만 메시징 인프라 의존성이 생깁니다.
+- 또한 메시지 전달 지연에 따른 일시적 불일치가 발생할 수 있습니다.
+
+```java
+// 이벤트 발행 서비스
+@Service
+@Transactional
+public class DataChangeService {
+    
+    @Autowired
+    private KafkaTemplate<String, CacheInvalidationEvent> kafkaTemplate;
+    
+    public Entity update(EntityDto dto) {
+        // 1. DB 업데이트
+        Entity updated = repository.save(convertToEntity(dto));
+        
+        // 2. 캐시 무효화 이벤트 발행 (분산 시스템 전체에 전파)
+        kafkaTemplate.send("cache-invalidation-topic", 
+            new CacheInvalidationEvent("entityCache", updated.getId()));
+        
+        return updated;
+    }
+}
+
+// 모든 서비스 인스턴스에서 구독
+@Component
+public class CacheInvalidationListener {
+    
+    @Autowired
+    private CacheManager cacheManager;
+    
+    @KafkaListener(topics = "cache-invalidation-topic")
+    public void handleCacheInvalidation(CacheInvalidationEvent event) {
+        // 이벤트 수신 시 로컬 캐시 무효화
+        cacheManager.getCache(event.getCacheName()).evict(event.getKey());
+    }
+}
+```
+
+- DB 업데이트 발생 시 캐시 무효화 이벤트를 발행합니다.
+- 모든 서비스 인스턴스에서 이 이벤트를 구독하여 캐시를 무효화합니다.
+
+## 4 유의사항
 
 - 캐시는 주로 갱신이 자주 일어나지 않고 참조가 빈번한 데이터에 적합합니다.
 - 데이터를 휘발성 메모리에 저장하기 때문에, 중요한 데이터는 영구적인 데이터 저장소에 보관해야 합니다.
 - 캐시에 저장된 데이터는 만료 정책에 따라 주기적으로 갱신되거나 삭제되어야 합니다.
 
-### 3.1 휘발성
+### 4.1 휘발성
 
 - 캐시는 데이터를 휘발성 메모리에 두므로 영속적으로 보관할 데이터는 캐시에 두는 것은 바람직하지 않다
 - 중요한 데이터는 여전히 persistent data store에 저장해야 한다
 
-### 3.2 만료 정책
+### 4.2 만료 정책
 
 - 캐시에 보관된 데이터의 만료 정책을 정해야한다
 - 만료 기한이 없는 경우 데이터가 캐시를 가득 채운다
 - 만료 기한이 너무 짧은 경우 데이터베이스를 더 많이 접근하게 될 것이다
 - 만료 기한이 너무 긴 경우 캐시된 데이터가 원본과 차이가 날 경우가 많아진다
 
-### 3.3 Cache Stampede
+### 4.4 Cache Stampede
 
 - 만료 기한이 너무 짧은 경우 캐시에 대한 요청이 동시에 들어오면 캐시가 만료되어 데이터베이스에 대한 요청이 동시에 들어가게 된다
 - 혹은 캐시가 전부 같은 시간에 만료되도록 구현하면 같은 문제가 발생할 수 있다
@@ -132,25 +251,25 @@ hide_title: true
 - 지터는 전자 신호를 읽는 과정에서 발생하는 짧은 지연 시간을 의미합니다.
 - 캐시 만료 시간에 랜덤한 값을 더해주면 캐시 갱신 시간이 겹치는 것을 방지할 수 있다
 
-### 3.4 일관성(consistency)
+### 4.4 일관성(consistency)
 
 - 일관성이란 데이터 저장소의 원본가 캐시 내의 사본이 같은지의 여부를 의미한다
 - 저장소의 데이터를 갱신하는 연산과 캐시를 갱신하는 연산이 단일 트랜잭션으로 처리되지 않는 경우 일관성이 깨질 수 있다
 
-### 3.5 장애 대처
+### 4.5 장애 대처
 
 - 캐시 서버를 한 대만 두는 경우 해당 서버는 단일 장애 지점(Single Point of Failure)이 되어버린다
 - 어떤 특정 지점에서의 장애가 전체 시스템의 동작을 중단시켜버릴 수 있는 경우 이 특정 지점을 `Single Point of Failure`라고 한다
 - 결과적으로 `Single Point of Failure`를 피하려면 여러 지역에 걸쳐 캐시 서버를 분산해야 한다
 
-### 3.6 메모리 크기 설정
+### 4.6 메모리 크기 설정
 
 - 캐시 메모리 크기는 얼마나 크게 잡아야 할까?
 - 캐시 메모리가 너무 작으면 액세스 패턴에 따라 데이터가 너무 자주 캐시에서 밀려나버려 캐시의 성능이 떨어지게 된다
 - 이를 막을 방법으로 캐시 메모리를 과할당 하는 것이다
 	- 이렇게 하면 캐시에 보관될 데이터가 갑자기 늘어났을 때 생길 문제도 방지할 수 있다
 
-### 3.7 데이터 방출 정책
+### 4.7 데이터 방출 정책
 
 - 캐시가 꽉 차버리면 추가로 캐시에 데이터를 넣어야 할 경우 기존 데이터를 내보내야 한다
 - 이것을 캐시 데이터 방출 정책이라고 한다
@@ -158,7 +277,7 @@ hide_title: true
 - LFU(Least Frequently Used): 사용된 빈도가 가장 낮은 데이터를 방출
 - FIFO(First In First Out): 가장 먼저 캐시에 들어온 데이터를 방출
 
-### 3.8 Cache Penetration
+### 4.8 Cache Penetration
 
 - Cache에서 캐시 미스가 발생할 때 데이터베이스에서 데이터를 가져오게 됩니다.
 - 그런데 데이터베이스에서도 해당 값이 없어 null을 반환받는 경우 반환 값인 null을 캐시에 채우지 않도록 구현하는 경우가 있습니다.
@@ -172,7 +291,7 @@ hide_title: true
 - 원시 타입의 경우 특정 값을 지정하여 '값이 없음'을 표현할 수 있습니다.
 - 예를 들어, 양수만 존재하는 정수 타입 데이터를 캐싱할 때는 정수의 최솟값과 같은 음수 값으로 '값이 없음'을 표현합니다.
 
-### 3.9 Hot Key (핫키) 만료
+### 4.9 Hot Key (핫키) 만료
 
 - 핫키는 매우 자주 접근되는 캐시의 키를 의미합니다.
 - 이런 핫키가 동시에 만료되면 다음과 같은 문제가 발생할 수 있습니다:
@@ -192,12 +311,12 @@ hide_title: true
 		- Redis의 싱글 스레드 특성을 활용한 알고리즘으로, 다양한 프로그래밍 언어에서 라이브러리를 제공합니다.
 	- 이를 통해 불필요한 데이터베이스 중복 조회를 방지하고 캐시 히트율을 유지할 수 있습니다.
 
-## 4 CDN(Content delivery network)
+## 5 CDN(Content delivery network)
 
 - CDN은 정적 콘텐츠를 전송하는 데 쓰이는 지리적으로 분산된 네트워크이다
 - 이미지, 비디오, CSS, JavaScript 파일을 등을 캐시할 수 있다
 
-### 4.1 CDN 동작과정
+### 5.1 CDN 동작과정
 
 1. 사용자 A가 이미지 URL을 이용해 이미지에 접근한다
 	- URL의 도메인은 CDN 서비스 사업자가 제공한 것
@@ -206,18 +325,18 @@ hide_title: true
 3. 원본 서버가 CDN 서버에게 이미지를 반환한다
 	- 응답 헤더에 TTL 값이 명시되어 있다
 	- TTL은 해당 데이터의 만료시간을 의미한다
-4. CDN 서버는 파일을 캐시하고 사용자 A에게 반환한다
+5. CDN 서버는 파일을 캐시하고 사용자 A에게 반환한다
 	- 이미지는 TTL에 명시된 시간까지 캐시된다
 5. 만료되지 않은 이미지에 대한 요청은 캐시를 통해 처리한다.
 
-### 4.2 CDN 사용 시 고려사항
+### 5.2 CDN 사용 시 고려사항
 
 - CDN은 보통 third party에서 운영하므로 CDN으로 들어가고 나가는 데이터 전송 양에 따라 요금을 내게 된다. 따라서 자주 사용되지 않는 콘텐츠는 CDN에 캐싱하지 말자
 - 적절한 만료시간을 설정해야 하는데 너무 길면 신선도가 떨어지고 너무 짧으면 원본 서버에 빈번히 접속해 성능상 좋지 않다
 - CDN 자체가 죽을 경우 애플리케이션이 어떻게 동작해야 하는지 고려해야 한다
 	- 가령 CDN이 응답하지 않을 경우 원본 서버로로 부터 직접 콘텐츠를 가져오도록 클라이언트를 구성한다
 
-### 4.3 장점
+### 5.3 장점
 
 - 정적 콘텐츠를 더이상 웹 서버에서 서비스하지 않으며 CDN을 통해 제공하여 더 나은 성능을 보장
 - 캐시가 데이터베이스 부하를 줄여준다

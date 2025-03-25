@@ -7,15 +7,11 @@
 - 노드 자체적으로 시크릿을 항상 메모리에만 저장한다.
   - 물리저장소에 기록하지 않아 시크릿을 삭제한 후에 디스크를 완전이 삭제하는 작업이 필요없다.
 
-
-
 ### 1.1 용도
 
 - 시크릿은 다음과 같은 상황에 사용할 수 있다.
 - 환경변수로 시크릿 항목을 컨테이너에 전달
 - 시크릿 항목을 볼륨 파일로 노출
-
-
 
 ### 1.2 컨피그맵과 비교
 
@@ -25,31 +21,23 @@
 - Secret 매니페스트는 base64로 인코딩되어 있지만 암호화되어 있지 않다
   - 이를 암호화하기 위해서는 kubesec/sealedSecret/ExternalSecret과 같은 오픈 소스 소프트웨어를 이용해보자
 
-
-
 ### 1.3 시크릿의 타입
 
 - 아래와 같은 타입이 있다.
 - [레퍼런스](https://kubernetes.io/docs/concepts/configuration/secret/#secret-types)
 
-| 종류                                  | 개요                                    |      |
-| ------------------------------------- | --------------------------------------- | ---- |
-| `Opaque`                              | 일반적인 범용 용도                      |      |
+| 종류                                    | 개요                                      |      |
+|---------------------------------------|-----------------------------------------|------|
+| `Opaque`                              | 일반적인 범용 용도                              |      |
 | `kubernetes.io/service-account-token` | ServiceAccount token                    |      |
 | `kubernetes.io/dockercfg`             | serialized `~/.dockercfg` file          |      |
 | `kubernetes.io/dockerconfigjson`      | serialized `~/.docker/config.json` file |      |
 | `kubernetes.io/basic-auth`            | credentials for basic authentication    |      |
 | `kubernetes.io/ssh-auth`              | credentials for SSH authentication      |      |
 
-
-
 ## 2 Secret 생성
 
-
-
 ### 2.1 Imperative 방식
-
-
 
 **literal**
 
@@ -58,8 +46,6 @@ $ kubectl create secret generic db-user-pass \
     --from-literal=username=devuser \
     --from-literal=password='S!B\*d$zDsb='
 ```
-
-
 
 **file**
 
@@ -82,8 +68,6 @@ kubectl create secret generic db-user-pass \
     --from-file=password=./password.txt
 ```
 
-
-
 ### 2.2 Declarative 방식
 
 ```yaml
@@ -98,7 +82,6 @@ data:
 ```
 
 - 매니페스트 작성 시 base64로 인코딩된 값을 추가한다.
-
 - 인코딩된 값은 다음과 같이 얻을 수 있다.
 
 ```bash
@@ -109,21 +92,15 @@ YWRtaW4
 - `data`가 아닌 `stringData` 필드를 사용하면 일반 텍스트로 작성할 수 있다.
   - 둘다 설정한 경우 `stringData`가 우선순위가 높다.
 
-
-
 ## 3 imagePullSecrets
 
 - 프라이빗 컨테이너 이미지 레지스트리를 사용하는 경우 쿠버네티스에서 자격증명을 전달하는 것이 필요하다.
 - 공개 이미지 레지스트리에 저장된 이미지는 가져오는데 특별한 자격증명이 필요없다.
 
-
-
 **프라이빗 저장소를 사용하는 파드에 필요한 작업**
 
 - 레지스트리 자격증명을 가진 시크릿 생성
 - 파드 매니페스트에 `imagePullSecrets` 필드에 해당 시크릿 참조
-
-
 
 **Sevice Account에 이미지 풀 시크릿 추가하기**
 
@@ -131,13 +108,9 @@ YWRtaW4
 kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "mySecret"}]}'
 ```
 
-
-
 ### 3.1 도커 허브
 
 - 도커 허브에 프라이빗 레지스트리를 만들 수 있다.
-
-
 
 **도커 레지스트리 인증을 위한 시크릿을 생성**
 
@@ -151,8 +124,6 @@ kubectl create secret docker-registry mydockerhubsecret \
 --docker-email=my@email.com
 ```
 
-
-
 **파드 매니페스트**
 
 ```yml
@@ -162,17 +133,13 @@ metadata:
   name: private-pod
 spec:
   imagePullSecrets:
-  - name: mydockerhubsecret
+    - name: mydockerhubsecret
   containers:
-  - image: username/private:tag
-    name: main
+    - image: username/private:tag
+      name: main
 ```
 
-
-
 ## 4 시크릿 사용
-
-
 
 ### 4.1 환경변수로 컨테이너에 전달
 
@@ -180,15 +147,11 @@ spec:
 - `spec.containers[].env.valuFrom.secretKeyRef` 를 사용한다.
 - [레퍼런스](https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/#define-a-container-environment-variable-with-data-from-a-single-secret)
 
-
-
 **CongifMap 생성**
 
 ```yaml
 kubectl create secret generic backend-user --from-literal=backend-username='backend-admin'
 ```
-
-
 
 **Pod Definition**
 
@@ -201,17 +164,15 @@ metadata:
   name: env-single-secret
 spec:
   containers:
-  - name: envars-test-container
-    image: nginx
-    env:
-    - name: SECRET_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: backend-user
-          key: backend-username
+    - name: envars-test-container
+      image: nginx
+      env:
+        - name: SECRET_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: backend-user
+              key: backend-username
 ```
-
-
 
 **확인**
 
@@ -224,8 +185,6 @@ kubectl exec -i -t env-single-secret -- /bin/sh -c 'echo $SECRET_USERNAME'
 backend-admin
 ```
 
-
-
 ### 4.2 시크릿의 모든 항목을 환경변수로 사용하기
 
 **시크릿 생성**
@@ -233,8 +192,6 @@ backend-admin
 ```bash
 kubectl create secret generic test-secret --from-literal=username='my-app' --from-literal=password='39528$vdg7Jb'
 ```
-
-
 
 **모든 항목 사용하기**
 
@@ -247,14 +204,12 @@ metadata:
   name: envfrom-secret
 spec:
   containers:
-  - name: envars-test-container
-    image: nginx
-    envFrom:
-    - secretRef:
-        name: test-secret
+    - name: envars-test-container
+      image: nginx
+      envFrom:
+        - secretRef:
+            name: test-secret
 ```
-
-
 
 **확인**
 
@@ -270,10 +225,6 @@ username: my-app
 password: 39528$vdg7Jb
 
 ```
-
-
-
-
 
 참고
 
