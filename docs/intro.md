@@ -44,7 +44,7 @@ sidebar_position: 1
 
 - [Message Systems](MessageSystem/index.md)
 	- [Kafka](MessageSystem/Kafka/index.md)
-	- [Redis Pub/Sub](MessageSystem/RedisPubSub/RedisPubSub.md)
+	- [Redis Pub/Sub](Redis/Pub-Sub/Pub-Sub.md)
 - NoSQL
 	- [Redis](Redis/index.md)
 
