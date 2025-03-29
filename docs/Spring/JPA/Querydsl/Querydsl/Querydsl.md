@@ -1,21 +1,21 @@
-##  1 Querydsl
+## 1 Querydsl
 
-* Querydsl은 JPQL 빌더
-* JPQL과 달리 컴파일 시점에 오류를 확인할 수 있다
-  * JPQL은 문자 따라서 실행 시점에 오류가 발생한다
+- Querydsl은 JPQL 빌더입니다.
+  - [JPQL 참고](../../JPQL/JPQL.md)
 
-* JPQL은 파라미터 바인딩을 직접 하지만 Querydsl은 파라미터 바인딩 자동으로 처리해준다
+### 1.1 Querydsl의 이점
 
+- JPQL과 달리 컴파일 시점에 오류를 확인할 수 있습니다. 
+  - JPQL은 문자 따라서 실행 시점에 오류가 발생합니다.
+- JPQL은 파라미터 바인딩을 직접 하지만 Querydsl은 파라미터 바인딩 자동으로 처리해줍니다.
 
+## 2 사용법
 
-##  2 기본 문법
-
-* `EntityManager` 로 `JPAQueryFactory` 생성
-* `JPAQueryFactory`를 필드 레벨로 가져가도 동시성 문제 없이 잘 사용할 수 있다
-  * 동시성 문제는 JPAQueryFactory를 생성할 때 주입되는 EntityManager에 달려있다
-  * 주입되는 `EntityManager` 자체가 Thread Safe하다
-  * 스프링 프레임워크는 여러 쓰레드에서 동시에 같은 EntityManager에 접근해도, 트랜잭션 마다 별도의 영속성 컨텍스트를 제공하기 때문에, 동시성 문제는 걱정하지 않아도 된다.
-
+- `EntityManager` 로 `JPAQueryFactory` 생성합니다.
+- `JPAQueryFactory`를 필드 레벨로 가져가도 동시성 문제 없이 잘 사용할 수 있습니다.
+	- 동시성 문제는 JPAQueryFactory를 생성할 때 주입되는 EntityManager가 해결해줍니다.
+	- 주입되는 `EntityManager` 자체가 Thread Safe합니다.
+  - 스프링 프레임워크는 여러 쓰레드에서 동시에 같은 EntityManager에 접근해도, 트랜잭션 마다 별도의 영속성 컨텍스트를 제공하기 때문에, 동시성 문제는 걱정하지 않아도 됩니다.
 
 ```java
 @SpringBootTest
@@ -46,18 +46,14 @@ public class QuerydslBasicTest {
 }
 ```
 
+## 3 기본 Q-Type 활용
 
-
-##  3 기본 Q-Type 활용
-
-* Q 클래스 인스턴스를 사용하는 두 가지 방법이 있다
-* 하나는 별칭을 직접 지정하는 것이고 다른 하나는 기본 인스턴스를 사용하는 것이다
-
-
+- Q 클래스 인스턴스를 사용하는 두 가지 방법이 있습니다.
+- 하나는 별칭을 직접 지정하는 것이고 다른 하나는 기본 인스턴스를 사용하는 것입니다.
 
 **Q클래스 인스턴스를 사용하는 2가지 방법**
 
-* 같은 테이블을 조인하는 경우가 아니라면 **기본 인스턴스를 사용하자**
+- 같은 테이블을 조인하는 경우가 아니라면 **기본 인스턴스를 사용하자**
 
 ```java
 QMember qMember = new QMember("m"); //별칭 직접 지정 
@@ -66,7 +62,7 @@ QMember qMember = QMember.member; //기본 인스턴스 사용
 
 **기본 인스턴스를 static import와 함께 사용**
 
-* `QMember.member` -> `member` static import하면 깔끔하게 사용할 수 있다
+- `QMember.member` -> `member` static import하면 깔끔하게 사용할 수 있다
 
 ```java
 import static study.querydsl.entity.QMember.*;
@@ -83,13 +79,11 @@ public void startQuerydsl3() {
 }
 ```
 
-
-
-##  4 검색 조건 쿼리
+## 4 검색 조건 쿼리
 
 **Predicate 체이닝**
 
-* 검색조건(Predicate)은 `.and()`,`.or()`를 메서드 체인으로 연결할 수 있다.
+- 검색조건(Predicate)은 `.and()`,`.or()`를 메서드 체인으로 연결할 수 있다.
 
 ```java
 @Test
@@ -103,13 +97,11 @@ public void search() {
 }
 ```
 
-
-
 **Predicate 아규먼트 여러개 넘겨주기**
 
-* where()에 아규먼트로 검색조건(Predicate)을 여러개 추가하면 AND 연산으로 조건들이 묶인다
-* 이 경우 Predicate가 null인 경우는 무시된다 
-* 메서드 추출을 활용해서 동적 쿼리를 깔끔하게 만들 수 있음
+- where()에 아규먼트로 검색조건(Predicate)을 여러개 추가하면 AND 연산으로 조건들이 묶인다
+- 이 경우 Predicate가 null인 경우는 무시된다
+- 메서드 추출을 활용해서 동적 쿼리를 깔끔하게 만들 수 있음
 
 ```java
 @Test
@@ -122,8 +114,6 @@ public void searchAndParam() {
   assertThat(result1.size()).isEqualTo(1);
 }
 ```
-
-
 
 **다양한 검색 조건**
 
@@ -147,13 +137,11 @@ member.username.contains("member") // like ‘%member%’ 검색
 member.username.startsWith("member") //like ‘member%’ 검색
 ```
 
-
-
-##  5 결과 조회
+## 5 결과 조회
 
 **`fetch()`**
 
-* 리스트 조회 데이터가 없으면 빈 리스트 반환
+- 리스트 조회 데이터가 없으면 빈 리스트 반환
 
 ```java
 List<Member> fetch = queryFactory
@@ -163,9 +151,9 @@ List<Member> fetch = queryFactory
 
 **`fetchOne()`**
 
-* 단 건 조회
-* 결과 없으면 null
-* 결과가 둘 이상이면 `com.querydsl.core.NonUniqueResultException` 발생
+- 단 건 조회
+- 결과 없으면 null
+- 결과가 둘 이상이면 `com.querydsl.core.NonUniqueResultException` 발생
 
 ```java
 Member findMember1 = queryFactory
@@ -175,7 +163,7 @@ Member findMember1 = queryFactory
 
 **`fecthFirst()`**
 
-* `limit(1).fetchOne()` 과 같은 결과
+- `limit(1).fetchOne()` 과 같은 결과
 
 ```java
 Member findMember2 = queryFactory
@@ -185,9 +173,9 @@ Member findMember2 = queryFactory
 
 **`fetchResults()`**
 
-* 페이징 정보 포함
-* total count 쿼리 추가 실행
-* count 쿼리가 실행되니 성능상 주의해야한다.
+- 페이징 정보 포함
+- total count 쿼리 추가 실행
+- count 쿼리가 실행되니 성능상 주의해야한다.
 
 ```java
 QueryResults<Member> results = queryFactory
@@ -204,11 +192,12 @@ results.getLimit();
 results.getOffset();
 ```
 
-> 실무에서 페이징 쿼리를 작성할 때, 데이터를 조회하는 쿼리는 여러 테이블을 조인해야 하지만, count 쿼리는 조인이 필요 없는 경우도 있다. 그런데 이렇게 자동화된 count 쿼리는 원본 쿼리와 같이 모두 조인을 해버리기 때문에 성능이 안나올 수 있다. count 쿼리에 조인이 필요없는 성능 최적화가 필요하다면, count 전용 쿼리를 별도로 작성해야 한다.
+> 실무에서 페이징 쿼리를 작성할 때, 데이터를 조회하는 쿼리는 여러 테이블을 조인해야 하지만, count 쿼리는 조인이 필요 없는 경우도 있다. 그런데 이렇게 자동화된 count 쿼리는 원본 쿼리와 같이 모두
+> 조인을 해버리기 때문에 성능이 안나올 수 있다. count 쿼리에 조인이 필요없는 성능 최적화가 필요하다면, count 전용 쿼리를 별도로 작성해야 한다.
 
 **`fetchCount()`**
 
-* count 쿼리로 변경해서 count 수 조회
+- count 쿼리로 변경해서 count 수 조회
 
 ```java
 long count = queryFactory
@@ -216,15 +205,13 @@ long count = queryFactory
   .fetchCount();
 ```
 
+## 6 정렬
 
-
-##  6 정렬
-
-* desc() , asc() : 일반 정렬
-* nullsLast() , nullsFirst() : null 데이터 순서 부여
-* 정렬 순서: `.orderBy(member.age.desc(), member.username.asc().nullsLast())`
-  1. 회원 나이 내림차순
-  2. 회원 이름 올림차순(회원 이름이 없으면(null이면) 마지막)
+- desc() , asc() : 일반 정렬
+- nullsLast() , nullsFirst() : null 데이터 순서 부여
+- 정렬 순서: `.orderBy(member.age.desc(), member.username.asc().nullsLast())`
+	1. 회원 나이 내림차순
+	2. 회원 이름 올림차순(회원 이름이 없으면(null이면) 마지막)
 
 ```java
 @Test
@@ -253,9 +240,7 @@ public void sort() {
 result = [Member(id=8, username=member5, age=100), Member(id=9, username=member6, age=100), Member(id=7, username=null, age=100)]
 ```
 
-
-
-##  7 페이징
+## 7 페이징
 
 ```java
 @Test
@@ -273,7 +258,7 @@ public void paging() {
 
 **페이징 정보 조회**
 
-* 페이징 정보를 포함하는 결과를 얻기 위해  `fetchResults()` 사용
+- 페이징 정보를 포함하는 결과를 얻기 위해  `fetchResults()` 사용
 
 ```java
 @Test
@@ -296,13 +281,12 @@ public void paging() {
 >
 > * count 쿼리가 실행되니 성능상 주의해야 한다
 >
-> 실무에서 페이징 쿼리를 작성할 때, 데이터를 조회하는 쿼리는 여러 테이블을 조인해야 하지만, count 쿼리는 조인이 필요 없는 경우도 있다. 그런데 이렇게 자동화된 count 쿼리는 원본 쿼리와 같이 모두 조인을 해버리기 때문에 성능이 안나올 수 있다. count 쿼리에 조인이 필요없는 성능 최적화가 필요하다면, count 전용 쿼리를 별도로 작성해야 한다.
+> 실무에서 페이징 쿼리를 작성할 때, 데이터를 조회하는 쿼리는 여러 테이블을 조인해야 하지만, count 쿼리는 조인이 필요 없는 경우도 있다. 그런데 이렇게 자동화된 count 쿼리는 원본 쿼리와 같이 모두
+> 조인을 해버리기 때문에 성능이 안나올 수 있다. count 쿼리에 조인이 필요없는 성능 최적화가 필요하다면, count 전용 쿼리를 별도로 작성해야 한다.
 
+## 8 집합
 
-
-##  8 집합
-
-* JPQL이 제공하는 모든 집합 함수를 제공한다.
+- JPQL이 제공하는 모든 집합 함수를 제공한다.
 
 ```java
 @Test
@@ -327,8 +311,8 @@ public void aggregation() throws Exception {
 
 ```java
 /**
- * 팀의 이름과 각 팀의 평균 연령을 구하라
- * @throws Exception
+ - 팀의 이름과 각 팀의 평균 연령을 구하라
+ - @throws Exception
  */
 @Test
 public void group() throws Exception {
@@ -349,14 +333,12 @@ public void group() throws Exception {
 }
 ```
 
+## 9 조인
 
-
-##  9 조인
-
-* 첫 번째 파라미터에 조인 대상을 지정하고, 두 번째 파라미터에 별칭(alias)으로 사용할 Q 타입을 지정하면 된다.
-* join() , innerJoin() : 내부 조인(inner join) 
-* leftJoin() : left 외부 조인(left outer join) 
-* rightJoin() : rigth 외부 조인(rigth outer join)
+- 첫 번째 파라미터에 조인 대상을 지정하고, 두 번째 파라미터에 별칭(alias)으로 사용할 Q 타입을 지정하면 된다.
+- join() , innerJoin() : 내부 조인(inner join)
+- leftJoin() : left 외부 조인(left outer join)
+- rightJoin() : rigth 외부 조인(rigth outer join)
 
 **기본 조인**
 
@@ -380,9 +362,9 @@ public void join() throws Exception {
 
 **세타 조인**
 
-* from 절에 여러 엔티티를 선택해서 세타 조인
-* 외부 조인 불가능
-  * 조인 on을 사용하면 외부 조인 가능
+- from 절에 여러 엔티티를 선택해서 세타 조인
+- 외부 조인 불가능
+	- 조인 on을 사용하면 외부 조인 가능
 
 ```java
 @Test
@@ -402,17 +384,15 @@ public void theta_join() throws Exception {
 }
 ```
 
+## 10 조인 - on절
 
-
-##  10 조인 - on절
-
-* ON절을 활용한 조인
-  1. 조인 대상 필터링
-  2. 연관관계 없는 엔티티 외부 조인
+- ON절을 활용한 조인
+	1. 조인 대상 필터링
+	2. 연관관계 없는 엔티티 외부 조인
 
 **조인 대상 필터링**
 
-* 회원과 팀을 조인하면서, 팀 이름이 teamA인 팀만 조인, 회원은 모두 조회
+- 회원과 팀을 조인하면서, 팀 이름이 teamA인 팀만 조인, 회원은 모두 조회
 
 ```java
 // JPQL: SELECT m, t FROM Member m LEFT JOIN m.team t on t.name = 'teamA'
@@ -439,17 +419,18 @@ t=[Member(id=5, username=member3, age=30), null]
 t=[Member(id=6, username=member4, age=40), null]
 ```
 
-> on 절을 활용해 조인 대상을 필터링 할 때, 외부조인이 아니라 내부조인(inner join)을 사용하면, where 절에서 필터링 하는 것과 기능이 동일하다. 따라서 on 절을 활용한 조인 대상 필터링을 사용할 때, 내부조인 이면 익숙한 where 절로 해결하고, 정말 외부조인이 필요한 경우에만 이 기능을 사용하자.
+> on 절을 활용해 조인 대상을 필터링 할 때, 외부조인이 아니라 내부조인(inner join)을 사용하면, where 절에서 필터링 하는 것과 기능이 동일하다. 따라서 on 절을 활용한 조인 대상 필터링을 사용할
+> 때, 내부조인 이면 익숙한 where 절로 해결하고, 정말 외부조인이 필요한 경우에만 이 기능을 사용하자.
 
 
 
 **연관관계 없는 엔티티 외부 조인**
 
-* 회원의 이름과 팀의 이름이 같은 대상 **외부 조인**
-* 하이버네이트 5.1부터 on 을 사용해서 서로 관계가 없는 필드로 외부 조인하는 기능이 추가되었다. 물론 내부 조인도 가능하다.
-* 주의! 문법을 잘 봐야 한다. **leftJoin()** 부분에 일반 조인과 다르게 엔티티 하나만 들어간다.
-  * 일반조인: leftJoin(member.team, team) 
-  * on조인: from(member).leftJoin(team).on(xxx)
+- 회원의 이름과 팀의 이름이 같은 대상 **외부 조인**
+- 하이버네이트 5.1부터 on 을 사용해서 서로 관계가 없는 필드로 외부 조인하는 기능이 추가되었다. 물론 내부 조인도 가능하다.
+- 주의! 문법을 잘 봐야 한다. **leftJoin()** 부분에 일반 조인과 다르게 엔티티 하나만 들어간다.
+	- 일반조인: leftJoin(member.team, team)
+	- on조인: from(member).leftJoin(team).on(xxx)
 
 ```java
 // JPQL: SELECT m, t FROM Member m LEFT JOIN Team t on m.username = t.name
@@ -484,18 +465,16 @@ t=[Member(id=7, username=teamA, age=0), Team(id=1, name=teamA)]
 t=[Member(id=8, username=teamB, age=0), Team(id=2, name=teamB)]
 ```
 
+## 11 페치 조인
 
-
-##  11 페치 조인
-
-* 페치 조인은 SQL에서 제공하는 기능은 아니다. 
-* SQL조인을 활용해서 연관된 엔티티를 SQL 한번에 조회하는 기능이다. 
-* 주로 성능 최적화에 사용하는 방법이다.
-* `join()`, `leftJoin()` 등 조인 기능 뒤에 `fetchJoin()`을 추가한다.
+- 페치 조인은 SQL에서 제공하는 기능은 아니다.
+- SQL조인을 활용해서 연관된 엔티티를 SQL 한번에 조회하는 기능이다.
+- 주로 성능 최적화에 사용하는 방법이다.
+- `join()`, `leftJoin()` 등 조인 기능 뒤에 `fetchJoin()`을 추가한다.
 
 **페치 조인 미적용**
 
-* entityManagerFactory로 `PersistenceUnitUtil` 을 얻어 프록시 인스턴스의 초기화 여부를 확인할 수 있다
+- entityManagerFactory로 `PersistenceUnitUtil` 을 얻어 프록시 인스턴스의 초기화 여부를 확인할 수 있다
 
 ```java
 @Test
@@ -538,11 +517,9 @@ public void fetchJoinUse() throws Exception {
 }
 ```
 
+## 12 서브 쿼리
 
-
-##  12 서브 쿼리
-
-* `com.querydsl.jpa.JPAExpressions`를 사용한다
+- `com.querydsl.jpa.JPAExpressions`를 사용한다
 
 **가장 나이가 많은 멤버 조회**
 
@@ -636,16 +613,14 @@ List<Member> result = queryFactory
   )) .fetch();
 ```
 
-
-
-###  12. 서브쿼리 한계
+### 12. 서브쿼리 한계
 
 **from 절의 서브쿼리 한계**
 
-* JPA JPQL 서브쿼리의 한계점으로 from 절의 서브쿼리(인라인 뷰)는 지원하지 않는다. 
-* 당연히 Querydsl 도 지원하지 않는다. 
-* 하이버네이트 구현체를 사용하면 select 절의 서브쿼리는 지원한다. 
-* Querydsl도 하이버네이트 구현체를 사용하면 select 절의 서브쿼리를 지원한다.
+- JPA JPQL 서브쿼리의 한계점으로 from 절의 서브쿼리(인라인 뷰)는 지원하지 않는다.
+- 당연히 Querydsl 도 지원하지 않는다.
+- 하이버네이트 구현체를 사용하면 select 절의 서브쿼리는 지원한다.
+- Querydsl도 하이버네이트 구현체를 사용하면 select 절의 서브쿼리를 지원한다.
 
 **from 절의 서브쿼리 해결방안**
 
@@ -653,14 +628,11 @@ List<Member> result = queryFactory
 2. 애플리케이션에서 쿼리를 2번 분리해서 실행한다.
 3. nativeSQL을 사용한다.
 
+## 13 Case 문
 
-
-##  13 Case 문
-
-* select, 조건절(where), order by에서 사용 가능
-* Case 기능을 정말 써야할까?
-  * 가급적 이런 계산 문제는 DB에서 하지말고 애플리케이션에서 수행하자
-
+- select, 조건절(where), order by에서 사용 가능
+- Case 기능을 정말 써야할까?
+	- 가급적 이런 계산 문제는 DB에서 하지말고 애플리케이션에서 수행하자
 
 **단순한 조건**
 
@@ -715,11 +687,9 @@ username = member2 age = 20 rank = 2
 username = member3 age = 30 rank = 1
 ```
 
+## 14 상수, 문자 더하기
 
-
-##  14 상수, 문자 더하기
-
-* 상수가 필요하면 Expressions.constant(xxx) 사용
+- 상수가 필요하면 Expressions.constant(xxx) 사용
 
 ```java
 Tuple result = queryFactory
@@ -728,12 +698,10 @@ Tuple result = queryFactory
   .fetchFirst();
 ```
 
-
-
 **문자 더하기**
 
-* member.age.stringValue() 부분이 중요한데, 문자가 아닌 다른 타입들은 stringValue() 로문자로 변환할 수 있다. 
-* 이 방법은 ENUM을 처리할 때도 자주 사용한다.
+- member.age.stringValue() 부분이 중요한데, 문자가 아닌 다른 타입들은 stringValue() 로문자로 변환할 수 있다.
+- 이 방법은 ENUM을 처리할 때도 자주 사용한다.
 
 ```java
 String result = queryFactory

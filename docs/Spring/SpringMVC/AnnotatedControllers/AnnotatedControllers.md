@@ -48,8 +48,71 @@ public class HelloController {
     - 효율성이 떨어지고 문자열 경로 입력은 URL의 인코딩 및 기타 문제를 효과적으로 처리하는 데 어려움이 있습니다.
 - PathPattern은 웹 애플리케이션에 권장되는 솔루션이며 Spring WebFlux에서는 유일한 선택입니다. 
   - Spring MVC에서는 버전 5.3부터 사용 가능하며 버전 6.0부터는 기본적으로 활성화됩니다.
-- 
 
+### 2.2 Media Types
+
+- @RequestMapping 메소드는 요청 및 응답의 미디어 타입을 매핑할 수 있습니다.
+
+#### 2.2.1 Consumable Media Types
+
+- 요청의 Content-Type을 기반으로 요청 매핑을 좁힐 수 있습니다
+- 콘텐츠 타입으로 매핑을 제한하기 위해 consumes 속성을 사용합니다.
+- consumes 속성은 부정 표현식도 지원합니다.
+  - 예를 들어, !text/plain은 text/plain을 제외한 모든 콘텐츠 타입을 의미합니다.
+
+```java
+@PostMapping(path = "/pets", consumes = "application/json") 
+public void addPet(@RequestBody Pet pet) {
+    // ...
+}
+```
+
+- 위 예제에서 @PostMapping은 요청 본문이 JSON 형식인 경우에만 매핑됩니다.
+
+#### 2.2.2 Produces Media Types
+
+- Accept 요청 헤더와 컨트롤러 메서드가 생성하는 콘텐츠 타입 목록을 기반으로 요청 매핑을 좁힐 수 있습니다.
+- 콘텐츠 타입으로 매핑을 제한하기 위해 produces 속성을 사용합니다.
+- 미디어 타입은 문자 집합을 지정할 수 있습니다. 부정 표현식도 지원됩니다. 
+  - 예를 들어, !text/plain은 "text/plain"을 제외한 모든 콘텐츠 타입을 의미합니다.
+
+```java
+@GetMapping(path = "/pets/{petId}", produces = "application/json") 
+@ResponseBody
+public Pet getPet(@PathVariable String petId) {
+    // ...
+}
+```
+
+- 위 예제에서 @GetMapping은 요청의 Accept 헤더가 JSON 형식인 경우에만 매핑됩니다.
+
+### 2.3 Request Parameters
+
+- 요청 파라미터 조건을 기반으로 요청 매핑을 좁힐 수 있습니다. 
+- 요청 파라미터의 존재 여부(myParam), 부재 여부(!myParam), 또는 특정 값(myParam=myValue)을 테스트할 수 있습니다.
+
+```java
+@GetMapping(path = "/pets/{petId}", params = "myParam=myValue") 
+public void findPet(@PathVariable String petId) {
+    // ...
+}
+```
+
+- 위 예제에서 @GetMapping은 요청의 쿼리 파라미터가 myParam=myValue인 경우에만 매핑됩니다.
+
+### 2.4 Request Headers
+
+- 요청 헤더 조건을 기반으로 요청 매핑을 좁힐 수 있습니다.
+
+```java
+@GetMapping(path = "/pets/{petId}", headers = "myHeader=myValue") 
+public void findPet(@PathVariable String petId) {
+    // ...
+}
+```
+
+- myHeader가 myValue와 일치하는지 테스트합니다.
+- Content-Type과 Accept 헤더도 headers 조건으로 매칭할 수 있지만, 대신 consumes와 produces를 사용하는 것이 더 좋습니다.
 
 ## 참고
 

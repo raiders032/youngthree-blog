@@ -21,7 +21,7 @@ title: "Spring"
 
 ### Spring MVC
 
-[Spring MVC Exception Handling](SpringMVCExceptionHandling/SpringMVCExceptionHandling.md)
+- [Spring MVC](SpringMVC/index.md)
 
 ### Spring WebFlux
 
