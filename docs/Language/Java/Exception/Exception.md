@@ -78,8 +78,8 @@ hide_title: true
 ### 3.1 Checked Exception의 목적
 
 - Checked Exception을 던지면 호출자가 그 예외를 catch로 잡아 처리하거나 더 바깥으로 전파라도록 강제합니다.
-- 따라서 메서드 선언에 포함된 Checked Exception은 메서드를 호출했을 때 발생할 수 있는 유력한 결과임을 API 사용자에게 알려줄 수 있습니다.
-- 달리 말하면 API 설계자는 Checked Exception를 던져주어 그 상황에서 회복해내라고 요구하는 것입니다.
+- 따라서 메서드 선언에 포함된 Checked Exception은 메서드를 호출했을 때 **발생할 수 있는 유력한 결과임을 API 사용자에게 알려줄 수 있습니다.**
+- **달리 말하면 API 설계자는 Checked Exception를 던져주어 그 상황에서 회복해내라고 요구하는 것입니다.**
 - 물론 사용자가 예외를 잡기만하고 별다른 조치를 취하지 않을 수 있지만 이는 사용자의 책임입니다.
 
 ### 3.2 Checked Exception의 장점

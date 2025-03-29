@@ -198,7 +198,7 @@ JdbcTemplate에서는 JPA가 변경한 데이터를 읽지 못하는 문제가 �
 - 따라서 커넥션이 필요하면 트랜잭션 동기화 매니저를 통해 커넥션을 획득하면 됩니다.
 - 따라서 이전처럼 파라미터로 커넥션을 전달하지 않아도 됩니다.
 
-### 3.2 동작 방식
+### 3.2 TransactionManager의 동작 방식
 
 - 서비스 계층에서 `transactionManager.getTransaction()`을 호출해서 트랜잭션을 시작합니다.
 - 트랜잭션을 시작하려면 먼저 데이터베이스 커넥션이 필요합니다. 트랜잭션 매니저는 내부에서 데이터소스를 사용해서 커넥션을 생성합니다.
@@ -217,6 +217,63 @@ JdbcTemplate에서는 JPA가 변경한 데이터를 읽지 못하는 문제가 �
 	- 트랜잭션 동기화 매니저를 정리합니다. 쓰레드 로컬은 사용후 꼭 정리해야 합니다.
 	- `con.setAutoCommit(true)`로 되돌립니다. 커넥션 풀을 고려해야 합니다.
 	- `con.close()`를 호출하여 커넥션을 종료합니다. 커넥션 풀을 사용하는 경우 `con.close()`를 호출하면 커넥션 풀에 반환됩니다.
+
+### 3.3 커넥션 풀에서 커넥션 획득하기
+
+```java
+@Test
+void double_commit() {
+    log.info("트랜잭션1 시작");
+    TransactionStatus tx1 = txManager.getTransaction(new DefaultTransactionAttribute());
+    log.info("트랜잭션1 커밋");
+    txManager.commit(tx1);
+    
+    log.info("트랜잭션2 시작");
+    TransactionStatus tx2 = txManager.getTransaction(new DefaultTransactionAttribute());
+    log.info("트랜잭션2 커밋");
+    txManager.commit(tx2);
+}
+```
+
+```text
+
+트랜잭션1 시작
+Creating new transaction with name [null]:
+PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+Acquired Connection [HikariProxyConnection@1064414847 wrapping conn0] for JDBC
+transaction
+Switching JDBC Connection [HikariProxyConnection@1064414847 wrapping conn0] to
+manual commit
+트랜잭션1 커밋
+Initiating transaction commit
+Committing JDBC transaction on Connection [HikariProxyConnection@1064414847
+wrapping conn0]
+Releasing JDBC Connection [HikariProxyConnection@1064414847 wrapping conn0]
+after transaction
+
+트랜잭션2 시작
+Creating new transaction with name [null]:
+PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+Acquired Connection [HikariProxyConnection@778350106 wrapping conn0] for JDBC
+transaction
+Switching JDBC Connection [HikariProxyConnection@778350106 wrapping conn0] to
+manual commit
+트랜잭션2 커밋
+Initiating transaction commit
+Committing JDBC transaction on Connection [HikariProxyConnection@778350106
+wrapping conn0]
+Releasing JDBC Connection [HikariProxyConnection@778350106 wrapping conn0] after
+transaction
+```
+
+- 실행 결과를 보면 각각의 트랜잭션이 트랜잭션을 시작하기 전에 먼저 커넥션을 획득합니다.
+- 여기서 로그를 보면  트랜잭션1과 트랜잭션2가 같은 `conn0` 커넥션을 사용합니다.
+- 이것은 중간에 커넥션 풀을 사용하기 때문에 같은 커넥션을 사용합니다.
+- 트랜잭션1에서 반납한 커넥션을 트랜잭션2에서 바로 재사용합니다.
+- 히카리 커넥션 풀은 커넥션을 반환할 때 실제 커넥션을 반환하지 않고 프록시 객체로 감싸서 반환합니다.
+- 따라서 둘의 프록시 객체의 주소가 다른것을 확인할 수 있습니다.
+  - 트랜잭션1: `Acquired Connection [HikariProxyConnection@1000000 wrapping conn0]`
+  - 트랜잭션2: `Acquired Connection [HikariProxyConnection@2000000 wrapping conn0]`
 
 ## 4. @Transactional
 
@@ -436,6 +493,27 @@ public class DocumentProcessingException extends Exception {
 - `timeoutString` 도 있는데, 숫자 대신 문자 값으로 지정할 수 있습니다.
 
 ### 4.7 readOnly
+
+- `readOnly=true` 옵션을 사용하면 읽기 전용 트랜잭션이 생성됩니다.
+- 이 경우 등록, 수정, 삭제가 안되고 읽기 기능만 작동합니다.
+- `readOnly` 옵션을 사용하면 읽기에서 다양한 성능 최적화가 가능합니다.
+
+#### 성능 최적화
+
+- JPA
+  - JPA(하이버네이트)는 읽기 전용 트랜잭션의 경우 커밋 시점에 플러시를 호출하지 않습니다.
+  - 읽기 전용이니 변경에 사용되는 플러시를 호출할 필요가 없습니다.
+  - 추가로 변경이 필요 없으니 변경 감지를 위한 스냅샷 객체도 생성하지 않습니다.
+  - 이렇게 JPA에서는 다양한 최적화가 가능합니다.
+- JDBC
+  - JDBC 드라이버는 DB와 버전에 따라 다르게 동작할 수 있습니다.
+  - 읽기 전용 트랜잭션에서 변경 쿼리가 발생하면 예외를 던집니다.
+  - 읽기, 쓰기(마스터, 슬레이브) 데이터베이스를 구분해서 요청합니다.
+  - 읽기 전용 트랜잭션의 경우 읽기(슬레이브) 데이터베이스의 커넥션을 획득해서 사용합니다.
+- JdbcTemplate
+  - JdbcTemplate은 읽기 전용 트랜잭션 안에서 변경 기능을 실행하면 예외를 던진다.
+- 데이터베이스 
+  - 데이터베이스에 따라 읽기 전용 트랜잭션의 경우 읽기만 하면 되므로, 내부에서 성능 최적화가 발생한다.
 
 ### 4.8 주의 사항
 

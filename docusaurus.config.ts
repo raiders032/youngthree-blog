@@ -3,8 +3,8 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-    title: 'Young Three의 개발 실험실',
-    tagline: '개발자를 위한 기술 문서 모음 - AWS, 알고리즘, Java, Kotlin 등의 기술 가이드와 팁을 제공합니다.',
+    title: 'Young Three의 개발 실험실(Java/Spring 백엔드 개발자)',
+    tagline: 'Young Three의 개발 실험실은 Java/Spring 백엔드 개발자를 위한 종합적인 기술 문서 라이브러리 웹사이트입니다. 이 웹사이트는 컴퓨터 과학의 기초 개념부터 최신 클라우드 기술과 아키텍처 패턴까지, 실무에서 바로 활용할 수 있는 지식을 체계적으로 정리하여 제공합니다.',
     favicon: 'img/favicon.ico',
     url: 'https://blog.youngthree.me/',
     baseUrl: '/',
