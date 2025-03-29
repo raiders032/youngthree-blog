@@ -182,16 +182,16 @@ spring.mvc.view.suffix=.jsp
 2. InternalResourceViewResolver
 	- JSP를 처리할 수 있는 뷰를 반환한다.
 
-> 참고
->
->  Thymeleaf 뷰 템플릿을 사용하면 ThymeleafViewResolver 를 등록해야 한다. 최근에는 라이브러리 만추가하면 스프링 부트가 이런 작업도 모두 자동화해준다 아래는 기본 설정을 수정해서 사용할
-> 수 있다.
->
->  ```properties
->  # application.properties
->  spring.thymeleaf.prefix=classpath:/templates/ 
->  spring.thymeleaf.suffix=.html
->  ```
+:::info
+Thymeleaf 뷰 템플릿을 사용하면 ThymeleafViewResolver 를 등록해야 한다. 최근에는 라이브러리 만추가하면 스프링 부트가 이런 작업도 모두 자동화해준다 아래는 기본 설정을 수정해서 사용할 수 있다.
+
+```properties
+# application.properties
+spring.thymeleaf.prefix=classpath:/templates/ 
+spring.thymeleaf.suffix=.html
+```
+
+:::
 
 # 6 HTTP 메시지 컨버터
 
