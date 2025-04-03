@@ -5,6 +5,35 @@
 - 캐싱 로직은 호출자에게 어떠한 간섭도 없이 투명하게 적용됩니다.
 - Spring Boot는 @EnableCaching 어노테이션을 통해 캐싱 지원이 활성화되는 한 캐시 인프라를 자동 설정합니다
 
+### 1.1 의존성
+
+- Spring Boot Starter Cache를 사용하여 캐싱을 사용할 수 있습니다.
+
+```groovy
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+}
+```
+
+### 1.2 @EnableCaching
+
+- 캐싱 어노테이션을 선언한다고 해서 자동으로 그 기능이 작동하는 것은 아니라는 점에 유의해야 합니다.
+- 캐싱 어노테이션을 활성화하려면 @Configuration 클래스 중 하나에 @EnableCaching 어노테이션을 추가해야 합니다.
+
+```java
+@Configuration
+@EnableCaching
+class CacheConfiguration {
+
+    @Bean
+    CacheManager cacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.setCacheSpecification("...");
+        return cacheManager;
+    }
+}
+```
+
 ## 2. 예시
 
 ```java

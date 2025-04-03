@@ -83,7 +83,8 @@ hide_title: true
 - 브로커가 메시지를 잘 받아 기록하고 ACK만 전송하지 못했다면 프로듀서는 메시지를 재전송해 메시지가 브로커에 중복저장 될 수 있다.
 - 즉 적어도 한 번 전송 방식은 네트워크 회선 장애나 기타 장애 상황에 따라 `일부 메시지가 중복`될 수 있습니다.
 	- 즉 적어도 한 번 전송은 멱등성이 보장되지 않는 전송 방식입니다.
-- `메시지 손실 가능성이 없어` 카프카는 기본적으로 적어도 한 번 전송 방식으로 동작한다.
+- `메시지 손실 가능성이 없어` 카프카는 기본적으로 적어도 한 번 전송 방식으로 동작합니다.
+  - 카프카 3.0 버전부터는 `exactly once` 전송을 기본으로 동작합니다.
 
 ### 4.2 최대 한 번 전송(At Most Once)
 
@@ -329,14 +330,17 @@ public class ProducerWithAsyncCallback {
 - `acks=1`
 	- 리더 파티션에 데이터가 저장되면 전송 성공으로 판단
 	- 모든 팔로워는 확인하지 않기 때문에 일부 데이터의 손실이 발생할 수도 있다.
+  - 만약 리더가 ack를 보낸 후 팔로워로 복제되기 전에 리더가 장애가 발생하면 데이터 손실이 발생할 수 있습니다.
+  - 카프카 2.8까지는 기본 값이 1이었지만 카프카 3.0부터는 `all`로 변경되었습니다.
 - `acks=0`
-	- 프로듀서가 전송한 즉시 브로커에 데이터 저장 여부와 상관없이 성공으로 판단
-	- 클라이언트는 전송 실패에 대한 결과를 알지 못하기 때문에 재요청 설정도 적용되지 않는다.
-	- 메시지가 손실될 수 있지만 높은 처리량을 얻을 수 있다.
+	- 프로듀서가 전송한 즉시 브로커에 데이터 저장 여부와 상관없이 성공으로 판단합니다.
+	- 클라이언트는 전송 실패에 대한 결과를 알지 못하기 때문에 재요청 설정도 적용되지 않습니다.
+	- 메시지가 손실될 수 있지만 높은 처리량을 얻을 수 있습니다.
 - `acks=-1 or acks=all`
 	- 리더는 ISR의 팔로워로부터 데이터에 대한 ack를 기다립니다.
-	- 카프카 브로커 설정 `min.insync.replicas` 개수에 해당되는 리더 파티션과 팔로워 파티션에 데이터가 저장되면 성공된 것으로 판단한다.
-	- 손실 없는 데이터 전송을 원한다면 `acks=all` 과 `min.insync.replicas=2` 토픽의 리플리케이션 팩터를 3으로 설정하는 것을 권장한다.
+	- 카프카 브로커 설정 `min.insync.replicas` 개수에 해당되는 리더 파티션과 팔로워 파티션에 데이터가 저장되면 성공된 것으로 판단합니다.
+	- 손실 없는 데이터 전송을 원한다면 `acks=all` 과 `min.insync.replicas=2` 토픽의 리플리케이션 팩터를 3으로 설정하는 것을 권장합니다.
+  - 카프카 3.0부터 기본값이 `all`로 변경되었습니다.
 
 `buffer.memory`
 
@@ -372,13 +376,14 @@ public class ProducerWithAsyncCallback {
 `enable.idempotence`
 
 - [레퍼런스](https://kafka.apache.org/documentation.html#producerconfigs_enable.idempotence)
-- 멱등성 프로듀서로 동작할지 여부를 설정한다.
-- `true` 로 설정하면 중복 없는 전송이 가능하다.
-	- 이 옵션을 `true` 로 설정하면 아래의 옵션도 반드시 변경해야 한다. 아니면 오류가 발생
+- 멱등성 프로듀서로 동작할지 여부를 설정합니다.
+- `true` 로 설정하면 중복 없는 전송이 가능합니다.
+	- 이 옵션을 `true` 로 설정하면 아래의 옵션도 반드시 변경해야 한다. 아니면 오류가 발생합니댜.
 	- `max.in.flight.requests.per.connection`은 5 이하로 설정한다.
-	- `retries`는 0 이상으로 설정한다.
-	- `acks`는 all로 설정한다.
-- 기본값  `false`
+	- `retries`는 1 이상으로 설정합니다.
+	- `acks`는 all로 설정합니다.
+- 기본값은 `false`입니다. 
+  - 카프카 3.0부터는 기본값이 `true`로 변경되었습니다.
 
 `max.in.flight.requests.per.connection`
 
@@ -406,3 +411,4 @@ public class ProducerWithAsyncCallback {
 참고
 
 - [실전 카프카 개발부터 운영까지](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791189909345)
+- https://oliveyoung.tech/2024-10-16/oliveyoung-scm-oms-kafka/

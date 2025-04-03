@@ -47,6 +47,7 @@ hide_title: true
 ## 3. EventLoop - 이벤트 처리의 핵심
 
 - EventLoop는 연결의 수명주기 동안 발생하는 이벤트를 처리하는 핵심 컴포넌트입니다.
+- [EventLoop 더 보기](../EventLoop/EventLoop.md)
 
 ### 3.1 EventLoop의 주요 특징
 

@@ -500,6 +500,10 @@ public class ConsumerWithSyncOffsetCommit {
 - 하나의 컨슈머 그룹 안에 여러개의 컨슈머가 구성될 수 있다.
 - 컨슈머들은 하나의 컨슈머 그룹에 속해 그룹 내의 컨슈머들은 서로의 정보를 공유한다.
 
+## 6. 메시지 유실 가능성
+
+- 
+
 참고
 
 - [실전 카프카 개발부터 운영까지](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9791189909345)

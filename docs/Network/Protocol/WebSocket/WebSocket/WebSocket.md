@@ -184,7 +184,7 @@ Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
 	- 연결 상태 모니터링
 - **Dos 공격 방지**
 	- 동일한 클라이언트 IP 주소에서 여러번 연결 시도 차단
-  - 예를 들어, 사용자 ID와 IP 주소를 기반으로 WebSocket 데이터를 포함하는 테이블을 만들어 관리합니다.
+	- 예를 들어, 사용자 ID와 IP 주소를 기반으로 WebSocket 데이터를 포함하는 테이블을 만들어 관리합니다.
 
 ### 5.2 메시지 처리
 

@@ -3,17 +3,14 @@
 - 팩토리 메서드 패턴은 객체를 생성하기 위한 인터페이스를 정의하지만, 어떤 클래스의 인스턴스를 생성할지에 대한 결정은 서브클래스가 내리도록 합니다.
 - 이를 통해 객체 생성을 캡슐화하고, 클라이언트 코드와 실제 객체 생성 코드를 분리할 수 있습니다.
 
-
-
 ## 2 문제
 
 - 물류 관리 앱을 개발 중이며, 현재는 트럭 운송만 지원합니다. 그런데 이후 해상 운송 기능을 추가해달라는 요청이 많이 들어왔습니다.
-- 문제는 현재 코드 대부분이 `Truck` 클래스에 의존하고 있다는 것입니다. 앱에 `Ship` 클래스를 추가하려면 코드 전체를 뜯어고쳐야 합니다. 게다가 이후에 또 다른 운송 수단이 추가된다면 또 코드를 대대적으로 수정해야 할 것입니다.
+- 문제는 현재 코드 대부분이 `Truck` 클래스에 의존하고 있다는 것입니다. 앱에 `Ship` 클래스를 추가하려면 코드 전체를 뜯어고쳐야 합니다. 게다가 이후에 또 다른 운송 수단이 추가된다면 또 코드를
+  대대적으로 수정해야 할 것입니다.
 - 이렇게 되면 새로운 운송 수단이 추가될 때마다 클래스를 확인하는 조건문이 곳곳에 들어가게 되어 코드가 복잡해질 것입니다.
 
 ![프로그램에 새 운송 클래스를 추가하면 문제가 발생합니다](https://refactoring.guru/images/patterns/diagrams/factory-method/problem1-ko.png?id=d54af258065966bbd1afc0329adc5ecc)
-
-
 
 ## 3 해결책
 
@@ -27,44 +24,34 @@
 - 단, 서브클래스에서 생성하는 객체는 모두 공통의 인터페이스나 기본 클래스를 공유해야 합니다.
 - 예를 들어, `Truck`과 `Ship` 클래스 모두 `Transport` 인터페이스를 구현하도록 합니다. 그리고 `Transport` 인터페이스의 `deliver` 메서드를 각자 다르게 구현합니다.
 - 그리고 `RoadLogistics` 클래스의 팩토리 메서드는 `Truck` 객체를 반환하고, `SeaLogistics` 클래스의 팩토리 메서드는 `Ship` 객체를 반환하도록 합니다.
-- 자식 클래스들은 팩토리 메서드가 반환하는 객체들의 클래스를 변경할 수 있습니다.
+- 자식 클래스들은 팩토리 메서드가 반환하는 객체들의 클래스를 변경할 수 있습니다.
 - 이렇게 하면 클라이언트 코드는 `Transport` 인터페이스에만 의존하게 되므로, 구체적으로 어떤 운송 수단이 사용되는지 알 필요가 없어집니다.
 
-
-
-## 4  구조
+## 4 구조
 
 ![팩토리 메서드 패턴 구조](https://refactoring.guru/images/patterns/diagrams/factory-method/structure.png?id=4cba0803f42517cfe8548c9bc7dc4c9b)
-
-
 
 ### 4.1 Product(제품)
 
 - Product는 팩토리 메서드로 생성될 객체들의 공통 인터페이스를 정의합니다.
 - 이 인터페이스는 Creator와 Concrete Creator에서 생성되는 모든 객체에 공통으로 적용됩니다.
 
-
-
 ### 4.2 Concrete Product(구체적인 제품)
 
 - Concrete Product 클래스들은 Product 인터페이스를 구현합니다.
 - Concrete Creator에 의해 생성되는 실제 객체들입니다.
 
-
 ### 4.3 Creator(생성자)
 
 - Creator 클래스는 Product 객체를 반환하는 팩토리 메서드를 선언합니다. 이 메서드의 리턴 타입은 Product 인터페이스여야 합니다.
 - Creator는 팩토리 메서드를 abstract로 선언하여 모든 하위 클래스에서 이를 구현하도록 강제할 수도 있고, 기본적인 구현을 제공할 수도 있습니다.
-- Creator의 주요 책임이 제품을 생성하는 것은 아닙니다. 주로 Product와 관련된 핵심 비즈니스 로직을 포함하고 있으며, 팩토리 메서드를 통해 이 로직과 구체적인 Product 클래스를 분리하는 것이 목적입니다.
-
-
+- Creator의 주요 책임이 제품을 생성하는 것은 아닙니다. 주로 Product와 관련된 핵심 비즈니스 로직을 포함하고 있으며, 팩토리 메서드를 통해 이 로직과 구체적인 Product 클래스를 분리하는 것이
+  목적입니다.
 
 ### 4.4 Concrete Creator
 
 - Concrete Creator 클래스들은 Creator의 팩토리 메서드를 오버라이드하여 다양한 유형의 Product 객체를 반환합니다.
 - 팩토리 메서드는 항상 새 인스턴스를 생성할 필요는 없습니다. 기존 객체를 반환하거나 객체를 공유하는 방식으로 구현할 수도 있습니다.
-
-
 
 ### 4.5 Client(클라이언트)
 
@@ -72,10 +59,7 @@
 - Creator의 팩토리 메서드를 호출하여 Product 객체를 얻습니다.
 - 어떤 Concrete Creator와 Concrete Product가 사용되는지 알 필요가 없습니다.
 
-
-
-## 5  예시 코드
-
+## 5 예시 코드
 
 ![팩토리 메서드 패턴 구조 예시](https://refactoring.guru/images/patterns/diagrams/factory-method/example.png?id=67db9a5cb817913444efcb1c067c9835)
 
@@ -169,12 +153,9 @@ public class Demo {
 ```
 
 - 이 예제에서는 Button 인터페이스가 Product 역할을 하고, WindowsButton과 WebButton이 Concrete Product입니다.
-- Dialog 클래스가 Creator 역할을 하는데, createButton 메서드가 팩토리 메서드입니다. 
+- Dialog 클래스가 Creator 역할을 하는데, createButton 메서드가 팩토리 메서드입니다.
 - WindowsDialog와 WebDialog가 Concrete Creator로써 createButton 메서드를 각자 다르게 구현하고 있습니다.
 - Client 코드는 Dialog 클래스에만 의존하며, 실제로 어떤 종류의 버튼이 생성되는지 알 필요가 없습니다.
-
-
-    
 
 ## 6 장단점
 
@@ -184,13 +165,9 @@ public class Demo {
 - 단일 책임 원칙을 지킬 수 있습니다. 제품 생성 코드를 한 곳에 모아둠으로써 코드를 더 깔끔하게 유지할 수 있습니다.
 - 개방/폐쇄 원칙을 지킬 수 있습니다. 새로운 종류의 제품을 추가하더라도 기존 클라이언트 코드를 변경하지 않아도 됩니다.
 
-
-
 ### 6.2 단점
 
 - 패턴을 적용하면 클래스가 많이 늘어나므로 코드가 복잡해질 수 있습니다.
-
-
 
 ## 7 다른 패턴과의 관계
 

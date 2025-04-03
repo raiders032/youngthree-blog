@@ -238,12 +238,14 @@ sidebar_position: 2
 ## 4.1 실시간 메시지 전송 흐름
 
 1. **메시지 생성 및 이벤트 발행 (HTTP API 서버)**
-	- 클라이언트가 HTTP API 서버로 메시지 생성 요청
-	- API 서버는 메시지를 DocumentDB에 저장
+	- 클라이언트가 HTTP API 서버로 메시지 생성 요청합니다.
+  - UUID V6 형식의 메시지 ID 생성하여 채팅 메시지에 부여합니다.
+  - 채팅 메시지를 DocumentDB에 저장합니다.
 	- Redis Pub/Sub을 통해 두 개의 이벤트를 발행
-		- MESSAGE_CREATED: 채팅 서버들이 구독 (메시지와 채팅방 ID 포함)
-		- FCM_TOKEN_MESSAGE: 알림 서버가 구독합니다.
+    - MESSAGE_CREATED: global 채널에 이벤트 생성 이벤트를 발행합니다. 모든 채팅 서버들이 구독하는 채널입니다. 
+    - FCM_TOKEN_MESSAGE: 알림 서버가 구독합니다.
 2. **실시간 메시지 전달 (채팅 서버)**
+	- 채팅 서버는 redis pub/sub의 globalEvents 채널을 구독합니다.
 	- 모든 채팅 서버가 MESSAGE_CREATED 이벤트 수신합니다.
 	- 이벤트에 포함된 roomId를 키로 사용하여 로컬 세션 맵에서 해당 채팅방의 WebSocket 세션들을 조회합니다.
 		- 채팅 서버는 각 채팅방별로 연결된 WebSocket 세션들을 관리하고 있습니다.

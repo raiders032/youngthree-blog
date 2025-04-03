@@ -69,6 +69,38 @@
 - 인자 타입을 배열이나 리스트로 선언하면 동일한 파라미터 이름에 대해 여러 파라미터 값을 받을 수 있습니다.
   - 예를 들어 `@RequestParam("name") String[] names`는 `?name=foo&name=bar`와 같은 요청을 처리할 수 있습니다.
 
+## 5. @ModelAttribute
+
+- [레퍼런스](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/modelattrib-method-args.html)
+- @ModelAttribute 메서드 파라미터 어노테이션은 요청 파라미터, URI 경로 변수 및 요청 헤더를 모델 객체에 바인딩합니다.
+- 이 어노테이션은 다음과 같은 데이터를 자바 객체에 바인딩합니다
+  - 요청 파라미터(URL 쿼리 파라미터, 폼 데이터)
+  - URI 경로 변수(path variables)
+  - 요청 헤더
+
+### 5.1 BindingResult
+
+- 데이터 바인딩이 오류를 발생시키는 경우, 기본적으로 MethodArgumentNotValidException이 발생합니다.
+  - 즉 컨트롤러 메서드가 호출되지 않습니다.
+- 컨트롤러 메소드에서 이러한 오류를 처리하기 위해 @ModelAttribute 바로 다음에 BindingResult 인자를 추가할 수도 있습니다.
+  - 이 경우 컨트롤러 메서드가 호출되고, BindingResult 인자에 바인딩 오류가 포함됩니다.
+- BindingResult는 데이터 바인딩 및 검증 오류를 포함하는 객체입니다.
+  - 객체에 타입 오류 등으로 바인딩이 실패하는 경우 스프링이 `FieldError` 생성해서 `BindingResult` 에 넣어줍니다.
+
+```java
+@PostMapping("/owners/{ownerId}/pets/{petId}/edit")
+public String processSubmit(@ModelAttribute("pet") Pet pet, BindingResult result) { 
+	if (result.hasErrors()) {
+		return "petForm";
+	}
+	// ...
+}
+```
+
+- BindingResult는 @ModelAttribute와 함께 사용되며, @ModelAttribute가 처리하는 객체에 대한 바인딩 결과를 포함합니다.
+- BindingResult는 @ModelAttribute 바로 다음에 위치해야 합니다.
+- BindingResult는 데이터 바인딩 및 검증 오류를 포함하는 객체입니다.
+
 ## 참고
 
 - https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods.html

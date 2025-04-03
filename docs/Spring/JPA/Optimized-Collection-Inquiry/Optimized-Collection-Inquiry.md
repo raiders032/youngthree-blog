@@ -1,20 +1,28 @@
 ## 1 컬렉션 조회 최적화
 
-- [지연로딩과 조회 성능 최적화](Lazy-Loading-And-Optimaization-Of-Inquiry.md)에서 ToOne 관계에 대해서 알아봤다면 이번엔 ToMany관계에 대해서 알아보자
-- `Order` 와 `Member` 일대일 관계이다.
-- `Order` 와 `Delivery` 일대일 관계이다.
-- `Order` 와 `OrderItem` 일대다 관계이다.
-- `OrderItem` 과 `Item` 은 다대일 관계이다.
-- 연관 관계는 모두 `fetch = FetchType.LAZY` 로 설정되어 있다.
+- [지연로딩과 조회 성능 최적화](../Lazy-Loading-And-Optimaization-Of-Inquiry/Lazy-Loading-And-Optimaization-Of-Inquiry.md)
+  - 위 문서에서는 ToOne 관계에 대해서 조회 성능을 최적화 하는 방법을 알아봤습니다.
+- 이번 글에서는 ToMany 관계에 대해서 조회 성능을 최적화 하는 방법을 알아보겠습니다.
+
+### 1.1 예시 상황
+
+- `Order` 와 `Member` 일대일 관계입니다.
+- `Order` 와 `Delivery` 일대일 관계입니다.
+- `Order` 와 `OrderItem` 일대다 관계입니다.
+- `OrderItem` 과 `Item` 은 다대일 관계입니다.
+- 연관 관계는 모두 `fetch = FetchType.LAZY` 로 설정되어 있습니다.
 
 ## 2 엔티티 조회
 
 ### 2.1 엔티티 직접 노출 버전
 
-- 엔티티 직접 노출하는 것은 피하자
-  - 엔티티가 변하면 API 스펙이 변한다
-- 양방향 연관 관계가 있다면 JSON으로 변환하는 과정에서 문제가 발생한다.
-  - 양방향 연관관계면 무한 루프에 걸리지 않게 한곳에 @JsonIgnore 를 추가해야 한다.
+- 엔티티 직접 노출하는 버전을 구현해보겠습니다.
+  - 엔티티 직접 노출은 권장하는 방법이 아닙니다.
+  - 엔티티가 변하면 API 스펙이 변하는 문제가 발생합니다.
+- 양방향 연관 관계가 있다면 JSON으로 변환하는 과정에서 문제가 발생합니다.
+  - 양방향 연관관계면 무한 루프에 걸리지 않게 한곳에 @JsonIgnore 를 추가해야 합니다.
+
+#### 2.1.1 예시
 
 ```java
 @RestController
@@ -39,15 +47,19 @@ public class OrderApiController {
 }
 ```
 
-### 2.2 엔티티를 DTO로 변환 버전
-
 - SQL 실행 횟수
   - `Order` 조회 1회 -> N개의 `Order` 가 조회됨
   - `Order` -> `Member` 지연 로딩 N회
   - `Order` -> `Delivery` 지연 로딩 N회
   - `Order` -> `OrderItem` 지연 로딩 N회 각각 K개의 `OrderItem` 이 조회된다.
   - `OrderItem` ->  `Item` 지연 로딩 K회
-- 성능이 좋지 않다 -> fetch 조인을 고려해보자
+  - 총 `1 + 3N + NK` 회의 SQL이 실행됩니다.
+
+### 2.2 엔티티를 DTO로 변환 버전
+
+- 이번엔 엔티티를 DTO로 변환하는 버전을 구현해보겠습니다.
+
+#### 2.2.1 예시
 
 ```java
 @RestController
@@ -106,25 +118,35 @@ class OrderItemDto {
 }
 ```
 
+- SQL 실행 횟수
+  - `Order` 조회 1회 -> N개의 `Order` 가 조회됩니다.
+  - `Order` -> `Member` 지연 로딩 N회
+  - `Order` -> `Delivery` 지연 로딩 N회
+  - `Order` -> `OrderItem` 지연 로딩 N회 각각 K개의 `OrderItem` 이 조회됩니다.
+  - `OrderItem` ->  `Item` 지연 로딩 K회
+  - 총 `1 + 3N + NK` 회의 SQL이 실행됩니다.
+- Lazy 로딩으로 인해 N + 1 문제가 발생합니다.
+
 ### 2.3 엔티티를 DTO로 변환 + 페치 조인 최적화 버전
 
-- `Order` 와 `OrderItem` 일대다 관계이다.
-- `Order` 와 `OrderItem` 을 페치 조인한다
-  - `Order` 1개에 `OrderItem` 이 5개 있다고 가정하면 페치 조인시 로우가 5개가 된다.
-  - 즉 같은 `Order` 가 5개가 중복되게 된다.
-  - 이 증복을 없어기 위해서 `distinct` 를 사용할 수 있다.
-  - JPA의 `distinct`는 SQL에 distinct를 추가하고, 더해서 같은 엔티티가 조회되면, 애플리케이션에서 중복을 걸러준다.
-- 결과적으로 SQL 실행 횟수는 1회이다.
+- `Order` 와 `OrderItem` 일대다 관계입니다.
+- `Order` 와 `OrderItem` 을 페치 조인합니다.
+  - `Order` 1개에 `OrderItem` 이 5개 있다고 가정하면 페치 조인시 로우가 5개가 됩니다.
+  - 즉 같은 `Order` 가 5개가 중복되게 됩니다.
+  - 이 증복을 없어기 위해서 `distinct`를 사용할 수 있습니다.
+  - JPA의 `distinct`는 SQL에 distinct를 추가하고, 더해서 같은 엔티티가 조회되면, 애플리케이션에서 중복을 걸러줍니다.
+- 결과적으로 SQL 실행 횟수는 1회입니다.
 - 단점
-  - 컬렉션을 페치 조인하게되면 페이징이 불가능하다.
+  - 컬렉션을 페치 조인하게되면 페이징이 불가능합니다.
 - 페이징이 불가능한 이유
-  - 일다대에서 일(1)을 기준으로 페이징을 하는 것이 목적이다.
-  - 그런데 데이터는 다(N)를 기준으로 row 가 생성된다.
-  - `Order`를 기준으로 페이징 하고 싶은데, 다(N)인 `OrderItem`을 조인하면 OrderItem이 기준이 되어 버린다.
+  - 일다대에서 일(1)을 기준으로 페이징을 하는 것이 목적입니다.
+  - 그런데 데이터는 다(N)를 기준으로 row 가 생성됩니다.
+  - `Order`를 기준으로 페이징 하고 싶은데, 다(N)인 `OrderItem`을 조인하면 OrderItem이 기준이 되어 버려 페이징이 불가능해집니다.
 
-> 참고
->
-> 컬렉션 페치 조인을 사용하면 페이징이 불가능하다. 하이버네이트는 경고 로그를 남기면서 모든 데이터를 DB에서 읽어오고, 메모리에서 페이징 해버리는데 이는 매우 위험하다.
+:::warning 컬렉션 페치 조인을 사용하면 페이징이 불가능하다. 하이버네이트는 경고 로그를 남기면서 모든 데이터를 DB에서 읽어오고, 메모리에서 페이징 해버리는데 이는 매우 위험하다.
+:::
+
+#### 2.3.1 예시
 
 ```java
 @RestController
@@ -166,30 +188,31 @@ public class OrderSimpleQueryRepository {
 
 ### 2.4 엔티티를 DTO로 변환 + 페치 조인 최적화 + 페이징 버전
 
-- 앞선 버전에서는 컬렉션을 페치 조인하면서 페이징이 불가능했다.
-- 페이징 + 컬렉션 엔티티를 함께 조회하는 방법을 알아보자.
+- 앞선 버전에서는 컬렉션을 페치 조인하면서 페이징이 불가능합니다.
+- 페이징이 필요한 경우 컬렉션 엔티티를 함께 조회하는 방법을 알아보겠습니다.
 
-컬렌션 조회 최적화 방법
+#### 2.4.1 컬렌션 조회 최적화 방법
 
-- 먼저 ToOne(OneToOne, ManyToOne) 관계를 모두 페치조인 한다
-  - ToOne 관계는 row수를 증가시 키지 않으므로 페이징 쿼리에 영향을 주지 않는다.
-- 컬렉션은 지연 로딩으로 조회한다.
-- 지연 로딩 성능 최적화를 위해 `spring.jpa.properties.hibernate.default_batch_fetch_size` , `@BatchSize` 를 적용한다.
+- 먼저 ToOne(OneToOne, ManyToOne) 관계를 모두 페치조인 합니다.
+  - ToOne 관계는 row수를 증가시 키지 않으므로 페이징 쿼리에 영향을 주지 않습니다.
+- 컬렉션은 지연 로딩으로 조회합니다.
+- 지연 로딩 성능 최적화를 위해 `spring.jpa.properties.hibernate.default_batch_fetch_size` , `@BatchSize` 를 적용합니다.
   - `spring.jpa.properties.hibernate.default_batch_fetch_size`: 글로벌 설정
-  - `@BatchSize`: 개별 최적화
+  - `@BatchSize`: 개별 설정을 위한 애노테이션
   - 이 옵션을 사용하면 컬렉션이나, 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
 
-장점
+#### 2.4.2 장점
 
-- 쿼리호출수가`1+N` 에서 `1+1`로최적화된다.
-- 컬렉션 페치 조인은 페이징이 불가능 하지만 이 방법은 페이징이 가능하다.
-- 조인보다 DB 데이터 전송량이 최적화 된다.
-  - `Order`와 `OrderItem`을 조인하면 `Order`가 `OrderItem` 만큼 중복해서 조회된다.
+- 쿼리호출수가`1+N` 에서 `1+1`로 최적화됩니다.
+- 컬렉션 페치 조인은 페이징이 불가능 하지만 이 방법은 페이징이 가능합니다.
+- 조인보다 DB 데이터 전송량이 최적화 됩니다.
+  - `Order`와 `OrderItem`을 조인하면 `Order`가 `OrderItem` 만큼 중복해서 조회됩니다.
 
-> 참고
->
->
+:::info
 `default_batch_fetch_size` 의 크기는 적당한 사이즈를 골라야 하는데, 100~1000 사이를 선택 하는 것을 권장한다. 이 전략을 SQL IN 절을 사용하는데, 데이터베이스에 따라 IN 절 파라미터를 1000으로 제한하기도 한다. 1000으로 잡으면 한번에 1000개를 DB에서 애플리케이션에 불러오므로 DB에 순간 부하가 증가할 수 있다. 하지만 애플리케이션은 100이든 1000이든 결국 전체 데이터를 로딩해야 하므로 메모리 사용량이 같다. 1000으로 설정하는 것이 성능상 가장 좋지만, 결국 DB든 애플리케이션이든 순간 부 하를 어디까지 견딜 수 있는지로 결정하면 된다.
+:::
+
+#### 2.4.3 예시
 
 ```java
 @RestController
@@ -228,8 +251,45 @@ public class OrderRepository {
 }
 ```
 
-- 컬렉션의 지연 로딩 성능 최적화를 위해 `hibernate.default_batch_fetch_size` 로 글로벌한 배치 사이즈를 설정한다
-- 이 옵션을 사용하면 컬렉션이나, 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회한다.
+```java
+@Data
+class OrderDto {
+    private Long orderId;
+    private String name;
+    private LocalDateTime orderDate;
+    private OrderStatus orderStatus;
+    private Address address;
+    private List<OrderItemDto> orderItems;
+
+    public OrderDto(Order order) {
+        orderId = order.getId();
+        name = order.getMember().getName();
+        orderDate = order.getOrderDate();
+        orderStatus = order.getStatus();
+        address = order.getDelivery().getAddress();
+        orderItems = order.getOrderItems().stream()
+                .map(orderItem -> new OrderItemDto(orderItem)).collect(toList());
+    }
+}
+```
+
+```java
+@Data
+class OrderItemDto {
+    private String itemName;
+    private int orderPrice;
+    private int count;
+
+    public OrderItemDto(OrderItem orderItem) {
+        itemName = orderItem.getItem().getName();
+        orderPrice = orderItem.getOrderPrice();
+        count = orderItem.getCount();
+    }
+}
+```
+
+- 컬렉션의 지연 로딩 성능 최적화를 위해 `hibernate.default_batch_fetch_size` 로 글로벌한 배치 사이즈를 설정합니다.
+- 이 옵션을 사용하면 컬렉션이나, 프록시 객체를 한꺼번에 설정한 size 만큼 IN 쿼리로 조회합니다.
 
 ```yaml
 spring:
@@ -238,6 +298,90 @@ spring:
       hibernate:
         default_batch_fetch_size: 500
 ```
+
+#### 2.4.4 실제 실행되는 SQL 예시
+
+- `default_batch_fetch_size` 설정을 적용했을 때 실제로 어떤 SQL이 실행되는지 살펴보겠습니다.
+
+##### ToOne 관계 페치 조인 쿼리 (Order, Member, Delivery)
+
+```sql
+SELECT o.order_id    AS order_id,
+       o.order_date  AS order_date,
+       o.status      AS status,
+       m.member_id   AS member_id,
+       m.name        AS member_name,
+       m.city        AS member_city,
+       m.street      AS member_street,
+       m.zipcode     AS member_zipcode,
+       d.delivery_id AS delivery_id,
+       d.status      AS delivery_status,
+       d.city        AS delivery_city,
+       d.street      AS delivery_street,
+       d.zipcode     AS delivery_zipcode
+FROM orders o
+         JOIN
+     member m ON o.member_id = m.member_id
+         JOIN
+     delivery d ON o.delivery_id = d.delivery_id
+ORDER BY o.order_id DESC LIMIT 100
+OFFSET 0;
+```
+
+- 이 쿼리로 ToOne 관계인 Order, Member, Delivery를 한 번에 조회하며, 로우가 늘지 않기 때문에 페이징이 정상적으로 적용됩니다.
+
+##### OrderItem 컬렉션 조회 (배치 사이즈 적용)
+
+- OrderDto 생성 과정에서 `order.getOrderItems()`가 호출될 때, 지연 로딩이 발생하지만 개별 쿼리가 아닌 배치로 조회합니다:
+
+```sql
+SELECT oi.order_item_id AS order_item_id,
+       oi.count AS count,
+    oi.order_price AS order_price,
+    oi.item_id AS item_id,
+    oi.order_id AS order_id
+FROM
+    order_item oi
+WHERE
+    oi.order_id IN (1
+    , 2
+    , 3
+    , ...
+    , 100);
+```
+
+100개의 주문이 조회되었다면, 이 100개 주문의 ID를 한꺼번에 IN 절에 포함시켜 관련 OrderItem을 모두 조회합니다.
+
+##### Item 엔티티 조회 (배치 사이즈 적용)
+
+OrderItemDto 생성 과정에서 `orderItem.getItem().getName()`이 호출될 때, Item도 배치로 조회됩니다:
+
+```sql
+SELECT i.item_id        AS item_id,
+       i.name           AS name,
+       i.price          AS price,
+       i.stock_quantity AS stock_quantity,
+       i.dtype          AS dtype
+FROM item i
+WHERE i.item_id IN (1, 2, 3, . . ., 100);
+```
+
+OrderItem에서 참조하는 모든 Item ID를 모아서 한 번의 쿼리로 조회합니다.
+
+##### 쿼리 실행 횟수 비교
+
+- 최적화 전 (N+1 문제 발생)
+  - Order 목록 조회: 1번
+  - 각 Order별 Member 조회: 100번
+  - 각 Order별 Delivery 조회: 100번
+  - 각 Order별 OrderItem 조회: 100번
+  - 각 OrderItem별 Item 조회: 1000번 (각 주문당 평균 10개 아이템 가정)
+  - 총 쿼리 수: 1 + 100 + 100 + 100 + 1000 = 1301개 쿼리
+- ToOne 관계만 페치 조인 + default_batch_fetch_size: 500 적용 후
+  - Order + Member + Delivery 페치 조인 조회: 1번
+  - OrderItem 배치 조회: 1번 (100개 주문 / 500 배치 사이즈 = 1번의 쿼리)
+  - Item 배치 조회: 2번 (1000개 주문 아이템 / 500 배치 사이즈 = 2번의 쿼리)
+  - 총 쿼리 수: 1 + 1 + 2 = 4개 쿼리
 
 ## 3 DTO 조회
 
@@ -495,10 +639,8 @@ public List<OrderQueryDto> ordersV6() {
 ## 4 권장 순서
 
 1. 엔티티 조회 방식으로 우선접근
-  1. 페치조인으로 쿼리 수를 최적화
-  2. 컬렉션 최적화
-    1. 페이징 필요 hibernate.default_batch_fetch_size , @BatchSize 로 최적화
-    2. 페이징 필요X 페치 조인 사용
+1. 페치조인으로 쿼리 수를 최적화
+2. 컬렉션 최적화 1. 페이징 필요 hibernate.default_batch_fetch_size , @BatchSize 로 최적화 2. 페이징 필요X 페치 조인 사용
 2. 엔티티 조회 방식으로 해결이 안되면 DTO 조회 방식 사용
 3. DTO 조회 방식으로 해결이 안되면 NativeSQL or 스프링 JdbcTemplate
 
@@ -506,8 +648,6 @@ public List<OrderQueryDto> ordersV6() {
 >
 > 개발자는 성능 최적화와 코드 복잡도 사이에서 줄타기를 해야 한다. 항상 그런 것은 아니지만, 보통 성능 최적화는 단순한 코드를 복잡한 코드로 몰고간다. 엔티티 조회 방식은 JPA가 많은 부분을 최적화 해주기 때문에, 단순한 코드를 유지하면서, 성능을 최적화 할 수 있다. 반면에 DTO 조회 방식은 SQL을 직접 다루는 것과 유사하기 때문에, 둘 사이에 줄타기를 해야 한다.
 
-
-
-참조
+## 참조
 
 - [실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-API%EA%B0%9C%EB%B0%9C-%EC%84%B1%EB%8A%A5%EC%B5%9C%EC%A0%81%ED%99%94/dashboard)

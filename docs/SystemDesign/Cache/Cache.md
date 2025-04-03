@@ -1,5 +1,5 @@
 ---
-title: "캐시 전략과 운영 가이드"
+title: "Cache 캐시 전략과 운영 가이드"
 description: "캐시의 기본 개념부터 다양한 캐시 전략, 운영 시 고려사항까지 상세히 알아봅니다. 실제 시스템 운영에서 마주치는 캐시 관련 문제들과 그 해결방안을 다룹니다."
 tags: [ "CACHE", "SYSTEM_DESIGN", "BACKEND", "DATABASE", "INFRASTRUCTURE" ]
 keywords: [ "캐시", "cache", "캐시전략", "cache strategy", "시스템설계", "system design", "백엔드", "backend", "데이터베이스", "database", "캐시운영", "cache operation", "핫키", "hot key" ]
