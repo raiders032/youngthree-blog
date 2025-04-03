@@ -46,7 +46,7 @@ title: "JPA"
 - [Soft Delete](Soft-Delete/Soft-Delete.md)
   - @SQLDelete, @Where, @FilterDef, @Filter
 
-참고
+## 참고
 
 - [자바 ORM 표준 JPA 프로그래밍](http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&ejkGb=KOR&barcode=9788960777330)
 
