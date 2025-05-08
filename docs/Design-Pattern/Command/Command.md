@@ -24,7 +24,7 @@
 
 ## 4 구조
 
-![[Pasted image 20240418221551.png]]
+![Pasted image 20240418221551.png](images/Pasted%20image%2020240418221551.png)
 
 ### 4.1 Invoker(호출자)
 

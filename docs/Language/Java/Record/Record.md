@@ -82,17 +82,75 @@ public void givenValidNameAndAddress_whenGetNameAndAddress_thenExpectedValuesRet
 - 선언된 모든 컴포넌트(필드)를 매개변수로 받습니다.
 - 각 매개변수 값을 해당 필드에 할당합니다.
 
+```java
+// 레코드 선언
+public record Person(String name, int age) { }
+
+// 컴파일러가 자동으로 다음과 같은 표준 생성자 생성
+// public Person(String name, int age) {
+//     this.name = name;
+//     this.age = age;
+// }
+
+// 사용 예시
+Person person = new Person("Kim", 30);
+```
+
+- Record는 선언된 필드에 대해 자동으로 생성된 표준 생성자를 사용하여 객체를 생성할 수 있습니다.
+
 ### 4.2 컴패트 생성자(Compact Constructor)
 
 - 매개변수 목록 없이 정의되는 생성자입니다.
 - 표준 생성자 내부에서 실행됩니다.
 - 필드에 최종 할당되기 전에 유효성 검사 및 변환 작업 수행합니다.
-- this. 접두사 없이 필드에 직접 접근 가능합니다.
+- `this` 접두사 없이 필드에 직접 접근 가능합니다.
+
+```java
+public record Person(String name, int age) {
+    // 컴팩트 생성자
+    public Person {
+        if (name == null) {
+            throw new IllegalArgumentException("이름은 null이 될 수 없습니다");
+        }
+        if (age < 0) {
+            throw new IllegalArgumentException("나이는 음수가 될 수 없습니다");
+        }
+        
+        // 필드 변환 예시 (이름 앞뒤 공백 제거)
+        name = name.trim();
+    }
+}
+
+// 사용 예시
+Person person = new Person("Kim ", 30);
+```
+- `Kim `의 공백이 제거되고 `Kim`으로 저장됨
 
 ### 4.3 커스텀 생성자(Custom Constructor)
 
 - Record는 기본 생성자 외에도 커스텀 생성자를 정의할 수 있습니다.
 - 반드시 표준 생성자나 다른 사용자 정의 생성자를 호출해야 합니다.
+
+```java
+public record Person(String name, int age) {
+    // 이름만 받고 나이는 0으로 설정하는 커스텀 생성자
+    public Person(String name) {
+        this(name, 0); // 표준 생성자 호출
+    }
+    
+    // 나이만 받고 이름은 "Unknown"으로 설정하는 커스텀 생성자
+    public Person(int age) {
+        this("Unknown", age); // 표준 생성자 호출
+    }
+}
+
+// 사용 예시
+Person person1 = new Person("Kim"); // Person[name=Kim, age=0]
+Person person2 = new Person(30);    // Person[name=Unknown, age=30]
+```
+
+- 위와 같이 커스텀 생성자를 정의하면, Record는 기본 생성자 외에도 추가적인 생성자를 제공할 수 있습니다.
+- 다양한 매개변수 조합으로 객체 생성이 가능합니다.
 
 ## 5. 사용 예시
 

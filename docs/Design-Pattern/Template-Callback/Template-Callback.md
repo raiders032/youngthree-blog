@@ -117,12 +117,11 @@ void callbackExample() {
 
 ## 4. 스프링에서의 활용
 
-스프링 프레임워크는 템플릿 콜백 패턴을 적극적으로 활용합니다:
-
-- JdbcTemplate: 데이터베이스 연동
-- RestTemplate: HTTP 통신
-- TransactionTemplate: 트랜잭션 처리
-- RedisTemplate: Redis 데이터 접근
+- 스프링 프레임워크는 템플릿 콜백 패턴을 적극적으로 활용합니다:
+  - JdbcTemplate: 데이터베이스 연동
+  - RestTemplate: HTTP 통신
+  - TransactionTemplate: 트랜잭션 처리
+  - RedisTemplate: Redis 데이터 접근
 
 :::tip
 스프링에서 클래스 이름이 'XxxTemplate'인 경우, 대부분 템플릿 콜백 패턴이 적용되어 있습니다.

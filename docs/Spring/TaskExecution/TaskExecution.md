@@ -170,7 +170,6 @@ ThreadPoolTaskExecutor decoratedTaskExecutor() {
 
 - Spring은 @Async 애노테이션을 사용하여 비동기 메서드를 쉽게 정의할 수 있는 기능을 제공합니다.
 - TaskExecutor를 직접 사용하지 않고 애노테이션을 사용하여 비동기 메서드를 정의할 수 있습니다.
-- The @EnableAsync annotation switches on Spring’s ability to run @Async methods in a background thread pool.
 
 ### 4.1 기본 사용법
 
@@ -265,7 +264,7 @@ public class SampleBeanInitializer {
 ### 4.4 @Async에서 Executor 지정하기
 
 - 기본적으로 메서드에 @Async를 지정할 때 사용되는 executor는 비동기 지원을 활성화할 때 구성된 것입니다. 
-- XML을 사용하는 경우 "annotation-driven" 요소 또는 AsyncConfigurer 구현체입니다. 하지만 특정 메서드를 실행할 때 기본값이 아닌 다른 executor를 지정해야 할 경우 @Async 애노테이션의 value 속성을 사용할 수 있습니다:
+- 특정 메서드를 실행할 때 기본값이 아닌 다른 executor를 지정해야 할 경우 @Async 애노테이션의 value 속성을 사용할 수 있습니다.
 
 ```java
 @Async("otherExecutor")

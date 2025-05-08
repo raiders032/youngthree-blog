@@ -302,18 +302,15 @@ while(resultSet 이 끝날 때 까지) {
 
 - query 메서드는 여러 개의 결과를 반환하는 쿼리를 실행할 때 사용합니다.
 - `RowMapper`는 데이터베이스의 반환 결과인 `ResultSet`을 객체로 변환합니다.
-- 결과가 없으면 빈 리스트를 반환합니다.
+- 결과가 없으면 빈 리스트를 반환
 
-## 7. NamedParameterJdbcTemplate
+## 7. batchUpdate 메서드
 
-- JdbcTemplate은 파라미터를 위치로 전달하는데, NamedParameterJdbcTemplate은 파라미터를 이름으로 전달합니다.
-- NamedParameterJdbcTemplate은 SQL 쿼리에 파라미터 이름을 사용할 수 있어 가독성이 높아집니다.
-- `JdbcTemplate` 대신 `NamedParameterJdbcTemplate`을 사용하는 것을 권장합니다.
+- 하나의 PreparedStatement를 사용해 여러 개의 업데이트 구문을 일괄 처리하는 메서드입니다. 
+- 배치 업데이트와 BatchPreparedStatementSetter를 활용하여 값을 설정합니다.
+- 약 JDBC 드라이버가 배치 업데이트를 지원하지 않는다면, 하나의 PreparedStatement로 각각 분리된 업데이트를 수행합니다.
+- 반환 값
+  - 배치 업데이트가 성공적으로 수행되면 각 SQL 구문이 영향을 준 행의 개수가 담긴 배열을 반환합니다.
+  - MySQL 드라이버는 최적화가 되면 대체로 -2 (SUCCESS_NO_INFO) 를 반환함
+    - 드라이버가 한 SQL로 보냈기 때문에 개별 row 영향 수를 알 수 없음
 
-## 8. SimpleJdbcInsert
-
-- JdbcTemplate은 INSERT SQL를 직접 작성하지 않아도 되도록 `SimpleJdbcInsert` 라는 편리한 기능을 제공합니다.
-
-## 참고
-
-- https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-2

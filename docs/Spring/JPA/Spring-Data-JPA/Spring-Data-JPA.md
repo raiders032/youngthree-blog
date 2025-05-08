@@ -404,14 +404,14 @@ Page<Member> findMemberAllCountBy(Pageable pageable);
 
 ### 4.5 Web 확장 - 페이징과 정렬
 
-- 스프링 데이터가 제공하는 페이징과 정렬 기능을 스프링 MVC에서 편리하게 사용할 수 있다.
-- 파라미터로 Pageable 을 받을 수 있다.
+- 스프링 데이터가 제공하는 페이징과 정렬 기능을 스프링 MVC에서 편리하게 사용할 수 있습니다.
+- Spring MVC의 핸들러 메서드에서 Pageable을 파라미터로 받을 수 있습니다.
 	- `package org.springframework.data.domain`
-- Pageable 은 인터페이스, 실제는 org.springframework.data.domain.PageRequest 객체 생성된다.
+- Pageable은 인터페이스이며, 실제는 org.springframework.data.domain.PageRequest 객체가 바인딩됩니다.
 - 요청예시 : `/members?page=0&size=3&sort=id,desc&sort=username,desc`
-	- page: 현재 페이지, 0부터 시작한다
+	- page: 현재 페이지, 0부터 시작합니다.
 	- size: 한 페이지에 노출할 데이터 건수
-	- sort: 정렬 조건을 정의한다.
+	- sort: 정렬 조건을 정의합니다.
 		- 예) 정렬 속성,정렬 속성...(ASC | DESC)
 		- 정렬 방향을 변경하고 싶으면 sort파라미터 추가 ( asc 생략 가능)
 
@@ -423,14 +423,14 @@ public Page<Member> list(Pageable pageable) {
 }
 ```
 
-**글로벌 설정하기**
+#### 4.5.1 글로벌 설정하기
 
 ```properties
-spring.data.web.pageable.default-page-size=20 # 기본 페이지 사이즈/
+spring.data.web.pageable.default-page-size=20 # 기본 페이지 사이즈
 spring.data.web.pageable.max-page-size=2000 # 최대 페이지 사이즈
 ```
 
-**개별 설정하기**
+- 위와 같이 설정하면 모든 페이지 요청에 대해 기본 페이지 사이즈를 20으로 설정합니다.
 
 ```java
 @RequestMapping(value = "/members_page", method = RequestMethod.GET)
@@ -439,6 +439,24 @@ public String list(@PageableDefault(size = 12, sort = "username",
   ... 
 }
 ```
+
+- 위와 같이 @PageableDefault 어노테이션을 사용하면 특정 컨트롤러에 대해서만 페이지 사이즈를 설정할 수 있습니다.
+- 우선순위는 @PageableDefault가 글로벌 설정보다 높습니다.
+
+####  4.5.2 여러 Pageable 파라미터 사용하기
+
+- 여러 개의 Pageable 파라미터를 사용하고 싶다면 @Qualifier 어노테이션을 사용합니다.
+- @Qualifier 어노테이션을 사용하면 스프링이 어떤 Pageable을 사용할지 구분할 수 있습니다.
+
+```java
+ public String list(
+     @Qualifier("member") Pageable memberPageable,
+     @Qualifier("order") Pageable orderPageable, ...
+```
+
+- 위와 같이 @Qualifier 어노테이션을 사용하면 여러 개의 Pageable 파라미터를 사용할 수 있습니다.
+- `/members?member_page=0&order_page=1`와 같이 요청하면
+  - member_page는 memberPageable에 바인딩되고 order_page는 orderPageable에 바인딩됩니다.
 
 ## 5 벌크성 수정 쿼리
 

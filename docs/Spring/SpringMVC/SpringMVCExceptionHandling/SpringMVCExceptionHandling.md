@@ -225,8 +225,31 @@ public class TypeSpecificExceptionHandler {
 - `@ControllerAdvice`의 글로벌 `@ExceptionHandler` 메서드는 `@Controller`의 로컬 메서드 이후에 적용됩니다.
 - 반대로 글로벌 `@ModelAttribute`와 `@InitBinder` 메서드는 로컬 메서드 이전에 적용됩니다.
 
+### 3.4 다중 @ControllerAdvice 구성
 
-참고
+- 다수의 @ControllerAdvice가 있는 경우, 스프링은 `@Order` 애노테이션을 사용하여 우선순위를 설정할 수 있습니다.
+- 예외 처리 시에는 일반적으로 원인(cause)보다 루트 예외(root exception)에 대한 매칭이 우선되지만, 이 판단은 하나의 @ControllerAdvice 또는 컨트롤러 클래스 내에서만 이루어집니다.
+- 따라서 우선순위가 더 높은 @ControllerAdvice에서 예외의 cause에 대한 매칭이 있다면, 우선순위가 낮은 다른 @ControllerAdvice에서의 루트 예외 매칭보다 더 우선시됩니다.
+
+```java
+@ControllerAdvice
+@Order(1)  // 숫자가 작을수록 우선순위 높음
+public class HighPriorityAdvice {
+    // 예외 처리 메서드들
+}
+
+@ControllerAdvice
+@Order(2)
+public class LowPriorityAdvice {
+    // 이 클래스는 위 클래스보다 나중에 적용됨
+}
+```
+
+- `@Order` 애노테이션은 `org.springframework.core.annotation.Order` 패키지에 포함되어 있습니다.
+- 숫자가 작을수록 우선순위가 높습니다.
+- 생략하면 기본 우선순위는 Ordered.LOWEST_PRECEDENCE (즉, 매우 낮은 우선순위)가 됩니다.
+
+## 참고
 
 - https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html
 - https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html

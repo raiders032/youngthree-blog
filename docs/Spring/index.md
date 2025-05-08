@@ -35,6 +35,7 @@ title: "Spring"
 - [Distributed Locks](DistributedLocks/DistributedLocks.md)
 	- LockRegistry, ExpirableLockRegistry, RenewableLockRegistry
 	- RedisLockRegistry
+- [Java Bean Validation](JavaBeanValidation/JavaBeanValidation.md)
 
 ### Spring MVC
 

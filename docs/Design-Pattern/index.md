@@ -16,3 +16,4 @@ title: "Design Pattern"
 - [Strategy](Strategy/Strategy.md)
 - [Template Callback](Template-Callback/Template-Callback.md) 
 - [Template Method](Template-Method/Template-Method.md)
+- [Visitor](Visitor/Visitor.md)

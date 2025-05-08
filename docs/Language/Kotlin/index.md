@@ -24,6 +24,10 @@ title: "Kotlin"
 - [Modifier](Modifier/Modifier.md)
 - [Nullable Type](Nullable-Type/Nullable-Type.md)
 - [Operator Overloading](Operator-Overloading/Operator-Overloading.md)
+- [Properties](Properties/Properties.md)
+- [Reflection](Reflection/Reflection.md)
+- [ScopeFunction](ScopeFunction/ScopeFunction.md)
+- [SmartCasts](SmartCasts/SmartCasts.md)
 - [Type System](Type-System/Type-System.md)
 - [Variable](Variable/Variable.md)
 
@@ -33,3 +37,5 @@ title: "Kotlin"
 - [Continuation](Coroutines/Continuation/Continuation.md)
 - [Builder](Coroutines/Builder/Builder.md)
 - [Context](Coroutines/CoroutineContext/CoroutineContext)
+
+### [Effective Kotlin](EffectiveKotlin/index.md)

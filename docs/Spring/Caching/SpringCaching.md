@@ -69,6 +69,10 @@ public class MyMathService {
 - 이름에서 알 수 있듯이, @Cacheable을 사용하여 캐시 가능한 메소드를 표시할 수 있습니다.
 - 즉, 결과가 캐시에 저장되는 메소드이므로 (동일한 인수로) 후속 호출 시 메소드를 실제로 호출하지 않고 캐시의 값이 반환됩니다.
 - 가장 간단한 형태로, 어노테이션 선언은 다음 예제와 같이 어노테이션이 달린 메소드와 연결된 캐시의 이름을 필요로 합니다
+- @Cacheable 어노테이션을 사용하면 Cache-Aside(Lazy-Loading) 패턴을 구현할 수 있습니다.
+  - Cache-Aside 패턴은 애플리케이션이 캐시를 직접 관리하는 방식입니다.
+  - 데이터가 캐시에 없으면 애플리케이션이 데이터베이스에서 가져와서 캐시에 저장합니다.
+  - 이후에는 캐시에서 데이터를 읽습니다.
 
 ```java
 @Cacheable("books")
@@ -90,7 +94,8 @@ public Book findBook(ISBN isbn) {...}
 - 이 접근 방식은 매개변수가 자연 키를 가지고 유효한 hashCode()와 equals() 메소드를 구현하는 한 대부분의 사용 사례에서 잘 작동합니다.
 - 다른 기본 키 생성기를 제공하려면 org.springframework.cache.interceptor.KeyGenerator 인터페이스를 구현해야 합니다.
 
-:::info 기본 키 생성 전략은 Spring 4.0 릴리스와 함께 변경되었습니다. 이전 버전의 Spring은 여러 키 매개변수의 경우 매개변수의 equals()가 아닌 hashCode()만 고려했습니다. 이로 인해 예상치 못한 키 충돌이 발생할 수 있었습니다(배경에 대해서는 spring-framework#14870 참조). 새로운 SimpleKeyGenerator는 이러한 시나리오에 복합 키를 사용합니다.
+:::info 
+기본 키 생성 전략은 Spring 4.0 릴리스와 함께 변경되었습니다. 이전 버전의 Spring은 여러 키 매개변수의 경우 매개변수의 equals()가 아닌 hashCode()만 고려했습니다. 이로 인해 예상치 못한 키 충돌이 발생할 수 있었습니다(배경에 대해서는 spring-framework#14870 참조). 새로운 SimpleKeyGenerator는 이러한 시나리오에 복합 키를 사용합니다.
 :::
 
 ### 3.3 Custom Key 사용하기
@@ -201,7 +206,7 @@ public Book findBook(String name)
 
 #### Optional 반환 타입 지원
 
-- Spring의 캐싱 추상화는 java.util.Optional 반환 타입도 지원합니다.
+- Spring의 캐싱 추상화는 `java.util.Optional` 반환 타입도 지원합니다.
 
 ```java
 @Cacheable(cacheNames="book", condition="#name.length() < 32", unless="#result?.hardback")
@@ -218,6 +223,9 @@ public Optional<Book> findBook(String name)
 - 메서드 실행에 간섭하지 않으면서 캐시를 업데이트해야 할 때 @CachePut 어노테이션을 사용할 수 있습니다.
 - 즉, 메서드는 항상 호출되고 그 결과는 (@CachePut 옵션에 따라) 캐시에 저장됩니다.
 - 이 어노테이션은 @Cacheable과 동일한 옵션을 지원하며, 메서드 흐름 최적화보다는 캐시 채우기에 사용해야 합니다.
+- @CachePut 애노테이션을 사용하면 Write-Through 캐시를 구현할 수 있습니다.
+  - Write-Through 캐시는 데이터베이스에 쓰기 작업을 수행할 때 캐시에도 동시에 쓰는 방식입니다.
+  - 이렇게 하면 데이터베이스와 캐시 간의 일관성을 유지할 수 있습니다.
 
 ```java
 @CachePut(cacheNames="book", key="#isbn")
@@ -270,22 +278,6 @@ public void loadBooks(InputStream batch)
   - Cache2k
   - Simple
 
-#### 활용 예시
-
-```java
-// 대용량 데이터 캐싱 제한
-@Cacheable(cacheNames="userData", condition="#userId > 0 && #userId < 10000")
-public UserData getUserData(long userId) { ... }
-
-// 특정 권한을 가진 사용자 데이터만 캐싱
-@Cacheable(cacheNames="userData", condition="#user.hasRole('ADMIN')")
-public UserData getUserDataByAdmin(User user, long userId) { ... }
-
-// 민감한 정보가 포함된 경우 캐싱하지 않음
-@Cacheable(cacheNames="userData", unless="#result?.containsSensitiveInfo")
-public UserData getUserProfile(long userId) { ... }
-```
-
 ### 4.1 Caffeine
 
 - Caffeine은 Guava의 캐시를 대체하는 Java 8 재작성 버전입니다.
@@ -295,15 +287,6 @@ public UserData getUserProfile(long userId) { ... }
   - `spring.cache.caffeine.spec`에 의해 정의된 캐시 스펙
   - `CaffeineSpec` Bean이 정의됨
   - `Caffeine` Bean이 정의됨
-
-#### 설정 예시
-
-```properties
-spring.cache.cache-names=cache1,cache2
-spring.cache.caffeine.spec=maximumSize=500,expireAfterAccess=600s
-```
-
-- 예를 들어, 다음 구성은 500의 최대 크기와 10분의 TTL로 `cache1` 및 `cache2` 캐시를 생성합니다:
 
 ## 참고
 

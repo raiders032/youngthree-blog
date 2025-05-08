@@ -17,6 +17,7 @@ hide_title: true
 
 ## 2. Spring의 LockRegistry 인터페이스
 
+- [레퍼런스](https://docs.spring.io/spring-integration/api/org/springframework/integration/support/locks/LockRegistry.html)
 - Spring Integration은 락 관리를 위한 `LockRegistry` 인터페이스를 제공합니다.
 - 이 인터페이스는 일반적인 락 관리 기능을 정의하며, 구현체에 따라 단일 JVM 내 락이나 분산 락으로 활용할 수 있습니다.
 - 동일한 인터페이스를 통해 다양한 저장소 기반의 락 구현체를 일관된 방식으로 사용할 수 있습니다.
@@ -26,17 +27,24 @@ hide_title: true
 - `obtain(Object lockKey)`
   - 주어진 락 키에 대한 락 객체를 획득합니다.
 - `void executeLocked(Object lockKey, CheckedRunnable<E> runnable)`
+  - 스프링 6.2 이상에서 사용 가능
   - 락을 획득하고 주어진 작업을 실행합니다.
+  - 해당 메서드는 태스크 호출에서 발생한 예외를 다시 던지며, Lock이 중단(interrupt)될 경우 InterruptedException을 던집니다.
 - `T executeLocked(Object lockKey, CheckedCallable<T,E> callable)`
   - 락을 획득하고 결과를 반환하는 작업을 실행합니다.
+  - 해당 메서드는 태스크 호출에서 발생한 예외를 다시 던지며, Lock이 중단(interrupt)될 경우 InterruptedException을 던집니다.
 - `void executeLocked(Object lockKey, Duration waitLockDuration, CheckedRunnable<E> runnable)`
   - 지정된 시간 동안 락 획득을 시도하고 작업을 실행합니다.
+  - 해당 메서드는 태스크 호출에서 발생한 예외를 다시 던지며, Lock이 중단(interrupt)될 경우 InterruptedException을 던집니다.
   - 지정 시간동안 락을 획득하지 못하면 TimeoutException가 발생합니다.
 - `T executeLocked(Object lockKey, Duration waitLockDuration, CheckedCallable<T,E> callable)`
   - 지정된 시간 동안 락 획득을 시도하고 결과를 반환하는 작업을 실행합니다.
+  - 해당 메서드는 태스크 호출에서 발생한 예외를 다시 던지며, Lock이 중단(interrupt)될 경우 InterruptedException을 던집니다.
   - 지정 시간동안 락을 획득하지 못하면 TimeoutException가 발생합니다.
 
 ### 2.2 사용 예시
+
+#### 2.2.1 락을 직접 관리하는 방식
 
 ```java
 // 락을 직접 관리하는 방식
@@ -54,12 +62,25 @@ try {
 catch (InterruptedException e) {
     Thread.currentThread().interrupt();
 }
+```
 
-// executeLocked를 사용한 간편한 방식 (Spring 6.2 이상)
+- LockRegistry의 `obtain` 메서드를 사용하여 락을 획득합니다.
+- `tryLock` 메서드를 사용하여 지정된 시간 동안 락을 획득하려고 시도합니다.
+  - `tryLock` 메서드는 지정된 시간 동안 락을 획득하지 못하면 false를 반환합니다.
+- 락을 획득한 후에는 `unlock` 메서드를 호출하여 락을 해제합니다.
+
+#### 2.2.2 executeLocked를 사용한 간편한 방식
+
+```java
 registry.executeLocked("someLockKey", () -> {
     // 배타적 리소스에 접근하는 코드
 });
 ```
+
+- executeLocked를 사용한 간편한 방식으로  Spring 6.2 이상에서 사용 가능합니다.
+- 이 API의 동작은 잘 알려진 JdbcTemplate, JmsTemplate 또는 RestTemplate과 유사합니다.
+- 템플릿 콜백 패턴으로 구현되어 있습니다.
+  - [Template Callback 패턴 참고](../../Design-Pattern/Template-Callback/Template-Callback.md)
 
 ### 2.3 주요 구현체
 
@@ -79,7 +100,8 @@ public interface ExpirableLockRegistry extends LockRegistry {
 }
 ```
 
-- 일정 시간 이상 사용되지 않은 락을 자동으로 제거할 수 있는 기능을 제공합니다.
+- 스프링 5.0부터 RedisLockRegistry는 `ExpirableLockRegistry`를 구현합니다.
+- 마지막으로 획득한 지 age 이상 지났고 현재 잠겨있지 않은 락을 제거합니다.
 - 오래된 락으로 인한 자원 낭비를 방지하는 데 유용합니다.
 
 ### 3.2 RenewableLockRegistry
