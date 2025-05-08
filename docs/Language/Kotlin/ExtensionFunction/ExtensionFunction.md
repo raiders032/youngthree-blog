@@ -1,5 +1,5 @@
 ---
-title: "코틀린 확장 함수(Extension Function) 완벽 가이드"
+title: "Extension Function"
 description: "코틀린의 강력한 기능인 확장 함수에 대해 자세히 알아봅니다. 기본 개념부터 실전 활용 패턴, 내부 구현 방식, 그리고 주의사항까지 실제 코드 예제와 함께 설명합니다. 자바 개발자와 코틀린 입문자를 위한 실용적인 확장 함수 사용법 가이드입니다."
 tags: [ "EXTENSION_FUNCTION", "KOTLIN", "JAVA_INTEROP", "FUNCTIONAL_PROGRAMMING", "BACKEND" ]
 keywords: [ "코틀린", "Kotlin", "확장함수", "Extension Function", "익스텐션", "확장 메서드", "확장 프로퍼티", "Extension Property", "함수형 프로그래밍", "Functional Programming", "자바 상호운용성", "Java Interoperability", "코틀린 표준 라이브러리", "let", "apply", "with", "run", "also", "확장", "extensions" ]
