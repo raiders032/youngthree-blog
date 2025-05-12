@@ -59,13 +59,38 @@ var <프로퍼티명>[: <타입>] [= <초기화 식>]
 var initialized = 1 // Int 타입으로 추론됨, 기본 게터와 세터가 제공됨
 ```
 
-### 2.1 커스텀 접근자 (Custom Accessors)
+### 2.1 이름 규칙
+
+- 이름이 is로 시작하는 프로퍼티의 게터는 get이 붙지 않고 원래 이름을 그대로 사용합니다.
+- 세터는 is를 set으로 바꾼 이름을 사용합니다.
+
+#### 예시
+
+```kotlin
+class Person(
+	val name: String, 
+	var isStudent: Boolean
+)
+
+fun main() {
+		val person = Person("John", true)
+		println(person.name) // "John"
+		println(person.isStudent) // true
+		person.isStudent = false // 세터 호출
+		println(person.isStudent) // false
+}
+```
+
+- `println(person.name)`에서 프로퍼티 이름을 직접 사용하면 코틀린이 자동으로 게터를 호출합니다.
+- `person.isStudent = false`에서 프로퍼티 이름을 직접 사용하면 코틀린이 자동으로 세터를 호출합니다.
+
+### 2.2 커스텀 접근자 (Custom Accessors)
 
 - 코틀린에서는 프로퍼티에 대한 커스텀 접근자를 정의할 수 있습니다.
 - 커스텀 게터를 정의하면, 프로퍼티에 접근할 때마다 해당 코드가 실행됩니다.
 - 어떤 프로퍼티가 같은 객체 안의 다른 프로퍼티에서 계산된 결과인 경우 커스텀 접근자를 사용합니다.
 
-**예시**
+#### 예시
 
 ```kotlin
 class Rectangle(val width: Int, val height: Int) {
@@ -78,7 +103,7 @@ class Rectangle(val width: Int, val height: Int) {
 val area get() = this.width * this.height
 ```
 
-- 타입이 추론 가능한 경우 더 간결하게 작성할 수 있습니다:
+- 타입이 추론 가능한 경우 더 간결하게 작성할 수 있습니다
 
 ```kotlin
 var stringRepresentation: String
@@ -91,8 +116,9 @@ var stringRepresentation: String
 - 커스텀 세터도 정의할 수 있으며, 프로퍼티에 값을 할당할 때마다 호출됩니다:
 - 관례적으로 세터의 파라미터 이름은 `value`를 사용하지만, 원하는 다른 이름을 선택할 수도 있습니다.
 
-### 2.2 접근자 가시성 변경 및 애노테이션
+### 2.3 접근자 가시성 변경 및 애노테이션
 
+- 접근자의 가시성은 기본적으로 프로퍼티의 가시성과 동일합니다.
 - 접근자의 가시성을 변경하거나 애노테이션을 추가하려면 본문 없이 접근자를 정의할 수 있습니다.
 
 **예시**

@@ -1,8 +1,8 @@
 ---
 title: "Smart Casts"
 description: "코틀린의 가장 강력한 기능 중 하나인 스마트 캐스팅에 대해 알아봅니다. 타입 체크 후 자동으로 이루어지는 타입 변환의 원리와 실제 활용 방법, 그리고 스마트 캐스팅이 동작하지 않는 상황까지 상세히 설명합니다. 코틀린으로 더 안전하고 간결한 코드를 작성하고 싶은 개발자를 위한 가이드입니다."
-tags: ["KOTLIN", "SMART_CASTING", "TYPE_SAFETY", "NULL_SAFETY", "JVM", "BACKEND"]
-keywords: ["코틀린", "Kotlin", "스마트캐스팅", "스마트 캐스팅", "Smart Casting", "Smart Cast", "타입 체크", "Type Check", "타입 안전성", "Type Safety", "널 안전성", "Null Safety", "타입 변환", "Type Conversion", "instanceof", "is 연산자", "as 연산자", "타입 추론", "Type Inference", "코틀린 컴파일러", "Kotlin Compiler", "불변성", "Immutability"]
+tags: [ "KOTLIN", "SMART_CASTING", "TYPE_SAFETY", "NULL_SAFETY", "JVM", "BACKEND" ]
+keywords: [ "코틀린", "Kotlin", "스마트캐스팅", "스마트 캐스팅", "Smart Casting", "Smart Cast", "타입 체크", "Type Check", "타입 안전성", "Type Safety", "널 안전성", "Null Safety", "타입 변환", "Type Conversion", "instanceof", "is 연산자", "as 연산자", "타입 추론", "Type Inference", "코틀린 컴파일러", "Kotlin Compiler", "불변성", "Immutability" ]
 draft: false
 hide_title: true
 ---
