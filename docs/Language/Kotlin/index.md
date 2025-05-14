@@ -12,6 +12,7 @@ title: "Kotlin"
 	- data class
 	- Primary Constructor, Secondary Constructor
 	- by, object, companion object
+  - inline class
 - [Collection](Collection/Collection.md)
 - [Enum](Enum/Enum.md)
 - [Exception](Exception/Exception.md)
