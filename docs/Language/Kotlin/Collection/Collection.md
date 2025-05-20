@@ -124,7 +124,210 @@ println(deque.last()) // 4
 가변 컬렉션을 val로 선언해도 내부 요소는 변경할 수 있습니다. 하지만 참조 자체는 변경할 수 없으므로, 가능한 한 val을 사용하는 것이 안전합니다.
 :::
 
-## 4. 마치며
+## 4. Colletion API
+
+### 4.1 filter
+
+- filter는 컬렉션에서 조건에 맞는 요소만을 추출하는 함수입니다.
+- filter 함수는 컬렉션을 순회하면서 주어진 람다가 true를 반환하는 요소만을 포함하는 새로운 컬렉션을 생성합니다.
+- 걸러내는 원소의 값 뿐 아니라 인덱스도 필요할 때는 `filterIndexed`를 사용합니다.
+- 맵의 경우 키와 값을 처리하는 함수가 따로 존재합니다. `filterKeys`, `filterValues`를 사용합니다.
+
+```kotlin
+fun main() {
+val list = listOf(1, 2, 3, 4)
+println(list.filter { it % 2 == 0 })
+// [2, 4]
+```
+
+- 위의 예제에서, filter 함수는 리스트에서 짝수인 요소만을 추출하여 새로운 리스트를 반환합니다.
+
+### 4.2 map
+
+- map은 컬렉션의 각 요소에 대해 주어진 변환 함수를 적용하여 새로운 컬렉션을 생성하는 함수입니다.
+- 변환하는 연산이 원소의 값 뿐 아니라 인덱스도 필요할 때는 `mapIndexed`를 사용합니다.
+- 맵의 경우 키와 값을 처리하는 함수가 따로 존재합니다. `mapKeys`, `mapValues`를 사용합니다.
+
+```kotlin
+fun main() {
+	val list = listOf(1, 2, 3, 4)
+	println(list.map { it * it })
+	// [1, 4, 9, 16]
+}
+```
+
+- 위의 예제에서, map 함수는 리스트의 각 요소를 제곱하여 새로운 리스트를 반환합니다.
+
+### 4.3 reduce
+
+- reduce는 컬렉션의 모든 요소를 하나의 값으로 축약하는 함수입니다.
+	- 컬렉션의 정보를 종합하는데 유용합니다.
+- 이 값은 누적기를 통해 점진적으로 만들어집니다.
+- reduce 함수는 초깃값으로 컬렉션의 첫 번째 요소를 사용하며, 두 번째 요소부터 주어진 연산을 적용합니다.
+- reduce 함수는 컬렉션이 비어있으면 NoSuchElementException을 발생시킵니다.
+	- 빈 컬렉션에서도 안전하게 사용하려면 reduceOrNull 또는 fold를 사용해야 합니다.
+
+#### 4.3.1 reduce의 동작 과정
+
+- 첫 번째 요소가 초기 누적값(accumulator)이 됩니다.
+- 두 번째 요소부터 순회하면서 누적값과 현재 요소에 대해 지정된 연산을 수행합니다.
+- 연산 결과가 새로운 누적값이 됩니다.
+- 모든 요소를 처리한 후 최종 누적값을 반환합니다.
+
+```kotlin
+fun main() {
+  val numbers = listOf(1, 2, 3, 4)
+  
+  val sum = numbers.reduce { acc, n -> 
+    println("누적값: $acc, 현재 요소: $n, 연산 결과: ${acc + n}")
+    acc + n 
+  }
+  
+  println("최종 결과: $sum")
+}
+```
+
+```text
+누적값: 1, 현재 요소: 2, 연산 결과: 3
+누적값: 3, 현재 요소: 3, 연산 결과: 6
+누적값: 6, 현재 요소: 4, 연산 결과: 10
+최종 결과: 10
+```
+
+#### 4.3.2 fold와의 차이점
+
+- fold는 reduce와 유사하지만 초기값을 명시적으로 제공할 수 있습니다.
+- 따라서 빈 컬렉션에 대해서도 안전하게 사용할 수 있습니다.
+
+```kotlin
+fun main() {
+  val numbers = listOf(1, 2, 3, 4)
+  
+  val sumWithFold = numbers.fold(10) { acc, n ->
+    println("누적값: $acc, 현재 요소: $n, 연산 결과: ${acc + n}")
+    acc + n
+  }
+  
+  println("최종 결과: $sumWithFold")
+}
+```
+
+```text
+누적값: 10, 현재 요소: 1, 연산 결과: 11
+누적값: 11, 현재 요소: 2, 연산 결과: 13
+누적값: 13, 현재 요소: 3, 연산 결과: 16
+누적값: 16, 현재 요소: 4, 연산 결과: 20
+최종 결과: 20
+```
+
+#### 4.3.3 다양한 reduce 변형 함수들
+
+- runningReduce: 각 단계에서의 누적값을 포함하는 리스트를 반환합니다.
+- reduceRight: 컬렉션의 마지막 요소부터 시작하여 역순으로 연산을 수행합니다.
+- reduceIndexed: 각 요소의 인덱스 정보도 함께 제공합니다.
+- reduceRightIndexed: reduceRight의 인덱스 제공 버전입니다.
+
+### 4.4 컬렉션에 Predicate 적용
+
+- 컬렉션에 자주 수행하는 연산으로 컬렉션의 모든 원소가 어떤 조건을 만족하는지 판단하는 것이 있습니다.
+- 코틀린에서는 all, any, none, count, find 등의 함수를 제공합니다.
+- all: 모든 원소가 조건을 만족하는지 확인합니다.
+- any: 하나라도 조건을 만족하는지 확인합니다.
+- none: 모든 원소가 조건을 만족하지 않는지 확인합니다.
+- count: 조건을 만족하는 원소의 개수를 반환합니다.
+- find: 조건을 만족하는 첫 번째 원소를 반환합니다. 없으면 null을 반환합니다.
+	- firstOrNull과 같은 기능입니다.
+
+```kotlin
+fun main() {
+ val people = listOf(Person("Alice", 27), Person("Bob", 31))
+ 
+ println(people.all { it.age <= 27 }) // false
+ println(people.any { it.age <= 27 }) // true
+ println(people.none { it.age <= 27 }) // false
+ println(people.count { it.age <= 27 }) // 1
+ println(people.find { it.age <= 27 }) // Person(name=Alice, age=27)
+}
+```
+
+### 4.5 partition
+
+- partition은 컬렉션을 두 개의 리스트로 나누는 함수입니다.
+- 컬렉션을 어떤 Predicate을 만족하는 그룹과 그렇지 않은 그룹으로 나눌 때 유용합니다.
+
+```kotlin
+fun main() {
+	val people = listOf(Person("Alice", 26), Person("Bob", 29), Person("Carol", 31))
+	val comeIn = people.filer(canBeInClub27)
+	val stayOut = people.filterNot(canBeInClub27)
+	println(comeIn) // [Person(name=Alice, age=26)]
+	println(stayOut) // [Person(name=Bob, age=29), Person(name=Carol, age=31)]
+}
+```
+
+- predicate를 만족하는 원소는 comeIn 리스트에, 그렇지 않은 원소는 stayOut 리스트에 저장됩니다.
+- 위 예시는 두 개의 리스트를 위해 전체 컬렉션을 두 번 순회합니다.
+
+```kotlin
+val (comeIn, stayOut) = people.partition(canBeInClub27)
+println(comeIn) // [Person(name=Alice, age=26)]
+println(stayOut) // [Person(name=Bob, age=29), Person(name=Carol, age=31)]
+```
+
+- partition은 컬렉션을 한 번만 순회하여 두 개의 리스트를 생성합니다.
+
+### 4.6 groupBy
+
+- groupBy는 컬렉션의 요소를 특정 키에 따라 그룹화하는 함수입니다.
+  - partition과 유사하지만, partition은 `true`와 `false`로 나누는 반면, groupBy는 다양한 키로 그룹화할 수 있습니다.
+  - 예를 들어, 사람을 나이에 따라 그룹화할 수 있습니다.
+
+```kotlin
+fun main() {
+	val list = listOf("apple", "apricot", "banana", "cantaloupe")
+	println(list.groupBy { String::first))
+	// {a=[apple, apricot], b=[banana], c=[cantaloupe]}
+}
+```
+
+- 위 예제에서, groupBy는 각 문자열의 첫 글자를 키로 사용하여 문자열을 그룹화합니다.
+
+### 4.7 associate
+
+- associate는 컬렉션의 각 요소를 키-값 쌍으로 변환하여 Map으로 만드는 함수입니다.
+
+```kotlin
+fun main() {
+	val people = listOf(Person("Joe", 22), Person("Mary", 31))
+	val nameToAge = people.associateBy { it.name to it.age }
+	println(nameToAge) // {Joe=22, Mary=31}
+	println(nameToAge["Joe"]) // 22
+}
+```
+
+#### 4.7.1 associateWith & associateBy
+
+- associateWith는 각 요소를 키로 사용하고, 제공된 람다는 각 요소에 대응하는 값을 만드는데 사용됩니다.
+- associateBy는 각 요소를 맵의 값으로하고, 제공된 람다는 각 요소에 대응하는 키를 만드는데 사용됩니다.
+
+##### 예시
+
+```kotlin
+fun main() {
+	val people = listOf(Person("Joe", 22), Person("Mary", 31), Person("Jamie, 22))
+	val personToAge = people.associateWith { it.age } // 람다는 값을 만드는 역할
+	println(personToAge) // {Person(name=Joe, age=22)=22, Person(name=Mary, age=31)=31, Person(name=Jamie, age=22)=22}
+	
+	val ageToPerson = people.associateBy { it.age } // 람다는 키를 만드는 역할
+	println(ageToPerson) // {22=Person(name=Jamie, age=22), 31=Person(name=Mary, age=31)}
+}
+```
+
+- 위 예제에서, associateWith는 각 Person 객체를 키로 사용하고, age를 값으로 사용하여 Map을 생성합니다.
+- associateBy는 각 Person 객체의 age를 키로 사용하고, Person 객체를 값으로 사용하여 Map을 생성합니다.
+- 맵에서는 키는 유일하기 때문에 변환 함수가 중복된 키를 생성하면 마지막에 생성된 값만 남게 됩니다.
+ 
+## 5. 마치며
 
 - 코틀린의 컬렉션 시스템은 불변/가변 인터페이스의 명확한 구분과 풍부한 표준 라이브러리 함수를 통해 안전하고 효율적인 데이터 처리를 가능하게 합니다.
 - 각 컬렉션 타입의 특성을 이해하고 적절히 활용하면, 더 견고하고 유지보수하기 쉬운 코드를 작성할 수 있습니다.
