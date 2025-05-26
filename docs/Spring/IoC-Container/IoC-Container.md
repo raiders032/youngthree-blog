@@ -422,7 +422,7 @@ public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discou
 6. 소멸 전 콜백
 7. 스프링 컨테이너 종료
 
-### 7.2 인터페이스
+### 7.2 InitializingBean과 DisposableBean 인터페이스
 
 ```java
 package org.springframework.beans.factory;
@@ -494,9 +494,17 @@ public class NetworkClient {
 }
 ```
 
-- 이 방식은 최신 스프링에서 가장 권장하는 방법으로, 간편하게 사용할 수 있고 자바 표준(JSR-250)이므로 다른 컨테이너에서도 동작합니다.
-- 단, 외부 라이브러리에는 적용할 수 없습니다.
-- 패키지를 보면 javax.annotation.PostConstruct이고 스프링에 의존하지 않습니다.
+- JSR-250 자바 표준 애노테이션으로 jakarta.annotation 패키지에 포함되어 있습니다.
+  - `jakarta.annotation.PostConstruct`, `jakarta.annotation.PreDestroy`
+  - 패키지를 보면 `jakarta.annotation`이고 스프링에 의존하지 않습니다.
+  - 따라서 Spring 외의 다른 DI 컨테이너에서도 동작합니다.
+- 이 방식은 최신 스프링에서 가장 권장하는 방법입니다.
+- 해당 클래스의 코드를 직접 수정할 수 있을 때만 사용 가능합니다.
+  - 따라서 외부 라이브러리에는 적용할 수 없습니다.
+- 다른 초기화/소멸 방법과 비교
+  - InitializingBean, DisposableBean 인터페이스는 Spring에 종속됩니다.
+  - @Bean(initMethod="", destroyMethod="") 방식은 외부 라이브러리에도 적용이 가능합니다.
+  - @PostConstruct, @PreDestroy 애노테이션은 자바 표준이므로 권장하는 방법입니다.
 
 ## 8. 빈 스코프
 

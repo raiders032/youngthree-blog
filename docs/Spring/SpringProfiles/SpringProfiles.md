@@ -24,6 +24,8 @@ hide_title: true
 
 - 프로파일 활성화 방법은 다음과 같이 여러 가지가 있습니다
 - 또한 다중 프로파일 활성화가 가능합니다.
+- 활성화된 프로파일이 없으면 기본 프로파일이 활성화됩니다. 
+  - 기본 프로파일의 이름은 default이며, `spring.profiles.default` Environment 속성을 사용하여 기본 프로파일의 이름을 변경할 수 있습니다.
 
 ### 3.1 환경 변수로 지정
 
@@ -72,19 +74,19 @@ public class AppConfig {
 - 스프링 부트는 프로파일별 설정 파일을 자동으로 감지하고 로드하는 규칙을 가지고 있습니다.
 - 기본 설정 파일:
 	- application.properties 또는 application.yml
-	- 모든 환경에서 공통으로 사용되는 기본 설정 정의
-		- 특정 프로파일이 활성화되면 해당 프로파일의 설정이 이 기본 설정을 덮어씁니다
+	- 모든 환경에서 공통으로 사용되는 기본 설정을 여기에 작성합니다.
+  - 특정 프로파일이 활성화되면 해당 프로파일의 설정이 이 기본 설정을 덮어씁니다.
 - 프로파일별 설정 파일:
 	- `application-{profile}.properties` 또는 `application-{profile}.yml`
-	- `{profile}` 부분에 실제 프로파일 이름이 들어갑니다
-	- 예: development 프로파일용 application-development.yml
+	- `{profile}` 부분에 실제 프로파일 이름이 들어갑니다.
+	- 예: development 프로파일을 활성화하면 `application-development.yml`이 로드됩니다.
 - 설정 로드 우선순위:
-	- 프로파일 설정 파일이 기본 설정 파일보다 우선순위가 높습니다
-	- 예: dev 프로파일 활성화시 application-dev.yml의 설정이 application.yml의 동일 설정을 덮어씁니다.
+	- 프로파일 설정 파일이 기본 설정 파일보다 우선순위가 높습니다.
+	- 예: dev 프로파일 활성화시 `application-dev.yml`의 설정이 `application.yml`의 동일 설정을 덮어씁니다.
 
 ```
 src/main/resources/
-├── application.yml               # 공통 설정
+├── application.yml              # 공통 설정
 ├── application-dev.yml          # 개발 환경
 ├── application-prod.yml         # 운영 환경
 └── application-test.yml         # 테스트 환경
@@ -118,13 +120,14 @@ server:
   port: 443
 ```
 
-- YAML 파일에서 spring.config.activate.on-profile은 문서 구분자(---)와 함께 사용하여 프로파일별 설정 블록을 구분합니다.
-- 이렇게 하나의 YAML 파일 안에서 여러 프로파일의 설정을 관리할 수 있습니다. 프로파일이 활성화되면 해당 블록의 설정이 적용됩니다.
-- 문서 구분자(---) 사용 필수입니다.
-- 각 블록의 시작에 spring.config.activate.on-profile 지정합니다.
+- YAML 파일에서 `spring.config.activate.on-profile`은 문서 구분자(`---`)와 함께 사용하여 프로파일별 설정 블록을 구분합니다.
+- 이렇게 하나의 YAML 파일 안에서 여러 프로파일의 설정을 관리할 수 있습니다. 
+  - `spring.config.activate.on-profile`에 명시된 프로파일이 활성화되면 해당 블록의 설정이 적용됩니다.
+- 문서 구분자(`---`) 사용 필수입니다.
+- 각 블록의 시작에 `spring.config.activate.on-profile` 지정합니다.
 - 프로파일 미지정 블록은 공통 설정으로 적용됩니다.
 
-#### 분리 파일 방식 (application-dev.yml)
+#### 4.2.2 분리 파일 방식 (application-dev.yml)
 
 ```yaml
 spring:
@@ -137,6 +140,7 @@ spring:
 ## 5. @Profile 어노테이션 활용
 
 - `@Profile` 어노테이션은 특정 프로파일이 활성화됐을 때만 빈을 등록하거나 설정을 활성화하는 조건부 구성을 가능하게 합니다.
+- 모든 @Component, @Configuration 또는 @ConfigurationProperties는 @Profile로 표시하여 언제 로드될지 제한할 수 있습니다.
 
 ### 5.1 클래스 레벨 적용
 
@@ -187,6 +191,39 @@ public class DatabaseConfig {
 5. 환경 변수 (SPRING_PROFILES_ACTIVE)
 6. application.yml의 spring.profiles.active
 
+## 7. 프로파일 추가하기(`spring.profiles.include`)
+
+- [레퍼런스](https://docs.spring.io/spring-boot/reference/features/profiles.html#features.profiles.adding-active-profiles)
+- 때로는 기존 활성 프로파일을 대체하지 않고 추가하는 속성이 유용한 경우가 있습니다. 
+- `spring.profiles.include` 속성은 `spring.profiles.active` 속성으로 활성화된 프로파일 위에 활성 프로파일을 추가하는 데 사용할 수 있습니다.
+- 추가된 프로파일은 모든 `spring.profiles.active` 프로파일보다 먼저 추가됩니다.
+
+### 7.1 주의사항
+
+```yml
+# ❌ 불가능 - application-dev.yml 같은 프로파일 특정 파일에서
+spring:
+  profiles:
+    include: common  # 이렇게 사용 불가
+
+---
+# ❌ 불가능 - 프로파일 특정 문서 블록에서  
+spring:
+  config:
+    activate:
+      on-profile: dev
+  profiles:
+    include: common  # 이렇게 사용 불가
+
+---
+# ✅ 가능 - application.yml의 기본 문서에서
+spring:
+  profiles:
+    include: common  # 이렇게 사용 가능
+```
+
+- `spring.profiles.include`는 전역적으로 항상 포함되어야 하는 프로파일을 정의하는 용도이기 때문에, 특정 프로파일이 활성화될 때만 동작하는 조건부 설정에서는 사용할 수 없습니다.
+
 ## 7. 실전 활용 예제
 
 ### 7.1 환경별 로깅 설정
@@ -231,3 +268,7 @@ public class ProdService implements MyService {
 - 프로파일 이름은 일관된 네이밍 규칙 적용
 - 활성화된 프로파일 로그 확인
 - 기본 프로파일 설정 관리
+
+## 참고
+
+- https://docs.spring.io/spring-boot/reference/features/profiles.html

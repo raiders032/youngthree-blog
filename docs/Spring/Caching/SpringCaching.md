@@ -7,13 +7,13 @@
 
 ### 1.1 의존성
 
-- Spring Boot Starter Cache를 사용하여 캐싱을 사용할 수 있습니다.
-
 ```groovy
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 ```
+
+- Spring Boot Starter Cache를 사용하여 캐싱을 사용할 수 있습니다.
 
 ### 1.2 @EnableCaching
 
@@ -58,11 +58,11 @@ public class MyMathService {
 ## 3. Declarative Annotation-based Caching
 
 - 스프링의 캐싱 추상화는 다음과 같은 자바 어노테이션을 제공합니다
-  - @Cacheable: 캐시 채우기를 트리거합니다.
-  - @CacheEvict: 캐시 제거를 트리거합니다.
-  - @CachePut: 메소드 실행에 간섭하지 않고 캐시를 업데이트합니다.
-  - @Caching: 하나의 메소드에 적용할 여러 캐시 작업을 그룹화합니다.
-  - @CacheConfig: 클래스 레벨에서 일부 공통 캐시 관련 설정을 공유합니다.
+	- @Cacheable: 캐시 채우기를 트리거합니다.
+	- @CacheEvict: 캐시 제거를 트리거합니다.
+	- @CachePut: 메소드 실행에 간섭하지 않고 캐시를 업데이트합니다.
+	- @Caching: 하나의 메소드에 적용할 여러 캐시 작업을 그룹화합니다.
+	- @CacheConfig: 클래스 레벨에서 일부 공통 캐시 관련 설정을 공유합니다.
 
 ### 3.1 @Cacheable 어노테이션
 
@@ -70,9 +70,9 @@ public class MyMathService {
 - 즉, 결과가 캐시에 저장되는 메소드이므로 (동일한 인수로) 후속 호출 시 메소드를 실제로 호출하지 않고 캐시의 값이 반환됩니다.
 - 가장 간단한 형태로, 어노테이션 선언은 다음 예제와 같이 어노테이션이 달린 메소드와 연결된 캐시의 이름을 필요로 합니다
 - @Cacheable 어노테이션을 사용하면 Cache-Aside(Lazy-Loading) 패턴을 구현할 수 있습니다.
-  - Cache-Aside 패턴은 애플리케이션이 캐시를 직접 관리하는 방식입니다.
-  - 데이터가 캐시에 없으면 애플리케이션이 데이터베이스에서 가져와서 캐시에 저장합니다.
-  - 이후에는 캐시에서 데이터를 읽습니다.
+	- Cache-Aside 패턴은 애플리케이션이 캐시를 직접 관리하는 방식입니다.
+	- 데이터가 캐시에 없으면 애플리케이션이 데이터베이스에서 가져와서 캐시에 저장합니다.
+	- 이후에는 캐시에서 데이터를 읽습니다.
 
 ```java
 @Cacheable("books")
@@ -88,14 +88,15 @@ public Book findBook(ISBN isbn) {...}
 
 - 캐시는 기본적으로 키-값 저장소이므로, 캐시된 메소드의 각 호출을 캐시 액세스에 적합한 키로 변환해야 합니다.
 - 캐싱 추상화는 다음 알고리즘에 기반한 간단한 KeyGenerator를 사용합니다.
-  - 매개변수가 없으면 SimpleKey.EMPTY를 반환합니다.
-  - 매개변수가 하나만 있으면 해당 인스턴스를 반환합니다.
-  - 매개변수가 둘 이상이면 모든 매개변수를 포함하는 SimpleKey를 반환합니다.
+	- 매개변수가 없으면 SimpleKey.EMPTY를 반환합니다.
+	- 매개변수가 하나만 있으면 해당 인스턴스를 반환합니다.
+	- 매개변수가 둘 이상이면 모든 매개변수를 포함하는 SimpleKey를 반환합니다.
 - 이 접근 방식은 매개변수가 자연 키를 가지고 유효한 hashCode()와 equals() 메소드를 구현하는 한 대부분의 사용 사례에서 잘 작동합니다.
 - 다른 기본 키 생성기를 제공하려면 org.springframework.cache.interceptor.KeyGenerator 인터페이스를 구현해야 합니다.
 
-:::info 
-기본 키 생성 전략은 Spring 4.0 릴리스와 함께 변경되었습니다. 이전 버전의 Spring은 여러 키 매개변수의 경우 매개변수의 equals()가 아닌 hashCode()만 고려했습니다. 이로 인해 예상치 못한 키 충돌이 발생할 수 있었습니다(배경에 대해서는 spring-framework#14870 참조). 새로운 SimpleKeyGenerator는 이러한 시나리오에 복합 키를 사용합니다.
+:::info
+기본 키 생성 전략은 Spring 4.0 릴리스와 함께 변경되었습니다. 이전 버전의 Spring은 여러 키 매개변수의 경우 매개변수의 equals()가 아닌 hashCode()만 고려했습니다. 이로 인해 예상치 못한
+키 충돌이 발생할 수 있었습니다(배경에 대해서는 spring-framework#14870 참조). 새로운 SimpleKeyGenerator는 이러한 시나리오에 복합 키를 사용합니다.
 :::
 
 ### 3.3 Custom Key 사용하기
@@ -117,9 +118,9 @@ public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)
 - 위의 예제에서, key 속성은 SpEL 표현식으로 지정됩니다.
 - 위의 코드 조각은 특정 인수, 그 속성 중 하나 또는 임의의 (정적) 메소드를 선택하는 것이 얼마나 쉬운지 보여줍니다.
 - @Cacheable(cacheNames="books", key="T(someType).hash(#isbn)")
-  - T(someType)은 someType이라는 클래스의 정적 메소드를 호출합니다.
-  - 이 메소드는 isbn 매개변수를 사용하여 해시를 계산합니다.
-  - 이렇게 하면 캐시 키를 생성할 수 있습니다.
+	- T(someType)은 someType이라는 클래스의 정적 메소드를 호출합니다.
+	- 이 메소드는 isbn 매개변수를 사용하여 해시를 계산합니다.
+	- 이렇게 하면 캐시 키를 생성할 수 있습니다.
 
 ```java
 @Cacheable(cacheNames="books", keyGenerator="myKeyGenerator")
@@ -133,17 +134,17 @@ public Book findBook(ISBN isbn, boolean checkWarehouse, boolean includeUsed)
 ### 3.4 CacheManager와 CacheResolver
 
 - 스프링은 캐시를 관리하는데 두 가지 개념을 사용합니다.
-  - CacheManager: 캐시 저장소를 직접 관리하는 객체
-  - CacheResolver: 어떤 캐시를 사용할지 결정하는 객체
+	- CacheManager: 캐시 저장소를 직접 관리하는 객체
+	- CacheResolver: 어떤 캐시를 사용할지 결정하는 객체
 - 보통은 간단한 방법으로 작동합니다. 어노테이션에 캐시 이름을 적으면 스프링이 알아서 해당 캐시를 찾아 사용합니다.
 - 만약 여러 캐시 매니저를 사용한다면 각 메서드마다 어떤 캐시를 사용할지 지정할 수 있습니다.
-  - 여러 종류의 캐시(Redis, Caffeine, Ehcache 등)를 동시에 사용하는 경우에 이 기능이 유용합니다.
-  - `@Cacheable(cacheNames="books", cacheManager="anotherCacheManager")`:
-    - books라는 캐시를 anotherCacheManager에서 찾습니다.
-  - 더 복잡한 로직으로 캐시를 결정하고 싶다면 CacheResolver를 직접 구현하고 지정할 수 있습니다.
-    - `@Cacheable(cacheResolver="runtimeCacheResolver")`
+	- 여러 종류의 캐시(Redis, Caffeine, Ehcache 등)를 동시에 사용하는 경우에 이 기능이 유용합니다.
+	- `@Cacheable(cacheNames="books", cacheManager="anotherCacheManager")`:
+		- books라는 캐시를 anotherCacheManager에서 찾습니다.
+	- 더 복잡한 로직으로 캐시를 결정하고 싶다면 CacheResolver를 직접 구현하고 지정할 수 있습니다.
+		- `@Cacheable(cacheResolver="runtimeCacheResolver")`
 - cacheManager와 cacheResolver 둘 다 같이 사용하면 안 됩니다.
-  - 둘 중 하나만 사용해야 합니다. 둘 다 지정하면 에러가 발생합니다.
+	- 둘 중 하나만 사용해야 합니다. 둘 다 지정하면 에러가 발생합니다.
 
 ```java
 // Redis 캐시 사용
@@ -189,8 +190,8 @@ public Book findBook(String name)
 
 - condition 속성은 SpEL(Spring Expression Language) 표현식을 사용하여 캐싱 여부를 결정합니다
 - 이 예제에서는 name 매개변수의 길이가 32 미만인 경우에만 캐싱이 적용됩니다.
-  - 조건이 true이면 메서드 결과가 캐시에 저장됩니다.
-  - 조건이 false이면 메서드가 항상 실행되며 결과는 캐시에 저장되지 않습니다.
+	- 조건이 true이면 메서드 결과가 캐시에 저장됩니다.
+	- 조건이 false이면 메서드가 항상 실행되며 결과는 캐시에 저장되지 않습니다.
 
 #### unless 속성
 
@@ -202,7 +203,7 @@ public Book findBook(String name)
 - unless 속성은 condition과 달리 메서드 실행 후에 평가되며, 캐시에 결과를 저장할지 여부를 결정합니다.
 - name 길이가 32 미만인 경우에만 캐싱 처리를 고려합니다(condition 조건)
 - 그리고 결과 객체의 hardback 속성이 true가 아닌 경우에만 실제로 캐시에 저장합니다.
-  - unless가 true면 캐시에 저장하지 않습니다.
+	- unless가 true면 캐시에 저장하지 않습니다.
 
 #### Optional 반환 타입 지원
 
@@ -224,8 +225,8 @@ public Optional<Book> findBook(String name)
 - 즉, 메서드는 항상 호출되고 그 결과는 (@CachePut 옵션에 따라) 캐시에 저장됩니다.
 - 이 어노테이션은 @Cacheable과 동일한 옵션을 지원하며, 메서드 흐름 최적화보다는 캐시 채우기에 사용해야 합니다.
 - @CachePut 애노테이션을 사용하면 Write-Through 캐시를 구현할 수 있습니다.
-  - Write-Through 캐시는 데이터베이스에 쓰기 작업을 수행할 때 캐시에도 동시에 쓰는 방식입니다.
-  - 이렇게 하면 데이터베이스와 캐시 간의 일관성을 유지할 수 있습니다.
+	- Write-Through 캐시는 데이터베이스에 쓰기 작업을 수행할 때 캐시에도 동시에 쓰는 방식입니다.
+	- 이렇게 하면 데이터베이스와 캐시 간의 일관성을 유지할 수 있습니다.
 
 ```java
 @CachePut(cacheNames="book", key="#isbn")
@@ -235,20 +236,20 @@ public Book updateBook(ISBN isbn, BookDescriptor descriptor)
 #### 주의사항
 
 - 동일한 메서드에 @CachePut과 @Cacheable 어노테이션을 함께 사용하는 것은 일반적으로 권장되지 않습니다.
-  - 왜냐하면 두 어노테이션은 서로 다른 동작 방식을 가지기 때문입니다.
-  - 후자는 캐시를 사용하여 메서드 호출을 건너뛰게 하는 반면, 전자는 캐시 업데이트를 실행하기 위해 메서드 호출을 강제합니다.
+	- 왜냐하면 두 어노테이션은 서로 다른 동작 방식을 가지기 때문입니다.
+	- 후자는 캐시를 사용하여 메서드 호출을 건너뛰게 하는 반면, 전자는 캐시 업데이트를 실행하기 위해 메서드 호출을 강제합니다.
 - 이로 인해 예상치 못한 동작이 발생할 수 있으며, 특정 예외 케이스(예: 어노테이션이 서로를 배제하는 조건을 가지는 경우)를 제외하고 이러한 선언은 피해야 합니다.
 
 ### 3.7 @CacheEvict 어노테이션
 
-- 캐시 추상화는 캐시 저장소의 채우기뿐만 아니라 제거도 허용합니다. 
-- 이 프로세스는 캐시에서 오래된 데이터나 사용되지 않는 데이터를 제거하는 데 유용합니다. 
-- @Cacheable과 달리, @CacheEvict는 캐시 제거를 수행하는 메서드를 표시합니다(즉, 캐시에서 데이터를 제거하는 트리거 역할을 하는 메서드). 
-- 형제 어노테이션과 마찬가지로, @CacheEvict는 작업의 영향을 받는 하나 이상의 캐시를 지정해야 하며, 사용자 정의 캐시 및 키 해석 또는 조건을 지정할 수 있습니다. 
+- 캐시 추상화는 캐시 저장소의 채우기뿐만 아니라 제거도 허용합니다.
+- 이 프로세스는 캐시에서 오래된 데이터나 사용되지 않는 데이터를 제거하는 데 유용합니다.
+- @Cacheable과 달리, @CacheEvict는 캐시 제거를 수행하는 메서드를 표시합니다(즉, 캐시에서 데이터를 제거하는 트리거 역할을 하는 메서드).
+- 형제 어노테이션과 마찬가지로, @CacheEvict는 작업의 영향을 받는 하나 이상의 캐시를 지정해야 하며, 사용자 정의 캐시 및 키 해석 또는 조건을 지정할 수 있습니다.
 - 또한 키 기반 항목 제거가 아닌 캐시 전체 제거가 필요한지 여부를 나타내는 추가 매개변수(allEntries)가 있습니다.
-- void 메서드는 @CacheEvict와 함께 사용할 수 있습니다. 
-  - 메서드가 트리거 역할을 하므로 반환 값은 무시됩니다(캐시와 상호 작용하지 않으므로). 
-  - 이는 캐시에 데이터를 추가하거나 캐시의 데이터를 업데이트하는 @Cacheable의 경우와는 다릅니다.
+- void 메서드는 @CacheEvict와 함께 사용할 수 있습니다.
+	- 메서드가 트리거 역할을 하므로 반환 값은 무시됩니다(캐시와 상호 작용하지 않으므로).
+	- 이는 캐시에 데이터를 추가하거나 캐시의 데이터를 업데이트하는 @Cacheable의 경우와는 다릅니다.
 
 #### allEntries 속성
 
@@ -259,34 +260,136 @@ public void loadBooks(InputStream batch)
 
 - 다음 예제는 books 캐시에서 모든 항목을 제거합니다
 - allEntries 속성을 사용하여 캐시에서 모든 항목을 제거합니다.
-- 이 옵션은 전체 캐시 영역을 비워야 할 때 유용합니다. 
-  - 각 항목을 개별적으로 제거하는 대신(시간이 오래 걸리고 비효율적임), 모든 항목이 하나의 작업으로 제거됩니다.
+- 이 옵션은 전체 캐시 영역을 비워야 할 때 유용합니다.
+	- 각 항목을 개별적으로 제거하는 대신(시간이 오래 걸리고 비효율적임), 모든 항목이 하나의 작업으로 제거됩니다.
 
 ## 4. 지원되는 캐시 프로바이더
 
-- 특정 캐시 라이브러리를 추가하지 않으면 Spring Boot는 메모리에 동시성 맵을 사용하는 간단한 프로바이더를 자동 구성합니다.
-  - 간단한 프로바이더는 실제 프로덕션 사용에는 권장되지 않지만, 시작하고 기능을 이해하는 데 좋습니다.
-- 캐시 추상화는 실제 저장소를 제공하지 않고 Cache 및 CacheManager 인터페이스로 구성됩니다.
-- CacheManager 유형의 Bean이나 cacheResolver라는 이름의 CacheResolver(CachingConfigurer 참조)를 정의하지 않은 경우, Spring Boot는 다음 프로바이더를 (지정된 순서대로) 감지하려고 시도합니다
-  - Generic
-  - JCache (JSR-107) (EhCache 3, Hazelcast, Infinispan 등)
+- Spring은 캐시 추상화(Cache Abstraction)라는 개념을 사용합니다. 
+- 스프링 캐시는 Cache와 CacheManager 인터페이스에 의존합니다.
+- 이는 실제 캐시 구현체(Redis, EhCache, Caffeine 등)와 상관없이 동일한 방식으로 캐시 기능을 사용할 수 있게 해주는 계층입니다.
+- CacheManager 타입의 빈 또는 cacheResolver라는 이름의 CacheResolver 타입 빈을 정의하지 않으면, Spring Boot는 클래스패스를 스캔하여 사용 가능한 캐시 라이브러리를 우선순위 순서대로 찾습니다.
+
+### 4.1 캐시 프로바이더 우선순위
+
+- Spring Boot는 개발자가 캐시 설정을 직접 하지 않으면 자동으로 적절한 캐시 제공자를 찾아서 구성해줍니다.
+- 캐시 프로바이더의 우선순위는 다음과 같습니다
+  - Generic - 기본 ConcurrentHashMap 기반
+  - JCache (JSR-107) - 표준 Java 캐시 API
+  - EhCache 2.x
   - Hazelcast
   - Infinispan
   - Couchbase
   - Redis
   - Caffeine
-  - Cache2k
-  - Simple
+  - Simple - 단순한 ConcurrentHashMap
+- 특정 캐시 라이브러리를 추가하지 않으면 Spring Boot는 메모리에 동시성 맵을 사용하는 간단한 프로바이더를 자동 구성합니다.
+	- 간단한 프로바이더는 실제 프로덕션 사용에는 권장되지 않지만, 시작하고 기능을 이해하는 데 좋습니다.
 
-### 4.1 Caffeine
+### 4.2 특정 프로파이더 지정하기
 
-- Caffeine은 Guava의 캐시를 대체하는 Java 8 재작성 버전입니다.
-- Caffeine이 있는 경우, `spring-boot-starter-cache` 스타터에서 제공하는 CaffeineCacheManager가 자동 구성됩니다.
-- `spring.cache.cache-names` 속성을 설정하여 시작 시 캐시를 생성할 수 있으며, 다음 중 하나로 사용자 정의할 수 있습니다.
-- 사용자 정의 순서
-  - `spring.cache.caffeine.spec`에 의해 정의된 캐시 스펙
-  - `CaffeineSpec` Bean이 정의됨
-  - `Caffeine` Bean이 정의됨
+- 앞서 설명한 것처럼 Spring Boot는 클래스패스에 있는 캐시 라이브러리를 자동으로 감지해서 사용합니다. 
+- 하지만 때로는 개발자가 원하는 특정 캐시 제공자를 강제로 사용하고 싶을 수 있습니다.
+- 이 경우 `spring.cache.type` 속성을 사용하여 원하는 캐시 제공자를 지정할 수 있습니다.
+- 만약 프로젝트에 Redis와 Caffeine 의존성이 모두 있다면. 우선순위에 따라 Redis가 선택됩니다. 
+  - caffeine을 사용하고 싶다면 `spring.cache.type=caffeine`으로 설정하면 됩니다.
+- 테스트 환경에서 캐시를 사용하지 않으려면 `spring.cache.type=none`으로 설정하면 됩니다.
+  - 테스트에서는 캐시로 인한 성능 향상보다는 정확한 동작 검증이 중요합니다.
+  - 캐시 때문에 테스트 결과가 달라지는 것을 방지합니다.
+
+```yaml
+
+### 4.2 캐시 프로바이더 설정
+
+```java
+@Configuration
+public class CacheConfig {
+    
+    @Bean
+    public CacheManager cacheManager() {
+        // 개발자가 직접 CacheManager를 정의한 경우
+        return new RedisCacheManager(...);
+    }
+    
+    // 또는
+    @Bean
+    public CacheResolver cacheResolver() {
+        // 개발자가 직접 CacheResolver를 정의한 경우
+        return new SimpleCacheResolver(...);
+    }
+}
+```
+
+- 캐시 프로바이더를 설정하는 방법은 두 가지입니다.
+  - CacheManager를 직접 정의하는 방법
+  - CacheResolver를 직접 정의하는 방법
+- 개발자가 위와 같은 설정을 하지 않았다면, Spring Boot는 클래스패스를 스캔해서 사용 가능한 캐시 라이브러리를 우선순위 순서대로 찾습니다.
+
+## 5 Caffeine
+
+- Caffeine은 Guava의 캐시를 Java 8로 다시 작성한 것으로, Guava 지원을 대체합니다. 
+
+### 5.1 의존성 추가
+
+```groovy
+implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
+```
+
+- 캐시 프로바이더를 제공하기 위해서 Caffeine 라이브러리를 사용합니다.
+- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine 이곳에서 Caffeine 라이브러리를 확인할 수 있습니다.
+
+### 5.2 Caffeine 설정
+
+```yml
+spring:
+  cache:
+    type: caffeine
+    cache-names:
+      - userCache
+      - productCache
+      - orderCache
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=600s,recordStats
+```
+
+- 위의 예제는 Caffeine 캐시를 설정하는 방법을 보여줍니다.
+- `spring.cache.type`을 caffeine으로 설정하면 CaffeineCacheManager가 자동으로 설정됩니다.
+- `spring.cache.caffeine.spec` 속성을 사용하여 Caffeine 캐시의 설정을 지정할 수 있습니다.
+- `maximumSize`는 캐시에 최대 항목수를 설정합니다.
+- `expireAfterWrite`는 캐시 항목이 작성된 후 만료되는 시간을 설정합니다.
+- `recordStats`는 캐시 통계를 기록하도록 설정합니다.
+
+```java
+@Configuration
+@EnableCaching
+public class MultiCacheConfig {
+
+    @Bean
+    public CacheManager cacheManager() {
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        
+        List<Cache> caches = Arrays.asList(
+            buildCache("userCache", 1000, 30),
+            buildCache("productCache", 5000, 60),
+            buildCache("orderCache", 2000, 15)
+        );
+        
+        cacheManager.setCaches(caches);
+        return cacheManager;
+    }
+
+    private Cache buildCache(String name, int maximumSize, int expireAfterWriteMinutes) {
+        return new CaffeineCache(name, Caffeine.newBuilder()
+                .maximumSize(maximumSize)
+                .expireAfterWrite(expireAfterWriteMinutes, TimeUnit.MINUTES)
+                .recordStats()
+                .build());
+    }
+}
+```
+
+- 위의 예제는 여러 개의 캐시를 개별적으로 설정하는 방법을 보여줍니다.
+
 
 ## 참고
 
