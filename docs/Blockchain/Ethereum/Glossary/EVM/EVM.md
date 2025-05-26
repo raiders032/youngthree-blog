@@ -182,16 +182,16 @@ GASLIMIT   //Get the block's gas limit
   * 계정은 이더리움 주소와 계정의 상태를 매핑한 것이다.
   * wolrd state는 이러한 계정의 집합이다.
 
-[img src="./images/world-state.png" alt="world state" style="zoom:70%;" /]
+![world-state.png](images/world-state.png)
 
-] 각 이더리움 주소는 이더 잔액, 논스, 계정의 스토리지, 계정의 프로그램 코드를 의미한다.
-]
-] [img src="./images/world-state2.png" alt="image-20211216112929387" style="zoom:70%;" /]
-]
-] * 이더 잔액: 계좌가 소유한 웨이
-] * 논스: EOA일 경우 성공적으로 전송한 트랜잭션의 수, CA인 경우 생성된 컨트랙트의 수
-] * 스토리지: 스마트 컨트랙트에서만 사용하는 영구 데이터 저장소, EOA는 스토리지가 비어있다.
-] * 프로그램 코드: CA일 경우만 존재, EOA는 코드가 없다
+각 이더리움 주소는 이더 잔액, 논스, 계정의 스토리지, 계정의 프로그램 코드를 의미한다.
+
+![world-state2.png](images/world-state2.png)
+
+* 이더 잔액: 계좌가 소유한 웨이
+* 논스: EOA일 경우 성공적으로 전송한 트랜잭션의 수, CA인 경우 생성된 컨트랙트의 수
+* 스토리지: 스마트 컨트랙트에서만 사용하는 영구 데이터 저장소, EOA는 스토리지가 비어있다.
+* 프로그램 코드: CA일 경우만 존재, EOA는 코드가 없다
 
 
 

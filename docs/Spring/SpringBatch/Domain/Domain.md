@@ -163,7 +163,7 @@
 - 파일을 처리하다가 오류가 발생하거나 시스템이 중단되어도, 현재까지 처리한 위치를 저장해두어 재시작 시 그 지점부터 다시 시작할 수 있습니다.
 - `executionContext.putLong(getKey(LINES_READ_COUNT), reader.getPosition());`
   - 위와 같이 `ExecutionContext`에 현재 읽은 줄 수를 저장할 수 있습니다.
-  - 이 정보가 BATCH_STEP_EXECUTION_CONTEXT 테이블에 {piece.count=40321}로 저장됨
+  - 이 정보가 BATCH_STEP_EXECUTION_CONTEXT 테이블에 `{piece.count=40321}`로 저장됨
   - 재시작시에는 저장된 컨텍스트 정보를 읽어와서 해당 위치부터 다시 읽기 시작할 수 있습니다.
 
 ```java
