@@ -47,6 +47,7 @@ public record UserRegistrationRequest(
 
 - Spring MVC에서는 두 가지 유효성 검증 방식을 제공합니다.
 - 하나는 검증하고 싶은 파라미터에 @Valid 어노테이션을 붙여 검증하는 방식이고 또 다른 하나는 파라미터에 직접 제약 조건을 붙여 검증하는 방식입니다.
+  - 전자를 **메서드 인자 검증(Method Argument Validation)**이라고 하고, 후자를 **메서드 검증(Method Validation)**이라고 합니다.
   - 메서드 인자 검증: @Valid 어노테이션을 사용하여 메서드 인자에 대한 유효성 검증을 수행합니다.
   - 메서드 검증: @Constraint 어노테이션(@Min, @NotBlank 등)을 사용하여 메서드 인자 또는 반환값에 대한 유효성 검증을 수행합니다.
 - 아래 예시를 통해 구분해보겠습니다.
