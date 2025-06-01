@@ -41,11 +41,14 @@ title: "Kotlin"
 - [Type System](Type-System/Type-System.md)
 - [Variable](Variable/Variable.md)
 
-### [Coroutine](Coroutines/index.md)
+### Coroutines
 
+- [index](Coroutines/index.md)
 - [Coroutines](Coroutines/Coroutines/Coroutines.md)
 - [Continuation](Coroutines/Continuation/Continuation.md)
 - [Builder](Coroutines/Builder/Builder.md)
 - [Context](Coroutines/CoroutineContext/CoroutineContext)
 
-### [Effective Kotlin](EffectiveKotlin/index.md)
+### Effective Kotlin
+
+- [index](EffectiveKotlin/index.md)
