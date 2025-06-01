@@ -313,7 +313,7 @@ class CountingSet<T>(
 - 싱글턴 객체는 선언문이 있는 위치에서 생성자 호출 없이 즉시 생성됩니다.
 - 객체 선언도 클래스나 인터페이스를 상속할 수 있습니다.
 
-#### 객체 선언 예시
+#### 8.1.1 object: 객체 선언 예시
 
 ```kotlin
 import java.util.Comparator
