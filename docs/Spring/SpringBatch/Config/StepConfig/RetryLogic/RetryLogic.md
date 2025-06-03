@@ -1,6 +1,6 @@
 ---
 title: "Retry Logic"
-description: "Spring Batch에서 예외 상황을 효과적으로 처리하기 위한 재시도(Retry) 로직 설정 방법을 알아봅니다. Step 실행 중 발생하는 일시적 예외를 처리하고 배치 처리의 안정성을 높이는 실용적인 가이드입니다."
+description: "Spring Batch에서 예외 상황을 효과적으로 처리하기 위한 재시도(Retry) 로직 설정 방법을 알아봅니다. StepConfig 실행 중 발생하는 일시적 예외를 처리하고 배치 처리의 안정성을 높이는 실용적인 가이드입니다."
 tags: ["SPRING_BATCH", "RETRY", "EXCEPTION_HANDLING", "SPRING", "BACKEND", "JAVA"]
 keywords: ["스프링배치", "Spring Batch", "재시도", "retry", "리트라이", "예외처리", "exception handling", "DeadlockLoserDataAccessException", "데드락", "deadlock", "배치처리", "batch processing", "스프링", "Spring", "자바", "Java", "백엔드"]
 draft: false

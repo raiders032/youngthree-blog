@@ -9,11 +9,17 @@ title: "Spring Batch"
 - [MetaData Schema](MetaDataSchema/MetaDataSchema.md)
 - [JobRepository](JobRepository/JobRepository.md)
 
-## Job & Step Configuration
+## Configuration
 
-- [Job](Config/Job/Job.md)
-- [Step.md](Config/Step/index.md)
-  - Chunk-oriented Processing, Commit Interval, Retry Logic, Skip Logic
+- Job Configuration
+  - [Job Configuration](Config/JobConfig/JobConfig/JobConfig.md)
+  - [Running a Job](Config/JobConfig/RunningJob/RunningJob.md)
+- Step Configuration
+  - [Step Configuration](Config/StepConfig/StepConfig/StepConfig.md)
+  - [Chunk-oriented Processing](Config/StepConfig/Chunk-orientedProcessing/Chunk-orientedProcessing.md)
+  - [Commit Interval](Config/StepConfig/CommitInterval/CommitInterval.md)
+  - [Retry Logic](Config/StepConfig/RetryLogic/RetryLogic.md)
+  - [Skip Logic](Config/StepConfig/SkipLogic/SkipLogic.md) 
 
 ## Item Operations
 

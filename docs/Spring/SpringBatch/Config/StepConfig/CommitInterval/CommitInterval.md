@@ -21,7 +21,7 @@
 - Java Configuration을 사용하여 Commit Interval을 설정할 수 있습니다.
 - `StepBuilder`의 `chunk()` 메소드를 사용하여 Commit Interval을 지정합니다.
 
-**Java 설정 예시**
+### 4.1 Java 설정 예시
 
 ```java
 @Bean
