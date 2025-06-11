@@ -48,11 +48,11 @@ public class PersonForm {
 ## 2. Bean Validation Provider 구성하기
 
 - Spring은 Bean Validation API를 완벽하게 지원하며, Bean Validation Provider를 Spring 빈으로 구성할 수 있습니다.
-- 이를 통해 애플리케이션에서 검증이 필요한 모든 곳에 `jakarta.validation.ValidatorFactory` 또는 `jakarta.validation.Validator`를 주입할 수 있습니다.
-
-:::info 프로바이더(provider)는 Bean Validation API를 구현하는 실제 라이브러리를 의미합니다. Bean Validation API(예: jakarta.validation 패키지)는 인터페이스와 어노테이션만 정의하고 있으며, 실제 검증 로직을 수행하는 구현체는 따로 필요합니다. 이 구현체를
-`Bean Validation Provider`라고 부릅니다. 가장 널리 사용되는 Bean Validation 프로바이더는 Hibernate Validator입니다.
-:::
+  - 프로바이더(provider)는 Bean Validation API를 구현하는 실제 라이브러리를 의미합니다. 
+  - Bean Validation API(예: jakarta.validation 패키지)는 인터페이스와 어노테이션만 정의하고 있으며, 실제 검증 로직을 수행하는 구현체는 따로 필요합니다. 
+  - 이 구현체를 `Bean Validation Provider`라고 부릅니다. 
+  - 가장 널리 사용되는 Bean Validation 프로바이더는 Hibernate Validator입니다.
+- 이를 통해 애플리케이션에서 검증이 필요한 모든 곳에 `jakarta.validation.ValidatorFactory` 또는 `jakarta.validation.Validator`를 주입받아 검증을 수행할 수 있습니다.
 
 ### 2.1 기본 Validator 구성
 
@@ -69,7 +69,7 @@ public class AppConfig {
 }
 ```
 
-- `LocalValidatorFactoryBean`을 사용하여 기본 Validator를 Spring 빈으로 구성할 수 있습니다:
+- `LocalValidatorFactoryBean`을 사용하여 기본 Validator를 Spring 빈으로 구성할 수 있습니다.
 - `LocalValidatorFactoryBean`은 `jakarta.validation.ValidatorFactory`와 `jakarta.validation.Validator` 모두를 구현합니다.
 - 위의 기본 구성은 기본 부트스트랩 메커니즘을 사용하여 Bean Validation을 초기화합니다.
 - Hibernate Validator와 같은 Bean Validation 제공자가 클래스패스에 있어야 하며 자동으로 감지됩니다.
@@ -78,8 +78,8 @@ public class AppConfig {
 
 ### 3.1 Jakarta Validator 주입
 
-- `LocalValidatorFactoryBean`은 `jakarta.validation.ValidatorFactory`와 `jakarta.validation.Validator` 모두를 구현합니다.
-- Bean Validation API를 직접 사용하려면 후자에 대한 참조를 주입할 수 있습니다:
+- 앞서 빈으로 구성한 `LocalValidatorFactoryBean`은 `jakarta.validation.ValidatorFactory`와 `jakarta.validation.Validator`를 모두 구현합니다.
+- 따라서 Bean Validation API를 직접 사용하는 경우, `jakarta.validation.Validator`를 주입받아 사용할 수 있습니다.
 
 ```java
 import jakarta.validation.Validator;
@@ -93,12 +93,12 @@ public class MyService {
 ```
 
 - `LocalValidatorFactoryBean`은 `jakarta.validation.Validator`를 구현했기 때문에, 빈으로 주입할 수 있습니다.
+- 이후 `validator`를 사용하여 객체의 유효성을 검증할 수 있습니다.
 
 ### 3.2 Spring Validator 주입
 
-- `LocalValidatorFactoryBean`은 `jakarta.validation.Validator`를 구현할 뿐만 아니라
-  `org.springframework.validation.Validator`에도 적응합니다.
-- 빈이 Spring Validation API를 필요로 하는 경우 후자에 대한 참조를 주입할 수 있습니다:
+- `LocalValidatorFactoryBean`은 `jakarta.validation.Validator`를 구현할 뿐만 아니라 `org.springframework.validation.Validator`도 구현합니다.
+- 빈이 Spring Validation API를 필요로 하는 경우 `org.springframework.validation.Validator`를 주입받아 사용할 수 있습니다.
 
 ```java
 import org.springframework.validation.Validator;
@@ -111,8 +111,7 @@ public class MyService {
 }
 ```
 
-- `org.springframework.validation.Validator`로 사용될 때, `LocalValidatorFactoryBean`은 기본
-  `jakarta.validation.Validator`를 호출한 다음:
+- `org.springframework.validation.Validator`로 사용될 때, `LocalValidatorFactoryBean`은 기본 `jakarta.validation.Validator`를 호출한 다음
   - `ConstraintViolations`를 `FieldErrors`로 변환합니다.
   - `validate` 메서드에 전달된 `Errors` 객체에 등록합니다.
 
@@ -215,7 +214,7 @@ public class ApplicationConfiguration {
 public class UserService {
     public User createUser(@NotNull @Valid User user) {
         // ...
-    }
+    }b
 }
 ```
 

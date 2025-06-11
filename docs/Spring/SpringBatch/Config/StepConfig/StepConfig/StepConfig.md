@@ -147,3 +147,8 @@ public Step step1(JobRepository jobRepository, PlatformTransactionManager transa
 - Skip, Retry, Rollback 제어 등의 구성을 통해 유연한 예외 처리가 가능합니다.
 - 이러한 구성을 적절히 활용하면 안정적이고 효율적인 배치 처리 시스템을 구축할 수 있습니다.
 - 실제 운영 환경에서는 데이터의 특성과 비즈니스 요구사항을 고려하여 적절한 예외 처리 전략을 선택해야 합니다.
+
+## 참고
+
+- https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/retry-logic.html
+- https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/controlling-rollback.html

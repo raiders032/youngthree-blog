@@ -21,7 +21,7 @@ Skip Logic은 데이터의 성격과 비즈니스 요구사항에 따라 신중�
 ### 2.1 Skip Limit 설정
 
 - Spring Batch에서 Skip Logic을 사용하려면 먼저 `faultTolerant()`를 활성화하고 `skipLimit()`를 설정해야 합니다.
-- 만약 `skipLimit()`을 설정하지 않으면 기본값은 10입니다. 즉, 최대 10개의 아이템을 스킵할 수 있습니다.
+- 만약 `skipLimit()`의 인자를 설정하지 않으면 기본값은 10입니다. 즉, 최대 10번의 예외 발생을 허용합니다.
 
 #### 기본 Skip 설정 예시
 
@@ -159,15 +159,12 @@ public Step resilientStep(JobRepository jobRepository, PlatformTransactionManage
 
 ### 5.1 설정 순서
 
-:::info
-
-`skip()`과 `noSkip()` 메서드의 호출 순서는 중요하지 않습니다. Spring Batch가 예외 계층 구조를 기반으로 적절한 설정을 찾아 적용합니다.
-
-:::
+- `skip()`과 `noSkip()` 메서드의 호출 순서는 중요하지 않습니다. 
+- Spring Batch가 예외 계층 구조를 기반으로 적절한 설정을 찾아 적용합니다.
 
 ### 5.2 로깅 및 모니터링
 
-Skip된 레코드는 반드시 로깅되어야 하며, 이는 일반적으로 리스너를 통해 처리됩니다:
+- Skip된 레코드는 반드시 로깅되어야 하며, 이는 일반적으로 리스너를 통해 처리됩니다:
 
 ```java
 @Bean
@@ -192,10 +189,9 @@ public Step monitoredStep(JobRepository jobRepository, PlatformTransactionManage
 
 ## 6. 마치며
 
-Spring Batch의 Skip Logic은 견고한 배치 처리 시스템을 구축하는 데 필수적인 기능입니다. 데이터의 특성과 비즈니스 요구사항을 충분히 고려하여 적절한 Skip 전략을 수립하고, 모니터링을 통해 지속적으로 개선해 나가는 것이 중요합니다.
+- Spring Batch의 Skip Logic은 견고한 배치 처리 시스템을 구축하는 데 필수적인 기능입니다. 
+- 데이터의 특성과 비즈니스 요구사항을 충분히 고려하여 적절한 Skip 전략을 수립하고, 모니터링을 통해 지속적으로 개선해 나가는 것이 중요합니다.
 
-:::warning
+## 참고
 
-Skip Logic을 사용할 때는 항상 데이터 정합성과 비즈니스 규칙을 우선적으로 고려해야 합니다. 편의를 위해 무분별하게 Skip을 허용하면 데이터 품질 문제가 발생할 수 있습니다.
-
-:::
+- https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/configuring-skip.html

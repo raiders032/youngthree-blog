@@ -8,8 +8,8 @@ title: "JdbcTemplate"
 - JdbcTemplate은 spring-jdbc 라이브러리에 포함되어 있는데, 이 라이브러리는 스프링으로 JDBC를 사용할 때 기본으로 사용되는 라이브러리이다.
 - JdbcTemplate를 사용하면 개발자는 SQL을 작성하고, 전달할 파리미터를 정의하고, 응답 값을 매핑하기만 하면 된다.
 - SQL을 직접 사용하는 경우에 스프링이 제공하는 JdbcTemplate은 아주 좋은 선택지입니다.
-  - JdbcTemplate은 JDBC를 매우 편리하게 사용할 수 있게 도와줍니다.
-  - 실무에서 가장 간단하고 실용적인 방법으로 SQL을 사용하려면 JdbcTemplate을 사용하면 됩니다.
+	- JdbcTemplate은 JDBC를 매우 편리하게 사용할 수 있게 도와줍니다.
+	- 실무에서 가장 간단하고 실용적인 방법으로 SQL을 사용하려면 JdbcTemplate을 사용하면 됩니다.
 
 ### 1.1 JDBC의 단점
 
@@ -25,14 +25,14 @@ title: "JdbcTemplate"
 - 이러한 JDBC의 단점을 보완하고자 스프링에서는 JdbcTemplate을 제공합니다.
 - JdbcTemplate은 JDBC를 래핑하여 위에서 언급한 문제점들을 해결해 줍니다.
 - 반복적인 코드 제거
-  - JdbcTemplate은 템플릿 콜백 패턴을 사용해서, JDBC를 직접 사용할 때 발생하는 대부분의 반복 작업을 대신 처리해준다.
-  - 커넥션 획득, Statement 준비와 실행, ResultSet 처리, 리소스 종료 등의 작업을 내부적으로 처리합니다.
-  - 개발자는 SQL 작성과 파라미터 설정, 결과 매핑에만 집중할 수 있습니다.
+	- JdbcTemplate은 템플릿 콜백 패턴을 사용해서, JDBC를 직접 사용할 때 발생하는 대부분의 반복 작업을 대신 처리해준다.
+	- 커넥션 획득, Statement 준비와 실행, ResultSet 처리, 리소스 종료 등의 작업을 내부적으로 처리합니다.
+	- 개발자는 SQL 작성과 파라미터 설정, 결과 매핑에만 집중할 수 있습니다.
 - 예외 처리 단순화
-  - JdbcTemplate은 체크 예외를 언체크 예외로 변환해주므로 매번 try-catch 블록을 사용하지 않아도 됩니다. 
-  - 이는 코드의 가독성을 높여줍니다.
+	- JdbcTemplate은 체크 예외를 언체크 예외로 변환해주므로 매번 try-catch 블록을 사용하지 않아도 됩니다.
+	- 이는 코드의 가독성을 높여줍니다.
 - 트랜잭션 관리 편의성
-  - JdbcTemplate은 트랜잭션 관리를 위한 유틸리티 메소드를 제공하므로 개발자는 복잡한 트랜잭션 관리 코드를 직접 작성하지 않아도 됩니다.
+	- JdbcTemplate은 트랜잭션 관리를 위한 유틸리티 메소드를 제공하므로 개발자는 복잡한 트랜잭션 관리 코드를 직접 작성하지 않아도 됩니다.
 
 ### 1.3 JdbcTemplate의 장점
 
@@ -306,11 +306,105 @@ while(resultSet 이 끝날 때 까지) {
 
 ## 7. batchUpdate 메서드
 
-- 하나의 PreparedStatement를 사용해 여러 개의 업데이트 구문을 일괄 처리하는 메서드입니다. 
+- 하나의 PreparedStatement를 사용해 여러 개의 업데이트 구문을 일괄 처리하는 메서드입니다.
+
+### 7.1 사용 예시
+
+```java
+int[] batchUpdate(String... sql)
+```
+
+- 여러 개의 서로 다른 SQL 문을 한 번에 실행합니다.
+- 각 SQL은 독립적이며 파라미터가 없는 정적 SQL입니다.
+- 가변인자로 여러 SQL을 전달합니다.
+
+```java
+@Service
+public class UserService {
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
+    public void executeMultipleDDL() {
+        int[] results = jdbcTemplate.batchUpdate(
+            "CREATE TABLE temp_users (id INT, name VARCHAR(50))",
+            "INSERT INTO temp_users VALUES (1, 'John')",
+            "INSERT INTO temp_users VALUES (2, 'Jane')",
+            "DROP TABLE temp_users"
+        );
+        
+        // results 배열에는 각 SQL의 영향받은 행 수가 저장됨
+        logBatchResults(results);
+    }
+    
+    private void logBatchResults(int[] results) {
+        for (int i = 0; i < results.length; i++) {
+            System.out.println("SQL " + (i + 1) + " affected rows: " + results[i]);
+        }
+    }
+}
+```
+
+```java
+batchUpdate(String sql, List<Object[]> batchArgs)
+```
+
+- 동일한 SQL을 여러 번 실행하되, 각각 다른 파라미터 사용합니다.
+- 가장 간단하고 많이 사용되는 배치 처리 방식입니다.
+- 파라미터 타입은 자동으로 추론됩니다.
+
+```java
+@Service
+public class UserBatchService {
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
+    public void batchInsertUsers(List<User> users) {
+        String sql = "INSERT INTO users (name, email, age) VALUES (?, ?, ?)";
+        
+        List<Object[]> batchArgs = createBatchArgs(users);
+        
+        int[] results = jdbcTemplate.batchUpdate(sql, batchArgs);
+        
+        validateBatchResults(results, users.size());
+    }
+    
+    private List<Object[]> createBatchArgs(List<User> users) {
+        return users.stream()
+                .map(user -> new Object[]{user.getName(), user.getEmail(), user.getAge()})
+                .collect(Collectors.toList());
+    }
+    
+    private void validateBatchResults(int[] results, int expectedCount) {
+        if (results.length != expectedCount) {
+            throw new RuntimeException("배치 처리 결과 수가 예상과 다릅니다.");
+        }
+        
+        for (int result : results) {
+            if (result <= 0) {
+                throw new RuntimeException("일부 데이터 처리가 실패했습니다.");
+            }
+        }
+    }
+}
+```
+
 - 배치 업데이트와 BatchPreparedStatementSetter를 활용하여 값을 설정합니다.
 - 약 JDBC 드라이버가 배치 업데이트를 지원하지 않는다면, 하나의 PreparedStatement로 각각 분리된 업데이트를 수행합니다.
 - 반환 값
-  - 배치 업데이트가 성공적으로 수행되면 각 SQL 구문이 영향을 준 행의 개수가 담긴 배열을 반환합니다.
-  - MySQL 드라이버는 최적화가 되면 대체로 -2 (SUCCESS_NO_INFO) 를 반환함
-    - 드라이버가 한 SQL로 보냈기 때문에 개별 row 영향 수를 알 수 없음
+	- 배치 업데이트가 성공적으로 수행되면 각 SQL 구문이 영향을 준 행의 개수가 담긴 배열을 반환합니다.
+	- MySQL 드라이버는 최적화가 되면 대체로 -2 (SUCCESS_NO_INFO) 를 반환함
+		- 드라이버가 한 SQL로 보냈기 때문에 개별 row 영향 수를 알 수 없음
 
+## 8. NamedParameterJdbcTemplate
+
+- Template 클래스로, 전통적인 `?` 플레이스홀더 대신 명명된 매개변수를 사용할 수 있도록 하는 기본적인 JDBC 연산 집합을 제공합니다.
+- 
+
+- `NamedParameterJdbcTemplate`은 `JdbcTemplate`의 확장으로, SQL 쿼리에서 파라미터를 이름으로 지정할 수 있게 해줍니다.
+- 이렇게 하면 SQL 쿼리가 더 읽기 쉽고 유지보수가 용이해집니다.
+
+## 참고
+
+- https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html

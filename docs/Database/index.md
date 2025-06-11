@@ -37,6 +37,7 @@ title: "Database"
 
 - [NoSQL](NoSQL/index.md)
 - [MongoDB](MongoDB/index.md)
+- [Redis](Redis/index.md)
 
 ## 응용
 

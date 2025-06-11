@@ -1,3 +1,12 @@
+---
+title: "ItemReader"
+description: "Spring Batch의 핵심 컴포넌트인 ItemReader의 성능 최적화 방법을 상세히 알아봅니다. Cursor 기반과 Paging 기반 ItemReader의 차이점, 대용량 데이터 처리 시 발생하는 성능 이슈와 해결책, Zero Offset Paging 기법까지 실무에서 바로 적용할 수 있는 최적화 전략을 제공합니다."
+tags: ["SPRING_BATCH", "ITEMREADER", "PERFORMANCE", "DATABASE", "SPRING", "BACKEND", "JAVA"]
+keywords: ["스프링배치", "Spring Batch", "ItemReader", "아이템리더", "배치처리", "batch processing", "성능최적화", "performance optimization", "커서", "cursor", "페이징", "paging", "대용량데이터", "bulk data", "제로오프셋", "zero offset", "데이터베이스", "database", "스프링", "Spring", "자바", "Java", "백엔드", "backend"]
+draft: false
+hide_title: true
+---
+
 ## 1 ItemReader
 
 - ItemReader는 다양한 소스(데이터베이스, 파일, XML 등)로부터 데이터를 읽어오는 역할을 담당합니다.
