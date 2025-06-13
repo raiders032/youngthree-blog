@@ -41,7 +41,7 @@ public interface MemberRepositoryCustom {
 
 - 구현 클래스의 이름은 반드시 특정 명명 규칙을 따라야 합니다.
 - `리포지토리 인터페이스 이름 + Impl` 또는 `사용자 정의 인터페이스 이름 + Impl`
-- @Enable<StoreModule>Repositories(repositoryImplementationPostfix = …)를 설정하여 저장소별 접미사를 커스터마이징할 수 있습니다.
+- `@Enable<StoreModule>Repositories(repositoryImplementationPostfix = …)`를 설정하여 저장소별 접미사를 커스터마이징할 수 있습니다.
 
 ```java
 @RequiredArgsConstructor

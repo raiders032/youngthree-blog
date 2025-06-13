@@ -16,7 +16,16 @@ hide_title: true
 	- `var`: 가변(mutable) 프로퍼티로, 값을 읽고 쓸 수 있습니다.
 	- `val`: 읽기 전용(read-only) 프로퍼티로, 초기화 후에는 값을 변경할 수 없습니다.
 
-### 1.1 기본 프로퍼티 선언 및 사용
+### 1.1 Java와 비교해서 이해하기
+
+- 프로퍼티는 빈의 상채를 나타내는 중요한 요소입니다.
+- 자바에서는 프로퍼티를 필드와 게터/세터 메서드로 구현합니다.
+- 코틀린에서는 프로퍼티를 선언할 때 `var` 또는 `val` 키워드를 사용하여 간결하게 표현합니다.
+- val 프로퍼티를 선언한느 경우, 이는 자바에서 private final 필드와 public getter 메서드와 동등합니다.
+- var 프로퍼티를 선언하는 경우, 이는 자바에서 private 필드와 public getter/setter 메서드와 동등합니다.
+- 즉 코틀린의 프로퍼티는 자바의 필드와 게터/세터 메서드를 결합한 형태로, 더 간결하고 직관적인 문법을 제공합니다.
+
+### 1.2 기본 프로퍼티 선언 및 사용
 
 ```kotlin
 class Address {
@@ -47,9 +56,9 @@ fun copyAddress(address: Address): Address {
 - 코틀린 프로퍼티의 전체 문법은 다음과 같습니다:
 
 ```kotlin
-var <프로퍼티명>[: <타입>] [= <초기화 식>]
-    [<게터>]
-    [<세터>]
+var <propertyName>[: <PropertyType>] [= <property_initializer>]
+    [<getter>]
+    [<setter>]
 ```
 
 - 초기화 식, 게터, 세터는 모두 선택사항입니다.

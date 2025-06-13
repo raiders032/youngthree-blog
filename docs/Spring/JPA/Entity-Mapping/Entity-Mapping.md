@@ -13,6 +13,31 @@ hide_title: true
 - JPA는 다양한 매핑 어노테이션을 지원하고 객체와 테이블 매핑, 기본 키 매핑, 필드와 컬럼 매핑, 연관관계 매핑 크게 4가지로 분류한 수 있습니다.
 - 각각 분류마다 대표하는 어노테이션을 알아보자.
 
+### 1.1 엔티티 클래스의 필수 조건
+
+- [레퍼런스](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/persist/persistence-intro/persistence-intro.html#_requirements_for_entity_classes)
+- 어노테이션 요구사항 
+  - 클래스는 반드시 jakarta.persistence.Entity 어노테이션으로 annotated 되어야 합니다.
+- 생성자 요구사항
+  - 클래스는 반드시 **public 또는 protected 접근 제한자를 가진 기본 생성자(no-argument constructor)**를 가져야 합니다.
+  - 다른 생성자들도 추가로 가질 수 있습니다.
+- final 제한사항
+  - 클래스는 final로 선언되어서는 안 됩니다.
+  - 어떤 메서드나 영속 인스턴스 변수도 final로 선언되어서는 안 됩니다.
+- 직렬화 요구사항
+  - Entity 인스턴스가 분리된 객체(detached object)로 값에 의해 전달되는 경우(예: 세션 빈의 원격 비즈니스 인터페이스를 통해), 클래스는 반드시 Serializable 인터페이스를 구현해야 합니다.
+- 상속 관계
+  - Entity는 Entity 클래스와 non-Entity 클래스 모두를 상속할 수 있습니다.
+  - non-Entity 클래스도 Entity 클래스를 상속할 수 있습니다. 
+- 필드 접근 제한
+  - 영속 인스턴스 변수들은 반드시 private, protected, 또는 package-private으로 선언되어야 합니다.
+  - 이러한 변수들은 오직 Entity 클래스의 메서드들에 의해서만 직접 접근될 수 있습니다.
+  - 클라이언트는 반드시 접근자 메서드(accessor methods) 또는 비즈니스 메서드를 통해 Entity의 상태에 접근해야 합니다.
+
+:::info
+여기서 "영속 인스턴스 변수"란 JPA가 관리하는 엔티티의 필드를 의미합니다. 즉, 데이터베이스에 저장되는 필드를 말합니다. transient 필드나 static 필드는 영속 인스턴스 변수에 포함되지 않습니다.
+:::
+
 ## 2 객체와 테이블 매핑
 
 ### 2.1 @Entity

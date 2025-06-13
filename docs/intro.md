@@ -48,8 +48,9 @@ sidebar_position: 1
 - NoSQL
 	- [Redis](Redis/index.md)
 
-### 🛠️ Build Tools
+### 🛠️ Development Environment & Tools
 
+- [Git](Git/index.md)
 - [Gradle](Gradle/index.md)
 
 ### 🏗 Infrastructure & Cloud
