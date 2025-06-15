@@ -1,6 +1,6 @@
 ## 1 SOLID
 
-- 클린코드로 유명한 로버트 마틴이 좋은 객체 지향 설계의 5가지 원칙을 정리함
+- SOLID란 클린코드로 유명한 로버트 마틴이 좋은 객체 지향 설계의 5가지 원칙을 정리한 것입니다.
 - 소프트웨어 설계를 이해하기 쉽고 유연하고 유지보수하기 쉽게 만들기 위해 사용되는 원칙 5가지를 뜻한다.
 - 5가지 원칙
 	- Single Responsibility Principle(단일 책임 원칙)
@@ -302,12 +302,99 @@ public void resize(Rectangle rectangle, int width, int height) {
 
 ## 6 Dependency Inversion Principle
 
-- 프로그래머는 “추상화에 의존해야지, 구체화에 의존하면 안된다.” 의존성 주입은 이 원칙 을 따르는 방법 중 하나다.
-- 구현 클래스에 의존하지 말고, 인터페이스에 의존하라는 뜻
-	- 클라이언트가 인터페이스에 의존해야 유연하게 구현체를 변경할 수 있다!
-	- 구현체에 의존하게 되면 변경이 아주 어려워진다.
+- 이 원칙은 두 가지 핵심 규칙으로 구성됩니다
+  - 상위 수준 모듈은 하위 수준 모듈에 의존해서는 안 된다. 둘 다 추상화에 의존해야 한다.
+  - 추상화는 세부 사항에 의존해서는 안 된다. 세부 사항이 추상화에 의존해야 한다.
+- 간단히 표현하면 "구현 클래스에 의존하지 말고, 인터페이스에 의존하라"는 뜻입니다.
+- 클라이언트가 인터페이스에 의존해야 유연하게 구현체를 변경할 수 있기 때문입니다.
 
-**DIP를 지키지 못하는 예**
+### 6.1 의존성 역전 원칙 위반 시 문제점
+
+- 객체 간의 협력에서 상위 수준 모듈은 비즈니스 로직과 정책을 담당하는 핵심 부분입니다.
+- 하위 수준 모듈은 데이터 저장, 파일 처리 등 구체적인 구현 세부사항을 담당합니다.
+- 상위 수준 모듈이 하위 수준 모듈에 직접 의존하면, 하위 수준 모듈의 변경이 상위 수준 모듈에 영향을 미치게 됩니다.
+
+### 6.2 실제 예시를 통한 문제 상황
+
+- 전화 통화 시간을 계산하는 시스템을 예로 들어보겠습니다.
+- 초기 요구사항
+  - 010-1111-2222 번호의 전체 통화 시간을 계산해야 합니다.
+	- 통화 내역은 CSV 파일로 저장되어 있습니다.
+
+```java
+// 하위 수준 모듈 - CSV 파일을 읽는 구체적인 구현
+public class CsvReader {
+    public List<CallRecord> readCallRecords(String filePath) {
+        // CSV 파일 읽기 로직
+        return callRecords;
+    }
+}
+
+// 상위 수준 모듈 - 통화 시간 계산 로직
+public class CallTimeCalculator {
+    private CsvReader csvReader; // 구체 클래스에 의존
+    
+    public CallTimeCalculator() {
+        this.csvReader = new CsvReader(); // 직접 생성
+    }
+    
+    public int calculateTotalCallTime(String phoneNumber) {
+        List<CallRecord> records = csvReader.readCallRecords("calls.csv");
+        // 통화 시간 계산 로직
+        return totalTime;
+    }
+}
+```
+
+- 요구사항이 변경되어 통화 내역을 JSON 형식으로 저장하게 되었습니다.
+- 이 경우 JsonReader라는 새로운 클래스를 만들어야 하고, 필연적으로 CallTimeCalculator의 코드도 수정해야 합니다.
+- 본질적인 비즈니스 로직(통화 시간 계산)과 관계없는 파일 형식 변경 때문에 상위 수준 모듈을 수정해야 하는 상황입니다.
+
+```java
+// 추상화 - 데이터 읽기 인터페이스
+public interface DataReader {
+    List<CallRecord> readCallRecords(String source);
+}
+
+// 하위 수준 모듈들 - 추상화를 구현
+public class CsvReader implements DataReader {
+    @Override
+    public List<CallRecord> readCallRecords(String filePath) {
+        // CSV 파일 읽기 로직
+        return callRecords;
+    }
+}
+
+public class JsonReader implements DataReader {
+    @Override
+    public List<CallRecord> readCallRecords(String filePath) {
+        // JSON 파일 읽기 로직
+        return callRecords;
+    }
+}
+
+// 상위 수준 모듈 - 추상화에 의존
+public class CallTimeCalculator {
+    private final DataReader dataReader;
+    
+    public CallTimeCalculator(DataReader dataReader) { // 의존성 주입
+        this.dataReader = dataReader;
+    }
+    
+    public int calculateTotalCallTime(String phoneNumber) {
+        List<CallRecord> records = dataReader.readCallRecords("calls");
+        // 통화 시간 계산 로직 (변경 없음)
+        return totalTime;
+    }
+}
+```
+
+- 이제 파일 형식이 변경되어도 CallTimeCalculator는 수정할 필요가 없습니다.
+- 여기서 주의할 점이 CallCollector가 직접 CsvReader나 JsonReader를 생성하지 않는 것입니다.
+- 의존성 주입을 사용하여 CallCollector가 Reader 인터페이스를 통해 CsvReader나 JsonReader를 주입받도록 합니다.
+- 이렇게 하면 상위 수준 모듈과 하위 수준 모듈 모두 추상화에 의존하게 되어, 하위 수준 모듈의 변경이 상위 수준 모듈에 영향을 미치지 않게 됩니다.
+
+### 6.3 DIP를 지키지 못하는 예
 
 ```java
 public class MemberService {
@@ -315,12 +402,38 @@ public class MemberService {
 }
 ```
 
-- `MemberRepository` 인터페이스를 구현한 `MemoryMemberRepository` 와 `JdbcMemberRepository`
-- `MemberService` 클라이언트가 `MemberRepository` 인터페이스를 의존해 DIP를 지키고 있는 것처럼 보인다
-- 그러나 `MemberService` 클라이언트가 구현 클래스를 직접 선택하므로 `MemoryMemberRepository`도 동시에 의존하고 있다.
-- 즉 구현 클래스에 의존하고 있으므로 DIP를 위반하고있다.
+- `MemberRepository` 인터페이스를 구현한 `MemoryMemberRepository` 와 `JdbcMemberRepository` 클래스가 있습니다.
+- 위 코드는 `MemberService` 클라이언트가 `MemberRepository` 인터페이스를 의존해 DIP를 지키고 있는 것처럼 보입니다.
+- 그러나 `MemberService` 클라이언트가 구현 클래스를 직접 선택하므로 `MemoryMemberRepository`도 동시에 의존하고 있습니다.
+  - new를 잘못 사용하면 클래스 간의 결합도가 강해집니다.
+  - new 연산자를 사용하기 위해서는 구체 클래스의 이름을 직접 기술해야 합니다.
+  - 이는 추상화에 의존하는 것이 아닌 구체 클래스에 의존할 수밖에 없기 때문에 결합도가 강해집니다.
+- 즉 구현 클래스에 의존하고 있으므로 DIP를 위반하고있습니다.
 
-### 6.1 DIP와 DI(Dependency Injection)의 관계
+```java
+@Service
+public class MemberService {
+    private final MemberRepository memberRepository;
+    
+    // 생성자 주입을 통한 의존성 주입
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+    
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+}
+
+@Repository
+public class MemoryMemberRepository implements MemberRepository {
+    // 구현 로직
+}
+```
+
+- 위와 같이 `MemberService` 생성자를 통한 의존성 주입을 사용하면 `MemberService`는 `MemberRepository` 인터페이스에만 의존하게 됩니다.
+
+### 6.4 DIP와 DI(Dependency Injection)의 관계
 
 - DIP는 원칙(principle)이고, DI는 이 원칙을 지키기 위한 구체적인 기법(technique)입니다.
 - 의존성 역전 원칙(DIP)이 "무엇을" 달성해야 하는지 말해준다면, 의존성 주입(DI)은 "어떻게" 달성할 수 있는지 알려줍니다.
@@ -329,6 +442,60 @@ public class MemberService {
   - 클래스가 직접 구현체를 생성하지 않고
   - 인터페이스를 통해 소통하게 하며
 	- 구현체의 교체가 용이하도록 만들어줍니다.
+
+### 6.5 의존성 역전과 패키지
+
+- 의존성 역전 원칙은 단순히 클래스 간의 의존성 방향만이 아니라 인터페이스의 소유권과 패키지 구조에도 적용됩니다.
+
+#### 6.5.1 SEPARATE INTERFACE 패턴
+
+- 마틴 파울러가 제시한 SEPARATE INTERFACE 패턴의 핵심 원칙은 다음과 같습니다:
+  - 인터페이스는 클라이언트가 속한 패키지에 위치해야 합니다
+  - 추상화를 별도의 독립적인 패키지가 아니라 클라이언트 패키지에 포함시켜야 합니다
+  - 함께 재사용될 필요가 없는 클래스들은 별도의 독립적인 패키지에 모아야 합니다
+
+#### 6.5.2 잘못된 패키지 구조 예시
+
+- 많은 개발자들이 다음과 같이 인터페이스를 별도 패키지에 분리하는 실수를 합니다.
+
+```text
+com.example.interfaces
+├── DataReader.java            // 인터페이스
+├── CsvReader.java             // 구현체
+└── JsonReader.java            // 구현체
+
+com.example.business
+└── CallTimeCalculator.java    // 클라이언트
+```
+
+- DataReader 인터페이스가 실제 사용자인 CallTimeCalculator와 다른 패키지에 위치
+- 추상화의 안정성이 떨어짐: 구현체들과 함께 있어 구현 세부사항의 변경에 영향을 받을 수 있음
+
+#### 6.5.3 올바른 패키지 구조 예시
+
+```text
+com.example.business
+├── CallTimeCalculator.java    // 클라이언트
+└── DataReader.java            // 인터페이스 (클라이언트와 같은 패키지)
+
+com.example.infrastructure
+├── CsvReader.java             // 구현체
+└── JsonReader.java            // 구현체
+```
+
+- 높은 응집도: 비즈니스 로직과 그것이 사용하는 인터페이스가 함께 위치
+- 안정성 보장: DataReader 인터페이스가 구현 세부사항과 분리되어 안정적
+- 낮은 결합도: infrastructure 패키지 변경이 business 패키지에 영향을 주지 않음
+
+#### 6.5.4 패키지 레벨 DIP의 이론적 배경
+
+- 안정성 관점
+  - 상위 수준 모듈(CallTimeCalculator)은 하위 수준 모듈(CsvReader, JsonReader)보다 더 안정적입니다
+  - 상위 수준 모듈은 본질적인 목적(통화 시간 계산)과 관련이 있어 불필요한 이유로 변경되어서는 안 됩니다
+  - 하위 수준 모듈은 세부사항(파일 읽기 방식)에 속하므로 자주 변경될 수 있습니다
+- 소유권 관점
+  - 인터페이스(DataReader)는 상위 수준 모듈에 속해야 합니다
+	- 추상화가 세부사항에 의존하면 안정적이어야 하는 추상화가 불안정해집니다
 
 ## 참고
 
