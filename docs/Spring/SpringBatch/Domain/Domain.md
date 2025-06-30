@@ -156,6 +156,7 @@
 - [레퍼런스](https://docs.spring.io/spring-batch/reference/domain.html#executioncontext)
 - ExecutionContext는 Spring Batch에서 배치 작업 실행 중에 상태나 데이터를 저장하고 공유하는 메커니즘입니다. 
 - 마치 Map처럼 key-value 형태로 데이터를 저장할 수 있습니다.
+- ExecutionContext는 JobRepository에 저장되어 안전합니다.
 
 ### 7.1 주요 사용 목적: 재시작 지원
 
@@ -182,6 +183,8 @@ if (executionContext.containsKey(getKey(LINES_READ_COUNT))) {
 ```
 
 ### 7.2 Job ExecutionContext와 Step ExecutionContext
+
+- JobExecution은 하나의 ExecutionContext를 가지고 있으며, StepExecution도 하나의 ExecutionContext를 가지고 있습니다.
 
 #### 서로 다른 스코프와 생명주기
 

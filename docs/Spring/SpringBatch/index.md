@@ -6,23 +6,28 @@ title: "Spring Batch"
 
 - [Spring Batch](SpringBatch/SpringBatch.md)
 - [Domain](Domain/Domain.md)
-- [MetaData Schema](MetaDataSchema/MetaDataSchema.md)
 - [JobRepository](JobRepository/JobRepository.md)
 - [Step](Step/Step.md)
-  - Chunk-oriented Processing, TaskletStep
+	- Chunk-oriented Processing, TaskletStep
 
 ## Configuration
 
+- Batch Configuration
+	- [Batch Configuration](Config/BatchConfig/BatchConfig.md)
 - Job Configuration
-  - [Job Configuration](Config/JobConfig/JobConfig/JobConfig.md)
-  - [Running a Job](Config/JobConfig/RunningJob/RunningJob.md)
+	- [Job Configuration](Config/JobConfig/JobConfig/JobConfig.md)
 - Step Configuration
-  - [Step Configuration](Config/StepConfig/StepConfig/StepConfig.md)
-  - [Chunk-oriented Processing](Config/StepConfig/Chunk-orientedProcessing/Chunk-orientedProcessing.md)
-  - [Commit Interval](Config/StepConfig/CommitInterval/CommitInterval.md)
-  - [Retry Logic](Config/StepConfig/RetryLogic/RetryLogic.md)
-  - [Skip Logic](Config/StepConfig/SkipLogic/SkipLogic.md) 
-  - [Step Listener](Config/StepConfig/StepListener/StepListener.md)
+	- [Step Configuration](Config/StepConfig/StepConfig/StepConfig.md)
+	- [Chunk-oriented Processing](Config/StepConfig/Chunk-orientedProcessing/Chunk-orientedProcessing.md)
+	- [Commit Interval](Config/StepConfig/CommitInterval/CommitInterval.md)
+	- [Retry Logic](Config/StepConfig/RetryLogic/RetryLogic.md)
+	- [Skip Logic](Config/StepConfig/SkipLogic/SkipLogic.md)
+	- [Step Listener](Config/StepConfig/StepListener/StepListener.md)
+
+## Running Jobs
+
+- [Job Parameters](JobParameters/JobParameters.md)
+- [Running Job](Config/RunningJob/RunningJob.md)
 
 ## Item Operations
 
@@ -30,7 +35,7 @@ title: "Spring Batch"
 - [Item Processors](ItemProcessors/ItemProcessors.md)
 - [Item Writers](ItemWriters/ItemWriters.md)
 
-## Execution & Monitoring
+## Monitoring
 
 - [Chunk Listener](Listener/ChunkListener.md)
 - [Job Execution Listener](Listener/JobExecutionListener.md)
@@ -38,4 +43,5 @@ title: "Spring Batch"
 
 ## Advanced Features
 
-- [Partitioning](Partitioning/Partitioning.md)
+- [Partitioning](ParallelProcessing/Partitioning/Partitioning.md)
+- [ParallelProcessing.md](ParallelProcessing/ParallelProcessing/ParallelProcessing.md)

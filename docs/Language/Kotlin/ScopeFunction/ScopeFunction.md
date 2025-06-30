@@ -179,7 +179,7 @@ val textView = TextView(context).apply {
 
 ## 5. let 함수
 
-`let` 함수는 nullable 객체를 처리하거나 지역 변수의 범위를 제한할 때 유용합니다.
+- `let` 함수는 nullable 객체를 처리하거나 지역 변수의 범위를 제한할 때 유용합니다.
 
 ### 5.1 let 함수의 구조
 
