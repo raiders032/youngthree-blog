@@ -202,8 +202,9 @@ public CompositeItemProcessor compositeProcessor() {
 
 ### 4.2 필터링 구현 방법
 
-- ItemProcessor에서 null을 반환하면 해당 레코드가 필터링됩니다.
-- Spring Batch 프레임워크가 null 결과를 감지하여 ItemWriter로 전달하지 않습니다.
+- ItemProcessor에서 `null`을 반환하면 해당 레코드는 다음 단계(ItemProcessor 또는 ItemWriter)로 전달되지 않고, 즉시 필터링되어 처리 대상에서 제외됩니다.  
+- ItemReader가 `null`을 반환하면 입력 데이터가 끝났다는 의미이지만, ItemProcessor에서 `null`을 반환해도 나머지 아이템들은 계속 정상적으로 처리됩니다.  
+- Spring Batch는 ItemProcessor의 결과가 `null`이면 자동으로 ItemWriter에 넘기지 않고, 해당 레코드를 건너뜁니다.
 
 #### 필터링 예시
 
@@ -224,18 +225,22 @@ public class RecordFilterProcessor implements ItemProcessor<Record, Record> {
 ```
 
 :::warning[예외 처리 주의사항]
-
 ItemProcessor에서 예외가 발생하면 스킵으로 처리됩니다. 의도적인 필터링을 위해서는 반드시 null을 반환해야 합니다.
-
 :::
 
 ## 5. 입력 데이터 검증
 
 ### 5.1 검증의 필요성
 
-- ItemReader에서 파싱이 성공해도 비즈니스 로직 관점에서 유효하지 않을 수 있습니다.
-- 예: 나이 필드가 음수인 경우, 필수 필드가 비어있는 경우 등
-- Spring Batch는 다양한 검증 프레임워크와 연동할 수 있는 Validator 인터페이스를 제공합니다.
+- Spring Batch의 ItemReader와 ItemWriter는 구조적 검증은 수행합니다.
+  - FixedLengthTokenizer: 고정 길이 데이터 범위 누락 시 예외 발생
+  - RowMapper/FieldSetMapper: 존재하지 않는 인덱스 접근 시 예외 발생
+  - 하지만 이는 데이터가 올바른 형식인지만 확인할 뿐, 비즈니스 규칙은 검증하지 않습니다.
+- 즉 ItemReader에서 파싱이 성공해도 비즈니스 로직 관점에서 유효하지 않을 수 있습니다.
+  - 예: 나이 필드가 음수인 경우, 필수 필드가 비어있는 경우 등
+- ItemReader에서 유형과 포맷 관련된 데이터 유효성 검증을 수행할 수 있지만, 아이템 구성 이후 수행하는 비즈니스 규칙에 따를 유효성 검은은 ItemProcessor에서 수행하는 것이 권장됩니다.
+- Spring Batch는 별도의 검증 프레임워크를 제공하지 않고, 기존 검증 프레임워크와 연동할 수 있는 인터페이스를 제공합니다.
+  - 따라서 어떤 검증 프레임워크든 연결할 수 있으며, 이것이 바로 Validator<T> 인터페이스입니다.
 
 ### 5.2 Validator 인터페이스
 
@@ -250,7 +255,14 @@ public interface Validator<T> {
 
 ### 5.3 ValidatingItemProcessor 사용
 
-#### Spring Validator를 활용한 검증
+- Spring Batch는 이 검증 로직을 ItemProcessor 안에 넣어주는 ValidatingItemProcessor를 제공합니다.
+- 이 프로세서는 아래와 같은 방식으로 작동합니다.
+  - 각 아이템을 받아서
+  - 설정된 Validator로 검증하고
+  - 검증 통과하면 그대로 다음 단계로 전달
+  - 검증 실패하면 ValidationException 발생
+
+#### 5.3.1 Spring Validator와 연동
 
 ```java
 @Bean
@@ -268,9 +280,11 @@ public SpringValidator validator() {
 }
 ```
 
-ValidatingItemProcessor를 사용하면 검증 로직을 깔끔하게 분리할 수 있습니다.
+- Spring Validator를 검증기로 사용하여 ValidatingItemProcessor를 설정합니다.
 
 ### 5.4 Bean Validation (JSR-303) 활용
+
+- 추가적으로 BeanValidatingItemProcessor를 사용하여 JSR-303 어노테이션 기반의 검증을 수행할 수도 있습니다.
 
 #### Bean Validation 어노테이션 사용 예시
 
@@ -294,7 +308,7 @@ class Person {
 }
 ```
 
-Person 클래스의 name 필드에 @NotEmpty 어노테이션을 적용하여 빈 값을 검증합니다.
+- Person 클래스의 name 필드에 @NotEmpty 어노테이션을 적용하여 빈 값을 검증합니다.
 
 #### BeanValidatingItemProcessor 설정
 

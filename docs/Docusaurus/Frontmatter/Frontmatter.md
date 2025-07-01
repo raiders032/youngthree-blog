@@ -184,3 +184,8 @@ hide_title: true
 :::warning
 날짜 형식이나 숫자 범위 등 각 필드의 제약사항을 반드시 준수해야 합니다.
 :::
+
+
+## 참고
+
+- https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter

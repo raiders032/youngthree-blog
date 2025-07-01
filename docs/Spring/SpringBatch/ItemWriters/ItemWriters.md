@@ -9,9 +9,11 @@ hide_title: true
 
 ## 1 ItemWriter
 
-- ItemWriter는 처리된 데이터를 저장하거나 출력하는 역할을 맡습니다.
-- 데이터베이스에 저장하거나, 파일로 출력하는 등 다양한 방식으로 데이터를 처리할 수 있습니다.
-- 스프링 배치는 다양한 ItemWriter 구현체를 제공하며, 필요에 따라 커스텀 ItemWriter를 개발할 수도 있습니다.
+- ItemWriter는 Spring Batch에서 데이터를 출력하는 역할을 담당하는 핵심 인터페이스입니다.
+- ItemReader와는 반대 개념으로, 데이터를 읽어오는 대신 데이터를 써내는 작업을 수행합니다.
+- 데이터베이스 삽입/업데이트, 파일 쓰기, 메시지 큐 전송 등 다양한 출력 작업을 처리할 수 있습니다.
+- ItemWriter는 ItemReader와 함께 Spring Batch의 청크 지향 처리(Chunk-oriented Processing)에서 핵심적인 역할을 합니다. 
+  - Reader가 데이터를 읽어오면, Processor가 가공하고, Writer가 최종 결과를 출력하는 구조입니다.
 
 ### 1.1 인터페이스
 
@@ -22,25 +24,80 @@ public interface ItemWriter<T> {
 }
 ```
 
-## 2 구현체
+- ItemWriter는 매우 간단한 구조의 제네릭 인터페이스입니다.
+- 단일 메서드 write()만을 정의하고 있어 구현이 용이합니다.
+- 이 인터페이스는 제네릭 타입 T를 사용하여 다양한 종류의 데이터를 처리할 수 있습니다.
 
-- [레퍼런스](https://docs.spring.io/spring-batch/reference/readers-and-writers/item-reader-writer-implementations.html#repositoryItemWriter)
+### 1.2 write 메서드의 특징
+
+- write 메서드는 개별 아이템이 아닌 Chunk 단위로 데이터를 받습니다.
+- ItemReader 인터페이스와 비교하면 read() 메서드가 단일 아이템을 반환하는 것과 달리, write() 메서드는 아이템의 목록을 받습니다.
+- 이는 배치 처리에서 성능 최적화를 위해 여러 아이템을 묶어서 처리하기 때문입니다.
+  - Spring Batch는 설정된 청크 크기만큼의 아이템을 모아서 ItemWriter에 전달합니다.
+  - 예를 들어, 청크 크기가 100이면 100개의 아이템이 리스트 형태로 전달됩니다.
+  - 이를 통해 네트워크 왕복 횟수를 줄이고 성능을 향상시킬 수 있습니다.
+- 청크 프로세싱에 대해서 더 자세히 알고 싶다면 아래 문서를 참고하세요.
+  - [Chunk oriented Processing](../Config/StepConfig/Chunk-orientedProcessing/Chunk-orientedProcessing.md)
+
+## 2 데이터베이스 기반 구현체
+
+- Spring Batch는 다양한 데이터베이스 기반 ItemWriter 구현체를 제공합니다.
+- 구현체 목록을 확인하고 싶다면 아래 링크를 참고하세요.
+  - [레퍼런스](https://docs.spring.io/spring-batch/reference/readers-and-writers/item-reader-writer-implementations.html#databaseWriters)
 
 ### 2.1 JdbcBatchItemWriter
 
-- JdbcBatchItemWriter는 JDBC를 사용하여 데이터베이스에 데이터를 일괄 삽입하는 ItemWriter 구현체입니다.
-- 내부적으로 PreparedStatement를 사용하여 SQL 쿼리를 실행하며, 일괄 처리를 위해 BatchPreparedStatementSetter를 사용합니다.
-- DataSource, SQL 쿼리, ItemPreparedStatementSetter 등을 설정하여 사용할 수 있습니다.
+- JdbcBatchItemWriter는 JDBC를 사용하여 데이터베이스에 배치 처리로 데이터를 저장하는 ItemWriter 구현체입니다.
+- JdbcTemplate을 래핑하여 내부적으로 배치 SQL 실행 기능을 제공합니다.
+- 청크 단위로 전달받은 모든 아이템에 대해 한 번에 SQL을 실행하여 성능을 최적화합니다.
+- SQL 파라미터를 채우는 방식에 따라 두 가지 구현 방법을 제공합니다.
 
-**예시**
+#### 2.1.1 주요 구성 옵션
+
+- **dataSource**: 데이터베이스 연결을 위한 DataSource 설정 (필수)
+- **sql**: 실행할 SQL 쿼리문 설정 (필수)
+- **assertUpdates**: SQL 실행 후 영향받은 행 수를 검증할지 여부 (기본값: true)
+- **itemSqlParameterSourceProvider**: Named Parameter 방식에서 아이템을 SqlParameterSource로 변환하는 프로바이더
+- **itemPreparedStatementSetter**: Positional Parameter 방식에서 PreparedStatement에 파라미터를 설정하는 세터
+
+#### 2.1.2 Named Parameter 방식
+
+- 콜론(:)을 사용한 Named Parameter 방식으로 SQL을 작성합니다.
+- `beanMapped()` 메서드를 사용하여 객체의 프로퍼티를 자동으로 매핑합니다.
+  - 객체의 필드명과 Named Parameter명이 일치해야 합니다.
 
 ```java
 @Bean
-public JdbcBatchItemWriter<Person> writer(DataSource dataSource) {
+public JdbcBatchItemWriter<Person> namedParameterWriter(DataSource dataSource) {
     return new JdbcBatchItemWriterBuilder<Person>()
             .dataSource(dataSource)
-            .sql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)")
-            .beanMapped()
+            .sql("INSERT INTO people (first_name, last_name, age) VALUES (:firstName, :lastName, :age)")
+            .beanMapped()  // Named Parameter 방식에서 사용
+            .build();
+}
+```
+
+#### 2.1.3 Positional Parameter(?) 방식
+
+- 물음표(?)를 사용한 Positional Parameter 방식으로 SQL을 작성합니다.
+- `ItemPreparedStatementSetter`를 구현하여 수동으로 파라미터를 설정합니다.
+  - ItemPreparedStatementSetter는 가 아이템의 값을 추출하고 PreparedStatement에 그 값을 세팅하는 것을 추상화한 인터페이스입니다.
+- 파라미터의 순서와 타입을 직접 제어할 수 있어 더 세밀한 매핑이 가능합니다.
+
+```java
+@Bean
+public JdbcBatchItemWriter<Person> positionalParameterWriter(DataSource dataSource) {
+    return new JdbcBatchItemWriterBuilder<Person>()
+            .dataSource(dataSource)
+            .sql("INSERT INTO people (first_name, last_name, age) VALUES (?, ?, ?)")
+            .itemPreparedStatementSetter(new ItemPreparedStatementSetter<Person>() {
+                @Override
+                public void setValues(Person person, PreparedStatement ps) throws SQLException {
+                    ps.setString(1, person.getFirstName());    // 첫 번째 ?
+                    ps.setString(2, person.getLastName());     // 두 번째 ?
+                    ps.setInt(3, person.getAge());             // 세 번째 ?
+                }
+            })
             .build();
 }
 ```
@@ -62,7 +119,9 @@ public HibernateItemWriter<Person> writer(SessionFactory sessionFactory) {
 }
 ```
 
-### 2.3 FlatFileItemWriter
+## 3. 파일 기반 구현체
+
+### 3.1 FlatFileItemWriter
 
 - FlatFileItemWriter는 데이터를 파일로 출력하는 ItemWriter 구현체입니다.
 - 다양한 형식(CSV, XML, JSON 등)으로 데이터를 출력할 수 있으며, 파일 경로와 출력 포맷을 설정할 수 있습니다.
@@ -82,7 +141,7 @@ public FlatFileItemWriter<Person> writer() {
 }
 ```
 
-### 2.4 ClassifierCompositeItemWriter
+## 4 ClassifierCompositeItemWriter
 
 - ClassifierCompositeItemWriter는 Spring Batch에서 제공하는 ItemWriter의 한 형태로, 분류기(Classifier) 기능을 사용하여 항목을 기반으로 다른 ItemWriter를
   선택합니다.
@@ -94,7 +153,7 @@ public FlatFileItemWriter<Person> writer() {
 - 이 분류기는 각 항목에 대해 호출되며, 선택된 ItemWriter의 write() 메서드를 호출 합니다.
 - 이를 통해 항목 유형에 따라 다른 쓰기 작업을 수행하도록 구성할 수 있습니다.
 
-## 3 커스텀 ItemWriter 개발
+## 5 커스텀 ItemWriter 개발
 
 - 스프링 배치에서 제공하는 ItemWriter 구현체로 처리할 수 없는 경우, 커스텀 ItemWriter를 개발할 수 있습니다.
 - ItemWriter 인터페이스를 구현하여 write() 메서드를 오버라이드하면 됩니다.

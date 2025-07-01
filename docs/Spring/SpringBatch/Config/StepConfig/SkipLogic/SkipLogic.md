@@ -11,6 +11,8 @@ hide_title: true
 
 - Spring Batch에서 Skip Logic은 step 처리 중 발생하는 예외를 처리하여 전체 step의 실패를 방지하는 중요한 기능입니다. 
 - 데이터 처리 과정에서 일부 레코드에 문제가 있더라도 전체 step 작업을 중단하지 않고 해당 레코드만 건너뛰고 계속 진행할 수 있게 해줍니다.
+  - 백만 건의 레코드 중 한두 건만 건너뛴다면 대수롭지 않을 수도 있습니다. 허나 백만 건 중 50만건을 건너뛴다면 뭔가 잘못된 것입니다.
+  - 기준을 정하는 것은 개발자의 몫입니다.
 
 :::info
 Skip Logic은 데이터의 성격과 비즈니스 요구사항에 따라 신중하게 결정해야 합니다. 금융 데이터처럼 정확성이 중요한 경우에는 스킵을 허용하지 않는 것이 좋지만, 벤더 목록 같은 데이터에서는 일부 잘못된 형식의 레코드를 건너뛰는 것이 적절할 수 있습니다.
@@ -150,10 +152,10 @@ public Step resilientStep(JobRepository jobRepository, PlatformTransactionManage
 }
 ```
 
-이 설정에서는:
-- `TransientException`이 발생하면 최대 3번까지 재시도
-- `ValidationException`이 발생하면 재시도 없이 바로 스킵
-- 최대 10개까지 스킵 허용
+- 이 설정에서는:
+  - `TransientException`이 발생하면 최대 3번까지 재시도
+  - `ValidationException`이 발생하면 재시도 없이 바로 스킵
+  - 최대 10개까지 스킵 허용
 
 ## 5. 주의사항 및 모범 사례
 
@@ -164,19 +166,96 @@ public Step resilientStep(JobRepository jobRepository, PlatformTransactionManage
 
 ### 5.2 로깅 및 모니터링
 
-- Skip된 레코드는 반드시 로깅되어야 하며, 이는 일반적으로 리스너를 통해 처리됩니다:
+- 문제가 있는 레코드를 건너뛰는 것은 유용한 방법이긴 하지만, 건너뛰는 것 자체가 문제가 될 수 있습니다.
+- 따라서 Skip된 레코드는 반드시 로깅되어야 하며, 이는 일반적으로 리스너를 통해 처리됩니다.
+- ItemReadListener를 사용해서 잘못된 레코드를 기록할 수 있습니다.
+
+#### 5.2.1 Skip된 레코드 로깅을 위한 ItemReadListener 구현
+
+```java
+@Component
+@Slf4j
+public class SkipLoggingItemReadListener implements ItemReadListener<Customer> {
+
+    private final List<String> skippedRecords = new ArrayList<>();
+    
+    @Autowired
+    private SkippedRecordRepository skippedRecordRepository;
+
+    @Override
+    public void beforeRead() {
+        // 읽기 전 처리가 필요한 경우
+    }
+
+    @Override
+    public void afterRead(Customer item) {
+        // 성공적인 읽기 후 처리
+        if (item != null) {
+            log.debug("고객 데이터 읽기 성공: ID={}", item.getId());
+        }
+    }
+
+    @Override
+    public void onReadError(Exception ex) {
+        log.error("데이터 읽기 중 스킵 발생: {}", ex.getMessage(), ex);
+        
+        // 스킵된 레코드 정보를 별도 테이블에 저장
+        SkippedRecord skippedRecord = SkippedRecord.builder()
+                .stepName("customerProcessingStep")
+                .errorMessage(ex.getMessage())
+                .errorType(ex.getClass().getSimpleName())
+                .skippedAt(LocalDateTime.now())
+                .rawData(extractRawDataFromException(ex))
+                .build();
+                
+        skippedRecordRepository.save(skippedRecord);
+        
+        // 메모리에도 기록 (배치 완료 후 리포트 생성용)
+        skippedRecords.add(ex.getMessage());
+        
+        // 스킵 횟수가 임계값에 근접하면 경고
+        if (skippedRecords.size() > 5) {
+            log.warn("스킵된 레코드가 {}개입니다. 데이터 품질을 확인하세요.", 
+                     skippedRecords.size());
+        }
+    }
+    
+    private String extractRawDataFromException(Exception ex) {
+        // 예외 메시지에서 원본 데이터 추출
+        if (ex instanceof FlatFileParseException) {
+            FlatFileParseException parseEx = (FlatFileParseException) ex;
+            return parseEx.getInput();
+        }
+        return ex.getMessage();
+    }
+    
+    public List<String> getSkippedRecords() {
+        return new ArrayList<>(skippedRecords);
+    }
+}
+```
+
+- SkipLoggingItemReadListener의 `onReadError` 메서드는 읽기 과정에서 오류가 발생했을 때 호출됩니다.
+- 따라서 onReadError 메서드를 오버라이딩 하면 발생한 예외 정보를 받아 적절한 오류 처리 및 로깅을 수행할 수 있습니다.
+
+#### Step 설정에서 Skip Logic과 리스너 함께 사용
 
 ```java
 @Bean
-public Step monitoredStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+public Step monitoredStep(JobRepository jobRepository, 
+                         PlatformTransactionManager transactionManager,
+                         SkipLoggingItemReadListener skipLoggingListener) {
     return new StepBuilder("monitoredStep", jobRepository)
-            .<String, String>chunk(10, transactionManager)
-            .reader(itemReader())
-            .writer(itemWriter())
+            .<Customer, Customer>chunk(10, transactionManager)
+            .reader(customerItemReader())
+            .processor(customerItemProcessor())
+            .writer(customerItemWriter())
             .faultTolerant()
             .skipLimit(10)
-            .skip(Exception.class)
-            .listener(skipListener())
+            .skip(FlatFileParseException.class)
+            .skip(ValidationException.class)
+            .noSkip(SystemException.class)
+            .listener(skipLoggingListener)  // 스킵 로깅 리스너 등록
             .build();
 }
 ```
