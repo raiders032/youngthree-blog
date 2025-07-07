@@ -74,7 +74,7 @@ spring:
 ### 2.6 CommonOAuth2Provider
 
 - `CommonOAuth2Provider`는 널리 알려진 여러 제공업체(Google, GitHub, Facebook, Okta)에 대한 기본 클라이언트 속성 세트를 미리 정의합니다.
-- 예를 들어, `authorization-uri`, `token-uri`, `user-info-uri`는 제공업체별로 자주 변경되지 않습니다. 
+- 예를 들어, `authorization-uri`, `token-uri`, `user-info-uri`는 제공업체별로 자주 변경되지 않습니다.
 - 따라서 기본값을 제공하여 필요한 구성을 줄이는 것이 합리적입니다.
 
 #### 2.6.1 기본 CommonOAuth2Provider 사용
@@ -104,7 +104,7 @@ spring:
     oauth2:
       client:
         registration:
-          google-login:           # registrationId를 google-login으로 설정
+          google-login: # registrationId를 google-login으로 설정
             provider: google      # provider 속성을 google로 설정
             client-id: google-client-id
             client-secret: google-client-secret
@@ -112,23 +112,23 @@ spring:
 
 - registrationId는 google-login으로 설정됩니다.
 - provider 속성은 google로 설정되어 CommonOAuth2Provider.GOOGLE.getBuilder()에 설정된 클라이언트 속성의 자동 기본값 설정을 활용합니다.
-- 이 방식을 사용하면 동일한 OAuth2 제공업체에 대해 여러 개의 다른 등록을 만들 수 있습니다. 
-  - 예를 들어, 서로 다른 scope나 redirect-uri를 가진 여러 Google 로그인 옵션을 제공할 수 있습니다.
+- 이 방식을 사용하면 동일한 OAuth2 제공업체에 대해 여러 개의 다른 등록을 만들 수 있습니다.
+	- 예를 들어, 서로 다른 scope나 redirect-uri를 가진 여러 Google 로그인 옵션을 제공할 수 있습니다.
 
 #### 2.6.3 지원되는 CommonOAuth2Provider
 
 - Spring Security는 다음과 같은 제공업체를 기본적으로 지원합니다:
-  - GOOGLE: Google OAuth2 로그인
-  - GITHUB: GitHub OAuth2 로그인
-  - FACEBOOK: Facebook OAuth2 로그인
-  - OKTA: Okta OAuth2/OIDC 로그인
+	- GOOGLE: Google OAuth2 로그인
+	- GITHUB: GitHub OAuth2 로그인
+	- FACEBOOK: Facebook OAuth2 로그인
+	- OKTA: Okta OAuth2/OIDC 로그인
 - 각 제공업체에 대해 다음과 같은 기본값이 설정됩니다:
-  - Authorization URI
-  - Token URI
-  - User Info URI
-  - User Name Attribute Name
-  - Client Name
-  - Scopes (제공업체별로 다름)
+	- Authorization URI
+	- Token URI
+	- User Info URI
+	- User Name Attribute Name
+	- Client Name
+	- Scopes (제공업체별로 다름)
 
 ## 3 OAuth2 Login 고급 설정
 
@@ -141,10 +141,10 @@ spring:
 ### 3.1 OAuth 2.0 프로토콜 엔드포인트
 
 - OAuth 2.0 Authorization Framework에서 정의하는 주요 엔드포인트는 다음과 같습니다.
-  - Authorization Endpoint: 클라이언트가 리소스 소유자로부터 인가를 받기 위해 사용하는 엔드포인트
-  - Token Endpoint: 클라이언트가 인가 코드를 액세스 토큰으로 교환하기 위해 사용하는 엔드포인트
-  - Redirection Endpoint: 인가 서버가 인가 결과를 클라이언트에게 반환하기 위해 사용하는 엔드포인트
-  - UserInfo Endpoint: 인증된 사용자에 대한 클레임 정보를 반환하는 OAuth 2.0 보호 리소스
+	- Authorization Endpoint: 클라이언트가 리소스 소유자로부터 인가를 받기 위해 사용하는 엔드포인트
+	- Token Endpoint: 클라이언트가 인가 코드를 액세스 토큰으로 교환하기 위해 사용하는 엔드포인트
+	- Redirection Endpoint: 인가 서버가 인가 결과를 클라이언트에게 반환하기 위해 사용하는 엔드포인트
+	- UserInfo Endpoint: 인증된 사용자에 대한 클레임 정보를 반환하는 OAuth 2.0 보호 리소스
 
 ### 3.2 OAuth 2.0 Login 구성 예시
 
@@ -218,19 +218,19 @@ public class OAuth2LoginSecurityConfig {
 #### 4.1.1 주요 속성들
 
 - 기본 클라이언트 정보
-  - registrationId: ClientRegistration을 고유하게 식별하는 ID
-  - clientId: OAuth2 Provider에서 발급한 클라이언트 식별자
-  - clientSecret: 클라이언트 인증을 위한 비밀키
-  - clientAuthenticationMethod: Provider와의 인증 방식 (client_secret_basic, client_secret_post 등)
+	- registrationId: ClientRegistration을 고유하게 식별하는 ID
+	- clientId: OAuth2 Provider에서 발급한 클라이언트 식별자
+	- clientSecret: 클라이언트 인증을 위한 비밀키
+	- clientAuthenticationMethod: Provider와의 인증 방식 (client_secret_basic, client_secret_post 등)
 - OAuth2 플로우 설정
-  - authorizationGrantType: 인증 그랜트 타입 (authorization_code, client_credentials 등)
-  - redirectUri: 인증 완료 후 리다이렉트될 URI
-  - scopes: 요청할 권한 범위 (openid, email, profile 등)
+	- authorizationGrantType: 인증 그랜트 타입 (authorization_code, client_credentials 등)
+	- redirectUri: 인증 완료 후 리다이렉트될 URI
+	- scopes: 요청할 권한 범위 (openid, email, profile 등)
 - Provider 엔드포인트 정보
-  - authorizationUri: 인증 서버의 Authorization Endpoint
-  - tokenUri: 토큰 발급을 위한 Token Endpoint
-  - userInfoEndpoint: 사용자 정보 조회 엔드포인트
-  - jwkSetUri: JWT 서명 검증을 위한 JWK Set URI
+	- authorizationUri: 인증 서버의 Authorization Endpoint
+	- tokenUri: 토큰 발급을 위한 Token Endpoint
+	- userInfoEndpoint: 사용자 정보 조회 엔드포인트
+	- jwkSetUri: JWT 서명 검증을 위한 JWK Set URI
 
 ### 4.2 ClientRegistrationRepository
 
@@ -287,12 +287,12 @@ public class OAuth2LoginSecurityConfig {
 - 프론트엔드는 백엔드의 `/oauth2/authorization/google` 엔드포인트로 요청을 보냅니다.
 - 이 요청은 `OAuth2AuthorizationRequestRedirectFilter`에 의해 가로채집니다.
 - 필터는 `ClientRegistrationRepository`에서 "google"이라는 registrationId로 등록된 `ClientRegistration` 정보를 조회합니다.
-  - registrationId는 요청 엔드포인트(/oauth2/authorization/{registrationId})의 마지막 값에서 추출됩니다. 여기서는 `google`입니다.
+	- registrationId는 요청 엔드포인트(/oauth2/authorization/{registrationId})의 마지막 값에서 추출됩니다. 여기서는 `google`입니다.
 - `DefaultOAuth2AuthorizationRequestResolver`가 OAuth2 인증 요청을 생성합니다:
-  - Google의 authorization-uri를 기반으로 리다이렉트 URL 구성
-  - client-id, redirect-uri, response-type, scope 등의 파라미터 추가
-  - CSRF 공격 방지를 위한 state 파라미터 생성 (랜덤 UUID)
-  - PKCE(Proof Key for Code Exchange) 사용 시 code_challenge 추가
+	- Google의 authorization-uri를 기반으로 리다이렉트 URL 구성
+	- client-id, redirect-uri, response-type, scope 등의 파라미터 추가
+	- CSRF 공격 방지를 위한 state 파라미터 생성 (랜덤 UUID)
+	- PKCE(Proof Key for Code Exchange) 사용 시 code_challenge 추가
 - 생성된 `OAuth2AuthorizationRequest` 객체는 `AuthorizationRequestRepository`에 저장됩니다 (기본적으로 HttpSession 사용).
 - 필터는 HTTP 302 응답을 생성하고, Location 헤더에 위에서 만든 Google 인증 URL을 넣어 브라우저에 보냅니다.
 - 브라우저는 이 302 응답을 받아 자동으로 Google 인증 서버로 이동(리다이렉트)합니다.
@@ -305,7 +305,7 @@ public class OAuth2LoginSecurityConfig {
 - 이미 Google에 로그인되어 있다면 바로 권한 동의 화면으로 이동합니다.
 - 권한 동의 화면에서는 애플리케이션이 요청한 scope(email, profile 등)에 대한 접근 권한을 표시합니다.
 - 사용자가 동의하면 Google은 Authorization Code와 state 파라미터를, Google API 콘솔에서 등록한 redirect-uri로 브라우저를 리다이렉트하여 전달합니다.
-  - Google API 콘솔에서 등록한 redirect-uri는 `http://localhost:8080/login/oauth2/code/google`로 설정했다고 가정합니다.
+	- Google API 콘솔에서 등록한 redirect-uri는 `http://localhost:8080/login/oauth2/code/google`로 설정했다고 가정합니다.
 
 #### 5.2.3 Authorization Code 처리 단계
 
@@ -315,22 +315,22 @@ public class OAuth2LoginSecurityConfig {
 - state 파라미터를 검증하여 CSRF 공격이 아님을 확인합니다.
 - `OAuth2LoginAuthenticationToken`을 생성하여 `AuthenticationManager`에 전달합니다.
 - `OAuth2LoginAuthenticationProvider`가 실제 인증 처리를 수행합니다:
-  - `OAuth2AccessTokenResponseClient`를 사용하여 Authorization Code를 Access Token으로 교환합니다.
-  - 내부적으로 Google의 token endpoint로 POST 요청 전송
-  - client-id, client-secret, code, grant-type 등을 전송
-  - 응답으로 access_token, token_type, expires_in, scope 등을 받음
+	- `OAuth2AccessTokenResponseClient`를 사용하여 Authorization Code를 Access Token으로 교환합니다.
+	- 내부적으로 Google의 token endpoint로 POST 요청 전송
+	- client-id, client-secret, code, grant-type 등을 전송
+	- 응답으로 access_token, token_type, expires_in, scope 등을 받음
 
 #### 5.2.4 사용자 정보 조회 단계
 
 - Token 교환이 성공하면 `OAuth2UserService`가 호출됩니다.
 - 기본적으로 `DefaultOAuth2UserService`가 사용되지만, 커스터마이징을 위해 `CustomOAuth2UserService`를 구현합니다.
 - `OAuth2UserRequest` 객체가 생성되어 서비스에 전달됩니다:
-  - ClientRegistration 정보
-  - OAuth2AccessToken
-  - 추가 파라미터들
+	- ClientRegistration 정보
+	- OAuth2AccessToken
+	- 추가 파라미터들
 - UserInfo Endpoint로 GET 요청을 보내 사용자 정보를 조회합니다:
-  - Authorization 헤더에 Bearer 토큰 포함
-  - Google의 경우 `https://www.googleapis.com/oauth2/v2/userinfo` 엔드포인트 사용
+	- Authorization 헤더에 Bearer 토큰 포함
+	- Google의 경우 `https://www.googleapis.com/oauth2/v2/userinfo` 엔드포인트 사용
 - 응답으로 받은 JSON 데이터를 `OAuth2User` 객체로 변환합니다.
 
 #### 5.2.5 커스텀 사용자 정보 처리
@@ -416,10 +416,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 - 이 토큰은 인증된 상태를 나타내며, Principal로 `OAuth2User` 객체를 포함합니다.
 - `SecurityContextHolder`에 인증 정보가 저장됩니다.
 - `OAuth2AuthorizedClientService`가 `OAuth2AuthorizedClient` 객체를 생성하여 저장합니다:
-  - ClientRegistration
-  - PrincipalName
-  - OAuth2AccessToken
-  - OAuth2RefreshToken (있는 경우)
+	- ClientRegistration
+	- PrincipalName
+	- OAuth2AccessToken
+	- OAuth2RefreshToken (있는 경우)
 - 설정된 `AuthenticationSuccessHandler`가 호출됩니다.
 
 #### 5.2.7 JWT 토큰 발급 및 리다이렉트
@@ -730,6 +730,7 @@ public class SecurityConfig {
 ### 7.2 환경별 설정 관리
 
 #### application.yml
+
 ```yaml
 spring:
   security:
@@ -739,7 +740,7 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope: 
+            scope:
               - openid
               - email
               - profile
@@ -757,107 +758,6 @@ app:
     secret: ${JWT_SECRET}
     expiration: 86400000 # 24시간
 ```
-
-## 8. API 엔드포인트 구현
-
-### 8.1 인증 관련 API
-
-```java
-@RestController
-@RequestMapping("/api/auth")
-@RequiredArgsConstructor
-public class AuthController {
-    
-    private final UserService userService;
-    
-    @GetMapping("/user")
-    public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal UserPrincipal principal) {
-        User user = userService.findById(principal.getId());
-        return ResponseEntity.ok(UserResponse.from(user));
-    }
-    
-    @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateToken() {
-        // JWT 필터를 통과했다면 유효한 토큰
-        return ResponseEntity.ok(true);
-    }
-}
-```
-
-### 8.2 보호된 리소스 API 예시
-
-```java
-@RestController
-@RequestMapping("/api/resources")
-@RequiredArgsConstructor
-public class ResourceController {
-    
-    @GetMapping("/protected")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> getProtectedResource() {
-        return ResponseEntity.ok("This is a protected resource");
-    }
-}
-```
-
-## 9. 테스트 및 디버깅
-
-### 9.1 테스트 시나리오
-
-#### 정상 플로우 테스트
-- 프론트엔드에서 소셜 로그인 버튼 클릭
-- OAuth2 Provider 인증 페이지로 리다이렉트 확인
-- 로그인 및 권한 동의 후 정상 리다이렉트 확인
-- JWT 토큰 수신 및 저장 확인
-- 보호된 API 접근 테스트
-
-#### 예외 상황 테스트
-- 잘못된 client-id/secret 설정
-- 리다이렉트 URI 불일치
-- 토큰 만료 상황
-- 네트워크 오류 처리
-
-### 9.2 일반적인 문제 해결
-
-:::warning
-**리다이렉트 URI 불일치 오류**
-- OAuth2 Provider에 등록된 URI와 애플리케이션 설정이 정확히 일치하는지 확인
-- 프로토콜(http/https), 포트, 경로를 모두 확인
-  :::
-
-:::tip
-**CORS 오류 해결**
-- 프론트엔드 도메인이 CORS 설정에 포함되어 있는지 확인
-- Credentials 포함 여부 확인
-  :::
-
-## 10. 운영 환경 고려사항
-
-### 10.1 보안 강화
-
-- **HTTPS 사용**: 운영 환경에서는 반드시 HTTPS를 사용
-- **토큰 관리**: Refresh Token 구현으로 보안성 향상
-- **Rate Limiting**: 무차별 대입 공격 방지
-- **로깅 및 모니터링**: 비정상적인 인증 시도 감지
-
-### 10.2 성능 최적화
-
-- **캐싱**: 사용자 정보 캐싱으로 DB 부하 감소
-- **비동기 처리**: 사용자 정보 업데이트를 비동기로 처리
-- **연결 풀링**: OAuth2 Provider API 호출 최적화
-
-### 10.3 확장성 고려
-
-- **다중 Provider 지원**: 여러 소셜 로그인 옵션 제공
-- **역할 기반 접근 제어**: RBAC 구현
-- **멀티 테넌시**: 기업별 OAuth2 설정 지원
-
-## 11. 마무리
-
-- Spring Security OAuth2 Client는 소셜 로그인 구현을 위한 강력한 프레임워크입니다.
-- 기본 설정만으로도 빠르게 시작할 수 있으며, 필요에 따라 세밀한 커스터마이징이 가능합니다.
-- JWT 토큰과 결합하여 현대적인 SPA 애플리케이션에 적합한 인증 시스템을 구축할 수 있습니다.
-- 보안, 성능, 확장성을 고려한 설계로 운영 환경에서도 안정적으로 사용할 수 있습니다.
 
 ## 참고
 
