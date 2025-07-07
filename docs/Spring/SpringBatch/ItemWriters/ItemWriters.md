@@ -48,9 +48,11 @@ public interface ItemWriter<T> {
 ### 2.1 JdbcBatchItemWriter
 
 - JdbcBatchItemWriter는 JDBC를 사용하여 데이터베이스에 배치 처리로 데이터를 저장하는 ItemWriter 구현체입니다.
-- JdbcTemplate을 래핑하여 내부적으로 배치 SQL 실행 기능을 제공합니다.
-- 청크 단위로 전달받은 모든 아이템에 대해 한 번에 SQL을 실행하여 성능을 최적화합니다.
+- JdbcBatchItemWriter는 내부적으로 JdbcTemplate를 감싸고 있는 래퍼에 지나지 않습니다.
+  - 청크 단위로 전달받은 아이템들을 JdbcTemplate의 배치 기능을 사용하여 한 번에 SQL을 실행하여 성능을 최적화합니다.
 - SQL 파라미터를 채우는 방식에 따라 두 가지 구현 방법을 제공합니다.
+  - Named Parameter 방식: SQL 쿼리에서 파라미터 이름을 사용하여 매핑합니다.
+  - Positional Parameter 방식: 물음표(`?`)를 값의 플레이스홀더로 사용하여 파라미터 순서를 지정합니다.
 
 #### 2.1.1 주요 구성 옵션
 
@@ -62,9 +64,13 @@ public interface ItemWriter<T> {
 
 #### 2.1.2 Named Parameter 방식
 
-- 콜론(:)을 사용한 Named Parameter 방식으로 SQL을 작성합니다.
-- `beanMapped()` 메서드를 사용하여 객체의 프로퍼티를 자동으로 매핑합니다.
-  - 객체의 필드명과 Named Parameter명이 일치해야 합니다.
+- 콜론(`:`)을 사용한 Named Parameter 방식으로 SQL을 작성합니다.
+- Named Parameter 방식을 사용하려면 ItemSqlParameterSourceProvider를 설정해야 합니다.
+- ItemSqlParameterSourceProvider의 구현체는 아이템에서 파라미터 값을 추출해 SqlParameterSource 객체로 반환하는 역할을 합니다.
+- 스프링 배치는 이 인터페이스에 대한 구현체를 제공해 아이템에서 값을 추출하려고 직접 구현할 필요가 없습니다.
+  - BeanPropertyItemSqlParameterSourceProvider를 사용하여 아이템의 프로퍼티를 자동으로 매핑할 수 있습니다.
+  - 이 구현체를 사용한다면, 아이템의 필드명과 SQL 쿼리의 Named Parameter명이 일치해야 합니다.
+  - JdbcBatchItemWriterBuilder를 사용할 때 `beanMapped()` 메서드를 호출하면 BeanPropertyItemSqlParameterSourceProvider 구현체를 사용하게 됩니다.
 
 ```java
 @Bean
@@ -74,6 +80,32 @@ public JdbcBatchItemWriter<Person> namedParameterWriter(DataSource dataSource) {
             .sql("INSERT INTO people (first_name, last_name, age) VALUES (:firstName, :lastName, :age)")
             .beanMapped()  // Named Parameter 방식에서 사용
             .build();
+}
+```
+
+- 위 예시에서 `beanMapped()` 메서드를 호출하면, `BeanPropertyItemSqlParameterSourceProvider`가 자동으로 설정되어 아이템의 프로퍼티를 Named Parameter로 매핑합니다.
+- Person 클래스의 필드명과 SQL 쿼리의 Named Parameter명이 일치해야 합니다.
+- 위 예시에서는 `firstName`, `lastName`, `age` 필드가 Person 클래스에 정의되어 있어야 합니다.
+
+##### 커스텀 ItemSqlParameterSourceProvider 구현
+
+- 만약 BeanPropertyItemSqlParameterSourceProvider 외에 다른 방식으로 아이템의 값을 추출하고 싶다면, ItemSqlParameterSourceProvider 인터페이스를 구현하여 커스텀 프로바이더를 만들 수 있습니다.
+- 커스텀 구현체는 데이터 변환, 타입 지정, 조건부 로직 등을 추가할 수 있어 더 유연한 처리가 가능합니다.
+- 커스텀 구현이 필요한 경우
+  - 필드명과 SQL 파라미터명이 다른 경우(같으면 BeanPropertyItemSqlParameterSourceProvider 사용)
+  - 데이터 변환이나 계산이 필요한 경우
+  - 특정 SQL 타입을 명시해야 하는 경우
+  - 조건부 로직이 필요한 경우
+
+```java
+public class CustomItemSqlParameterSourceProvider implements ItemSqlParameterSourceProvider<Person> {
+   @Override
+   public SqlParameterSource createSqlParameterSource(Person person) {
+       return new MapSqlParameterSource()
+           .addValue("firstName", person.getFirstName())
+           .addValue("lastName", person.getLastName())
+           .addValue("age", person.getAge());
+   }
 }
 ```
 
