@@ -40,7 +40,7 @@ implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 - 리다이렉트 URI는 최종 사용자가 Google로 인증을 완료하고 동의 페이지에서 OAuth 클라이언트(이전 단계에서 생성)에 대한 액세스 권한을 부여한 후 사용자 에이전트가 다시 리다이렉트되는 애플리케이션 내의
   경로입니다.
 - "Set a redirect URI" 하위 섹션에서 Authorized redirect URIs 필드가 localhost:8080/login/oauth2/code/google로 설정되어 있는지 확인하세요.
-- 기본 리다이렉트 URI 템플릿은 {baseUrl}/login/oauth2/code/{registrationId}입니다. registrationId는 ClientRegistration의 고유 식별자입니다.
+- 기본 리다이렉트 URI 템플릿은 `{baseUrl}/login/oauth2/code/{registrationId}`입니다. registrationId는 ClientRegistration의 고유 식별자입니다.
 - OAuth 클라이언트가 프록시 서버 뒤에서 실행되는 경우, 애플리케이션이 올바르게 구성되었는지 확인하기 위해 프록시 서버 구성을 확인해야 합니다. 또한 redirect-uri에 지원되는 URI 템플릿 변수들을
   참조하세요.
 
@@ -287,7 +287,7 @@ public class OAuth2LoginSecurityConfig {
 - 프론트엔드는 백엔드의 `/oauth2/authorization/google` 엔드포인트로 요청을 보냅니다.
 - 이 요청은 `OAuth2AuthorizationRequestRedirectFilter`에 의해 가로채집니다.
 - 필터는 `ClientRegistrationRepository`에서 "google"이라는 registrationId로 등록된 `ClientRegistration` 정보를 조회합니다.
-	- registrationId는 요청 엔드포인트(/oauth2/authorization/{registrationId})의 마지막 값에서 추출됩니다. 여기서는 `google`입니다.
+	- registrationId는 요청 엔드포인트(`/oauth2/authorization/{registrationId}`)의 마지막 값에서 추출됩니다. 여기서는 `google`입니다.
 - `DefaultOAuth2AuthorizationRequestResolver`가 OAuth2 인증 요청을 생성합니다:
 	- Google의 authorization-uri를 기반으로 리다이렉트 URL 구성
 	- client-id, redirect-uri, response-type, scope 등의 파라미터 추가
