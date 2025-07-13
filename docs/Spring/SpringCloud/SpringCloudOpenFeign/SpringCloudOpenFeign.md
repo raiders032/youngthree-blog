@@ -1,5 +1,5 @@
 ---
-title: "Spring Cloud OpenFeign 완벽 가이드: 선언적 HTTP 클라이언트의 모든 것"
+title: "Spring Cloud OpenFeign"
 description: "Spring Cloud OpenFeign을 사용하여 마이크로서비스 간 통신을 구현하는 방법을 상세히 알아봅니다. 기본 설정부터 고급 커스터마이징까지, 실무에서 바로 활용할 수 있는 예제와 함께 설명합니다."
 tags: [ "OPENFEIGN", "SPRING_CLOUD", "MICROSERVICE", "REST_CLIENT", "SPRING", "BACKEND", "JAVA" ]
 keywords: [ "OpenFeign", "오픈페인", "Feign", "페인", "Spring Cloud OpenFeign", "스프링 클라우드 오픈페인", "HTTP 클라이언트", "HTTP Client", "선언적 클라이언트", "Declarative Client", "마이크로서비스", "Microservice", "RestTemplate", "WebClient", "REST API", "스프링", "Spring" ]
@@ -260,8 +260,8 @@ public class PaymentClientConfig {
 ```
 
 :::danger
-Configuration 클래스에 @Configuration을 붙이면 전역 설정이 되어 모든 Feign Client에 영향을 줄 수 있습니다. 특정 클라이언트에만 적용하려면 @Configuration을 붙이지
-마세요.
+Configuration 클래스에 @Configuration을 붙이면 전역 설정이 되어 모든 Feign Client에 영향을 줄 수 있습니다. 
+특정 클라이언트에만 적용하려면 @Configuration을 붙이지 마세요.
 :::
 
 ### 4.3 application.yml을 통한 설정
