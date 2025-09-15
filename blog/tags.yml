@@ -1,9 +1,0 @@
-# AWS
-AWS:
-  label: AWS
-  permalink: /tags/aws
-  description: Amazon Web Services
-ACM:
-  label: ACM
-  permalink: /tags/acm
-  description: AWS Certificate Manager

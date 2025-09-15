@@ -1,0 +1,71 @@
+PORTFOLIO:
+  label: Portfolio
+  permalink: /tags/portfolio
+  description: 포트폴리오 및 프로젝트
+PROJECT:
+  label: Project
+  permalink: /tags/project
+  description: 개발 프로젝트
+FULLSTACK:
+  label: Fullstack
+  permalink: /tags/fullstack
+  description: 풀스택 개발
+BACKEND:
+  label: Backend
+  permalink: /tags/backend
+  description: 백엔드 개발
+FRONTEND:
+  label: Frontend
+  permalink: /tags/frontend
+  description: 프론트엔드 개발
+REACT:
+  label: React
+  permalink: /tags/react
+  description: React 라이브러리
+SPRING:
+  label: Spring
+  permalink: /tags/spring
+  description: Spring Framework
+JAVA:
+  label: Java
+  permalink: /tags/java
+  description: Java 프로그래밍 언어
+JAVASCRIPT:
+  label: JavaScript
+  permalink: /tags/javascript
+  description: JavaScript 프로그래밍 언어
+TYPESCRIPT:
+  label: TypeScript
+  permalink: /tags/typescript
+  description: TypeScript 프로그래밍 언어
+DATABASE:
+  label: Database
+  permalink: /tags/database
+  description: 데이터베이스
+AWS:
+  label: AWS
+  permalink: /tags/aws
+  description: Amazon Web Services
+DOCKER:
+  label: Docker
+  permalink: /tags/docker
+  description: Docker 컨테이너화
+DEVOPS:
+  label: DevOps
+  permalink: /tags/devops
+  description: DevOps 및 CI/CD
+API:
+  label: API
+  permalink: /tags/api
+  description: API 개발
+MICROSERVICE:
+  label: Microservice
+  permalink: /tags/microservice
+  description: 마이크로서비스 아키텍처
+ARCHITECTURE:
+  label: Architecture
+  permalink: /tags/architecture
+  description: 시스템 아키텍처
+
+
+

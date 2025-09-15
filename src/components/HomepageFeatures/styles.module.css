@@ -3,18 +3,41 @@
   width: 100%;
 }
 
-.getStarted {
-  text-align: center;
-  max-width: 600px;
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 900px;
   margin: 0 auto;
 }
 
-.getStarted h2 {
-  margin-bottom: 1rem;
-  color: var(--ifm-color-primary);
+.card {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 16px;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 
-.getStarted p {
-  margin-bottom: 2rem;
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  margin-bottom: 0.75rem;
+  color: var(--ifm-color-primary);
+  font-size: 1.8rem;
+  line-height: 1.25;
+}
+
+.card p {
+  margin-bottom: 1.5rem;
   color: var(--ifm-color-content);
+  font-size: 1.05rem;
+}
+.card :global(.button) {
+  min-width: 220px;
 }

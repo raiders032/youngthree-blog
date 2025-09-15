@@ -1,0 +1,63 @@
+FINANCE:
+  label: Finance
+  permalink: /tags/finance
+  description: 재테크 및 금융 관련 정보
+ETF:
+  label: ETF
+  permalink: /tags/etf
+  description: Exchange Traded Fund 상장지수펀드
+PENSION:
+  label: Pension
+  permalink: /tags/pension
+  description: 연금저축 및 퇴직연금
+INVESTMENT:
+  label: Investment
+  permalink: /tags/investment
+  description: 투자 및 자산관리
+FUND:
+  label: Fund
+  permalink: /tags/fund
+  description: 펀드 및 집합투자
+DIVIDEND:
+  label: Dividend
+  permalink: /tags/dividend
+  description: 배당금 및 배당투자
+STOCK:
+  label: Stock
+  permalink: /tags/stock
+  description: 주식투자
+BOND:
+  label: Bond
+  permalink: /tags/bond
+  description: 채권투자
+RETIREMENT:
+  label: Retirement
+  permalink: /tags/retirement
+  description: 은퇴 및 노후준비
+TAX:
+  label: Tax
+  permalink: /tags/tax
+  description: 세금 및 절세
+SAVINGS:
+  label: Savings
+  permalink: /tags/savings
+  description: 저축 및 예금
+LOAN:
+  label: Loan
+  permalink: /tags/loan
+  description: 대출 및 신용
+INSURANCE:
+  label: Insurance
+  permalink: /tags/insurance
+  description: 보험 및 리스크 관리
+POVERTY:
+  label: Poverty
+  permalink: /tags/poverty
+  description: 빈곤율 및 사회보장
+STATISTICS:
+  label: Statistics
+  permalink: /tags/statistics
+  description: 경제통계 및 지표
+
+
+

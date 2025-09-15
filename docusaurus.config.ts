@@ -3,7 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-    title: 'Young Three의 개발 실험실(Java/Spring 백엔드 개발자)',
+    title: 'Young Three의 실험실',
     tagline: 'Young Three의 개발 실험실은 Java/Spring 백엔드 개발자를 위한 종합적인 기술 문서 라이브러리 웹사이트입니다. 이 웹사이트는 컴퓨터 과학의 기초 개념부터 최신 클라우드 기술과 아키텍처 패턴까지, 실무에서 바로 활용할 수 있는 지식을 체계적으로 정리하여 제공합니다.',
     favicon: 'img/favicon.ico',
     url: 'https://blog.youngthree.me/',
@@ -22,6 +22,7 @@ const config: Config = {
             {
                 docs: {
                     sidebarPath: './sidebars.ts',
+                    exclude: [],
                     tags: 'tags.yml',
                     showLastUpdateTime: false,
                     showLastUpdateAuthor: false,
@@ -40,7 +41,7 @@ const config: Config = {
                 },
                 sitemap: {
                     filename: 'sitemap.xml',
-                    ignorePatterns: ['/docs/tags/**', '/blog/**'],
+                    ignorePatterns: ['/docs/tags/**', '/blog/**', '/finance/tags/**', '/portfolio/tags/**'],
                     changefreq: 'weekly',
                     lastmod: "date",
                     createSitemapItems: async (params) => {
@@ -64,6 +65,37 @@ const config: Config = {
                     customCss: './src/css/custom.css',
                 },
             } satisfies Preset.Options,
+        ],
+    ],
+
+    plugins: [
+        [
+            '@docusaurus/plugin-content-docs',
+            {
+                id: 'finance',
+                path: 'finance',
+                routeBasePath: 'finance',
+                sidebarPath: './sidebars.finance.ts',
+                exclude: [],
+                tags: 'tags.yml',
+                showLastUpdateTime: false,
+                showLastUpdateAuthor: false,
+                onInlineTags: 'ignore',
+            },
+        ],
+        [
+            '@docusaurus/plugin-content-docs',
+            {
+                id: 'portfolio',
+                path: 'portfolio',
+                routeBasePath: 'portfolio',
+                sidebarPath: './sidebars.portfolio.ts',
+                exclude: [],
+                tags: 'tags.yml',
+                showLastUpdateTime: false,
+                showLastUpdateAuthor: false,
+                onInlineTags: 'ignore',
+            },
         ],
     ],
 
@@ -92,10 +124,16 @@ const config: Config = {
                     position: 'left',
                     label: 'Document',
                 },
-                {to: '/blog', label: 'Blog', position: 'left'},
-                {to: '/docs/tags', label: 'Tag', position: 'left'},
                 {
                     type: 'docSidebar',
+                    docsPluginId: 'finance',
+                    sidebarId: 'financeSidebar',
+                    position: 'left',
+                    label: 'Finance',
+                },
+                {
+                    type: 'docSidebar',
+                    docsPluginId: 'portfolio',
                     sidebarId: 'portfolioSidebar',
                     position: 'left',
                     label: 'Portfolio',
@@ -137,8 +175,12 @@ const config: Config = {
                             to: '/docs/intro',
                         },
                         {
-                            label: '블로그',
-                            to: '/blog',
+                            label: '재테크',
+                            to: '/finance',
+                        },
+                        {
+                            label: '포트폴리오',
+                            to: '/portfolio',
                         },
                     ],
                 },

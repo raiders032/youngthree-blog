@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+### 프로젝트 구조 가이드
+
+- 이 저장소는 Docusaurus 기반 문서 사이트입니다.
+- 핵심 경로 및 역할:
+  - [docusaurus.config.ts](mdc:docusaurus.config.ts): 사이트 전반 설정
+  - [sidebars.ts](mdc:sidebars.ts): 문서 사이드바 구조 정의
+  - [docs/](mdc:docs/): 정적 문서 콘텐츠(가이드, 레퍼런스 등)
+  - [finance/](mdc:finance/): 재테크 문서
+  - [portfolio/](mdc:portfolio/): 포트폴리오 문서
+  - [src/](mdc:src/): 커스텀 페이지/레이아웃/컴포넌트
+  - [static/](mdc:static/): 정적 자산(img, favicon, html 등)
+
+### docs 구조
+
+- [docs/](mdc:docs/): 정적 문서 콘텐츠를 위한 디렉토리
+
+### images 구조
