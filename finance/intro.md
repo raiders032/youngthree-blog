@@ -7,6 +7,8 @@ sidebar_position: 1
 
 ## 재테크
 
+- [CMA](CMA/CMA.md)
+
 ## 연금
 
 - [국민연금](국민연금/국민연금.md)
