@@ -1,7 +1,10 @@
 ---
 title: "ISA"
-description: "ISA 섹션 소개 및 구성"
-tags: ["FINANCE"]
+description: "개인종합자산관리계좌(ISA) 완전 가이드 - 중개형/신탁형/일임형 비교, 세금 혜택(비과세/분리과세), 손익통산 절세 효과 총정리"
+tags: ["FINANCE", "ISA", "절세계좌", "비과세"]
+last_update:
+  date: 2025-09-21
+  author: youngthree
 ---
 
 ## 1. ISA

@@ -1,7 +1,10 @@
 ---
 title: "IRP"
-description: "IRP"
-tags: ["FINANCE"]
+description: "개인형 퇴직연금(IRP) 완전 가이드 - 가입조건, 세액공제 혜택, 투자한도, 연금저축과의 차이점 및 최적 활용 전략 총정리"
+tags: ["FINANCE", "IRP", "퇴직연금", "세액공제"]
+last_update:
+  date: 2025-09-21
+  author: youngthree
 ---
 
 ## 1. IRP란?

@@ -1,7 +1,10 @@
 ---
 title: "CMA"
-description: "자산관리계좌(CMA) 완전정리"
-tags: ["FINANCE"]
+description: "자산관리계좌(CMA) 완전정리 - RP형, MMF형, MMW형, 발행어음형 등 CMA 유형별 특징과 안전성, 수익률 비교 가이드"
+tags: ["FINANCE", "CMA", "자산관리계좌"]
+last_update:
+  date: 2025-09-21
+  author: youngthree
 ---
 
 ## 1. CMA(Cash Management Account)

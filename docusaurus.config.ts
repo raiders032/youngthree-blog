@@ -78,7 +78,7 @@ const config: Config = {
                 sidebarPath: './sidebars.finance.ts',
                 exclude: [],
                 tags: 'tags.yml',
-                showLastUpdateTime: false,
+                showLastUpdateTime: true,
                 showLastUpdateAuthor: false,
                 onInlineTags: 'ignore',
             },

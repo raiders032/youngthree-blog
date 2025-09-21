@@ -1,8 +1,11 @@
 ---
-title: "ETF란?"
-description: "ETF의 구조, 장단점, 비용, 세금, 투자 체크리스트"
-tags: ["FINANCE", "ETF"]
+title: "ETF"
+description: "ETF(상장지수편드) 완전 가이드 - 구조와 특징, 인덱스편드와의 차이점, 비용 구조, 세금 처리, 매수 체크리스트 총정리"
+tags: ["FINANCE", "ETF", "상장지수편드", "투자"]
 hide_title: true
+last_update:
+  date: 2025-09-21
+  author: youngthree
 ---
 
 ## 1. ETF란?

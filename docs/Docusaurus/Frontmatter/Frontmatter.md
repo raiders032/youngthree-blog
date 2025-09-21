@@ -22,13 +22,6 @@ hide_title: true
 - **설명**: 문서의 제목. 페이지 메타데이터와 여러 곳에서 대체값으로 사용
 - **특징**: 마크다운에 제목이 없으면 자동으로 문서 상단에 추가됨
 
-### title_meta
-
-- **타입**: string
-- **기본값**: frontMatter.title
-- **설명**: SEO를 위한 메타데이터 제목 (`<head>`의 `<title>`, og:title)
-- **용도**: 표시되는 제목과 SEO 제목이 다를 때 사용
-
 ## 2. 사이드바 및 네비게이션
 
 ### pagination_label
@@ -185,6 +178,30 @@ hide_title: true
 날짜 형식이나 숫자 범위 등 각 필드의 제약사항을 반드시 준수해야 합니다.
 :::
 
+## 8. 예시
+
+```markdown
+---
+id: doc-markdown
+title: Docs Markdown Features
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Markdown
+sidebar_position: 3
+pagination_label: Markdown features
+custom_edit_url: https://github.com/facebook/docusaurus/edit/main/docs/api-doc-markdown.md
+description: How do I find you when I cannot solve this problem
+keywords:
+  - docs
+  - docusaurus
+tags: [docusaurus]
+image: https://i.imgur.com/mErPwqL.png
+slug: /myDoc
+last_update:
+  date: 1/1/2000
+  author: custom author name
+---
+```
 
 ## 참고
 
