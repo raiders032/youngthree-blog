@@ -35,6 +35,7 @@ title: "Database"
 
 ## 데이터베이스 유형
 
+- [MySQL](Mysql/index.md)
 - [NoSQL](NoSQL/index.md)
 - [MongoDB](MongoDB/index.md)
 - [Redis](Redis/index.md)

@@ -10,8 +10,7 @@ title: "Redis"
 - [Redis Cluster](Redis-Cluster/Redis-Cluster.md)
 - [Replication](Replication/Replication.md)
 
-
-### Event Processing
+## Event Processing
 
 - [Pub/Sub](Pub-Sub/Pub-Sub.md)
 - [Redis Streams](RedisStreams/RedisStreams.md)
