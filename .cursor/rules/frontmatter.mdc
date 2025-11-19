@@ -1,0 +1,54 @@
+---
+globs: docs/**/*.md,finance/**/*.md,portfolio/**/*.md
+description: Docusaurus Frontmatter 작성 규칙
+---
+
+### 프론트매터 규칙
+
+- Docusaurus 문서의 경우 문서 상단에 YAML 프론트매터를 항상 사용합니다.
+
+### 예시
+
+```markdown
+---
+title: "예시 문서"
+description: "문서 설명"
+keywords: ["JAVA", "SPRING"]
+tags: ["JAVA", "SPRING"]
+hide_title: true
+last_update:
+  date: 2025-09-21
+  author: youngthree
+---
+```
+
+### title 필드
+
+- 문서의 제목은 간결하게 작성합니다.
+- 핵심 개념을 한 단어로 표현합니다.
+- 예시: "Index", "Selectivity", "Cardinality"
+
+### description 필드
+
+- 제목을 간결하게 작성했기 때문에 description은 장황하게 작성해도 괜찮습니다.
+- SEO 최적화를 위해 작성합니다.
+
+### keywords 필드
+
+- SEO 최적화를 위해 작성합니다.
+- 문서의 주요 내용을 키워드로 나타냅니다.
+
+### tags 필드
+
+- 문서의 주제를 태그로 나타냅니다.
+- 예시: ["Database", "Index", "Performance"]
+
+### hide_title 필드
+
+- 항상 true로 설정합니다.
+
+### last_updated 필드
+
+- 문서가 마지막으로 업데이트된 날짜를 나타냅니다.
+- date: 수정한 날짜를 오늘 날짜로 설정합니다.
+- author: 항상 youngthree로 설정합니다.
