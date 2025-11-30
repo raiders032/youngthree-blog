@@ -5,6 +5,9 @@ tags: ["ITEM_PROCESSOR", "SPRING_BATCH", "SPRING", "BACKEND", "JAVA", "BATCH_PRO
 keywords: ["ItemProcessor", "Spring Batch", "스프링 배치", "아이템 프로세서", "데이터 변환", "배치 처리", "비즈니스 로직", "체이닝", "필터링", "검증", "Validation", "CompositeItemProcessor", "Validator", "BeanValidating"]
 draft: false
 hide_title: true
+last_update:
+  date: 2025-11-23
+  author: youngthree
 ---
 
 ## 1. ItemProcessor 소개
@@ -197,8 +200,10 @@ public CompositeItemProcessor compositeProcessor() {
 
 ### 4.1 필터링과 스킵의 차이
 
-- **필터링**: 레코드가 유효하지만 처리하지 않아도 되는 경우 (예: 삭제 대상 레코드)
+- **필터링**: 레코드가 유효하지만 처리하지 않아도 되는 경우
+  - 단지 해당 레코드를 쓰기 대상에서 제외하고 싶다는 의미로 ItemWriter로 전달하지 않고 싶다는 의미입니다.
 - **스킵**: 레코드가 잘못되어 처리할 수 없는 경우 (예: 형식 오류)
+  - 반대로 ItemProcessor에서 예외를 던지면 해당 레코드는 스킵 처리됩니다.
 
 ### 4.2 필터링 구현 방법
 
@@ -224,9 +229,10 @@ public class RecordFilterProcessor implements ItemProcessor<Record, Record> {
 }
 ```
 
-:::warning[예외 처리 주의사항]
-ItemProcessor에서 예외가 발생하면 스킵으로 처리됩니다. 의도적인 필터링을 위해서는 반드시 null을 반환해야 합니다.
-:::
+### 4.3 스킵 구현 방법
+
+- ItemProcessor에서 예외가 발생하면 스킵으로 처리됩니다. 
+- 의도적인 필터링을 위해서는 반드시 null을 반환해야 합니다.
 
 ## 5. 입력 데이터 검증
 
@@ -330,7 +336,7 @@ public BeanValidatingItemProcessor<Person> beanValidatingItemProcessor() throws 
 
 - 배치 처리 중 오류가 발생하면 청크가 롤백될 수 있습니다.
 - 롤백 시 읽기 단계에서 캐시된 아이템들이 재처리될 수 있습니다.
-- ItemProcessor는 동일한 입력에 대해 동일한 결과를 보장하는 멱등성(idempotent)을 가져야 합니다.
+- 스킵이나 재시도 설정 등으로 fault-tolerant하게 구성된 스텝이라면, 사용하는 모든 ItemProcessor는 반복 실행되어도 결과가 달라지지 않는 멱등성(idempotent) 방식으로 구현해야 합니다.
 
 ### 6.2 멱등성 구현 방법
 
@@ -424,3 +430,7 @@ public class OrderProcessor implements ItemProcessor<Order, ProcessedOrder> {
 - CompositeItemProcessor를 통해 복잡한 처리 과정을 단계별로 나눌 수 있습니다.
 - 장애 허용성을 위해 멱등성을 고려한 구현이 중요합니다.
 - 적절한 검증과 필터링을 통해 안정적인 배치 처리 시스템을 구축할 수 있습니다.
+
+## 참고
+
+- https://docs.spring.io/spring-batch/reference/processor.html
