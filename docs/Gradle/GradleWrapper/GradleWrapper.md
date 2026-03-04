@@ -416,7 +416,7 @@ $ shasum --algorithm=256 gradle/wrapper/gradle-wrapper.jar
 > (Get-FileHash gradle\wrapper\gradle-wrapper.jar -Algorithm SHA256).Hash.ToLower()
 ```
 
-- 구한 체크섬이 <https://gradle.org/release-checksums/>에 있으면, 해당 Wrapper JAR은 검증된 것이다. JAR을 생성한 Gradle 버전과 `gradle-wrapper.properties`의 버전이 다르면, `wrapper` 태스크를 한 번 더 실행해 Wrapper JAR을 갱신해도 된다.
+- 구한 체크섬이 `<https://gradle.org/release-checksums/>`에 있으면, 해당 Wrapper JAR은 검증된 것이다. JAR을 생성한 Gradle 버전과 `gradle-wrapper.properties`의 버전이 다르면, `wrapper` 태스크를 한 번 더 실행해 Wrapper JAR을 갱신해도 된다.
 - 목록에 없으면 milestone, release candidate, nightly 빌드이거나 Gradle 3.3~4.0.2에서 생성된 JAR일 수 있다. 출처를 확인하고, 증명되기 전까지는 신뢰하지 않는 것이 좋다. 변조를 의심하면 security@gradle.com으로 연락한다.
 
 ## 7. 참고
