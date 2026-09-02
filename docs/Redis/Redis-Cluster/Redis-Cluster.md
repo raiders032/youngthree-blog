@@ -33,6 +33,7 @@
 	- Node A contains hash slots from 0 to 5500.
 	- Node B contains hash slots from 5501 to 11000.
 	- Node C contains hash slots from 11001 to 16383.
+- 해시 슬롯 계산 알고리즘, 해시 태그(hash tag)를 이용한 슬롯 강제 배정 등 자세한 내용은 [Hash Slot](../HashSlot/HashSlot.md) 문서 참고
 
 ### 2.1 data sharding과 노드의 추가 및 제거
 

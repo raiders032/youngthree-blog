@@ -11,8 +11,7 @@ last_update:
 
 ## 1 ISR이란
 
-**ISR(Incremental Static Regeneration)**은 페이지를 **정적으로 생성**하되, 일정 시간이 지나거나 특정 트리거 후 **백그라운드에서 다시 생성**해 점진적으로 갱신하는 방식입니다.
-
+- **ISR(Incremental Static Regeneration)**은 페이지를 **정적으로 생성**하되, 일정 시간이 지나거나 특정 트리거 후 **백그라운드에서 다시 생성**해 점진적으로 갱신하는 방식입니다.
 - **빌드 시**: SSG처럼 최초 HTML 생성.
 - **revalidate 경과 후**: 다음 요청에서 기존 HTML을 먼저 반환하고, 백그라운드에서 재생성. 완료 후부터 새 HTML 서빙.
 - SSG의 속도·캐시 이점을 유지하면서, 주기적으로 최신 데이터로 갱신할 수 있습니다.
@@ -72,9 +71,10 @@ export default function Post({ post }) {
 
 ### 4.2 온디맨드 재생성 (Pages Router)
 
-`getStaticProps`와 별도로, 재생성을 트리거하는 API 라우트를 둘 수 있습니다. Next.js 12.2+에서는 `revalidatePath` / `revalidateTag`(App Router)를 주로 사용합니다. Pages Router에서는 예전 방식으로 해당 경로를 재검증하는 API를 호출하는 패턴을 씁니다.
-
-(실제 트리거는 배포 환경에 따라 다르며, Vercel 등에서는 On-Demand Revalidation API를 사용합니다.)
+- `getStaticProps`와 별도로, 재생성을 트리거하는 API 라우트를 둘 수 있습니다. 
+- Next.js 12.2+에서는 `revalidatePath` / `revalidateTag`(App Router)를 주로 사용합니다. 
+- Pages Router에서는 예전 방식으로 해당 경로를 재검증하는 API를 호출하는 패턴을 씁니다.
+- 실제 트리거는 배포 환경에 따라 다르며, Vercel 등에서는 On-Demand Revalidation API를 사용합니다.
 
 ## 5 App Router 사용법
 
