@@ -43,7 +43,7 @@ hide_title: true
 	- IP, ICMP, ARP
 - 네트워크 액세스 계층 (Network Access Layer): 프레임 (Frame)
 	- 이더넷, Wi-Fi
-	  :::
+:::
 
 ## 2. TCP 세그먼트 헤더 구조
 
